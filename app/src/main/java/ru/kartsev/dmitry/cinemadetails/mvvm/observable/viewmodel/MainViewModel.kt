@@ -41,6 +41,9 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     var totalPagesCount: Int = 0
     var totalResultsCount: Int = 0
     var currentPage: Int = 1
+    val listOffset: Int = 20
+    var isLastPage: Boolean = false
+    var isLoading: Boolean = false
 
     /** Section: Initialization. */
 
@@ -51,7 +54,7 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Common Methods. */
 
     fun fetchMoreMovies() {
-        fetchMovies(currentPage + 1)
+        fetchMovies(currentPage)
     }
 
     fun cancelAllRequests() = coroutineContext.cancel()

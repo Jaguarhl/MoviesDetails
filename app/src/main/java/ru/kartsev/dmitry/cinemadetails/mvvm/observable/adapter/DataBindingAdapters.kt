@@ -20,11 +20,13 @@ object DataBindingAdapters : KoinComponent {
     )
     fun adapterImage(
         view: ImageView,
-        uri: String,
+        uri: String?,
         defaultPlaceholder: Drawable? = null,
         errorPlaceholder: Drawable? = null,
         isCenterInside: Boolean = false
     ) {
+        if (uri == null) return
+
         val picasso = get<Picasso>()
         val creator = picasso.run {
             if (Patterns.WEB_URL.matcher(uri).matches()) load(uri) else load(File(uri))

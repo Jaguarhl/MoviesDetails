@@ -7,16 +7,20 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.standalone.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.databinding.ItemLoadingBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieBinding
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.base.BaseAdapterPagination
 
 class MoviesListAdapter(
     private val viewModel: MainViewModel
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+) : BaseAdapterPagination<MovieObservable>(),
     KoinComponent {
 
-    var items = mutableListOf<MovieObservable>()
+    override fun getItemViewType(position: Int): Int {
+        return if (position == dataList.size - 1 && isLoadingAdded) R.layout.item_loading else R.layout.item_movie
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,30 +28,22 @@ class MoviesListAdapter(
             inflater, viewType, parent, false
         )
 
-        return ItemMovieViewHolder(binding as ItemMovieBinding)
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return R.layout.item_movie
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
+        return when (viewType) {
+            R.layout.item_loading -> ItemLoadingViewHolder(binding as ItemLoadingBinding)
+            else -> ItemMovieViewHolder(binding as ItemMovieBinding)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val observable = items[position]
+        when (getItemViewType(position)) {
+            R.layout.item_movie -> {
+                val observable = dataList[position]
 
-        (holder as ItemMovieViewHolder).bind(viewModel, observable)
-    }
+                (holder as ItemMovieViewHolder).bind(viewModel, observable)
+            }
 
-    fun initList(data: List<MovieObservable>) {
-        with (items) {
-            clear()
-            addAll(data)
+            R.layout.item_loading -> (holder as BaseAdapterPagination<*>.ItemLoadingViewHolder).bind()
         }
-
-        notifyDataSetChanged()
     }
 
     class ItemMovieViewHolder(
