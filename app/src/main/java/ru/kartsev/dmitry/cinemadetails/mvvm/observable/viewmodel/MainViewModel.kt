@@ -1,6 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import androidx.databinding.Bindable
+import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -11,6 +15,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import kotlin.coroutines.CoroutineContext
@@ -18,7 +23,7 @@ import kotlin.coroutines.CoroutineContext
 class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
-    private val movieRepository: MovieRepository by inject()
+    private val movieDataSource: MoviesDataSource by inject()
 
     /** Section: Bindable Properties. */
 
@@ -31,37 +36,25 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
 
     /** Section: Simple Properties. */
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private val scope = CoroutineScope(coroutineContext)
-
-    val popularMovies = mutableListOf<MovieObservable>()
-
-    var totalPagesCount: Int = 0
-    var totalResultsCount: Int = 0
-    var currentPage: Int = 1
-    val listOffset: Int = 20
-    var isLastPage: Boolean = false
-    var isLoading: Boolean = false
+    private var popularMovies: LiveData<PagedList<MovieObservable>>
 
     /** Section: Initialization. */
 
-    fun initializeByDefault() {
-        fetchMovies(1)
+    init {
+        val config = PagedList.Config.Builder()
+            .setPageSize(20)
+            .setEnablePlaceholders(false)
+            .build()
+        popularMovies  = initializedPagedListBuilder(config).build()
     }
 
     /** Section: Common Methods. */
 
-    fun fetchMoreMovies() {
-        fetchMovies(currentPage)
-    }
-
-    fun cancelAllRequests() = coroutineContext.cancel()
+    fun getMoviesList(): LiveData<PagedList<MovieObservable>> = popularMovies
 
     /** Section: Private Methods. */
 
-    private fun fetchMovies(pageToDisplay: Int) {
+    /*private fun fetchMovies(pageToDisplay: Int) {
         scope.launch {
             if (currentPage == totalPagesCount && totalPagesCount > 0) return@launch
 
@@ -91,9 +84,17 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
                 }
             }
         }
-    }
+    }*/
 
-    companion object {
-        const val ACTION_DISPLAY_RESULTS = 0
+    private fun initializedPagedListBuilder(config: PagedList.Config):
+        LivePagedListBuilder<Int, MovieObservable> {
+
+        val dataSourceFactory = object : DataSource.Factory<Int, MovieObservable>() {
+            override fun create(): DataSource<Int, MovieObservable> {
+                return movieDataSource
+            }
+        }
+
+        return LivePagedListBuilder<Int, MovieObservable>(dataSourceFactory, config)
     }
 }

@@ -2,19 +2,14 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel.Companion.ACTION_DISPLAY_RESULTS
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.MoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.PaginationScrollListener
-
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -26,36 +21,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
+        if (savedInstanceState == null) {
+//            viewModel.initializeByDefault()
+        }
+
+        observeLiveData()
+
         moviesAdapter = MoviesListAdapter(viewModel)
         mainViewRecyclerList.apply {
             val llm = LinearLayoutManager(context)
             layoutManager = llm
             setHasFixedSize(true)
             adapter = moviesAdapter
-            addOnScrollListener(object : PaginationScrollListener(llm) {
-                override val totalPageCount: Int = viewModel.totalResultsCount / viewModel.listOffset
-                override val isLastPage: Boolean = viewModel.isLastPage
-                override val isLoading: Boolean = viewModel.isLoading
-
-                override fun loadMoreItems() {
-                    viewModel.isLoading = true
-                    viewModel.currentPage++
-                    viewModel.totalPagesCount = totalPageCount
-                    viewModel.fetchMoreMovies()
-                }
-            })
         }
 
         propertyHandler.attach()
-
-        if (savedInstanceState == null) {
-            viewModel.initializeByDefault()
-        }
     }
 
-    override fun onDestroy() {
-        viewModel.cancelAllRequests()
-        super.onDestroy()
+    /** Section: Private Methods. */
+
+    private fun observeLiveData() {
+        //observe live data emitted by view model
+        viewModel.getMoviesList().observe(this, Observer {
+            moviesAdapter.submitList(it)
+        })
     }
 
     /** Section: Property Handler. */
@@ -67,11 +56,6 @@ class MainActivity : AppCompatActivity() {
     ) : DefaultPropertyHandler<MainActivity>(reference) {
         override fun onPropertyChanged(reference: MainActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
-                BR.action -> when (viewModel.action) {
-                    ACTION_DISPLAY_RESULTS -> moviesAdapter.setList(viewModel.popularMovies)
-
-                    else -> return@with
-                }
             }
         }
 

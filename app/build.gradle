@@ -7,12 +7,15 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "ru.kartsev.dmitry.cinemadetails"
+        applicationId "ru.kartsev.dmitry.cinemadetails.test"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        testApplicationId "ru.kartsev.dmitry.cinemadetails"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testHandleProfiling true
+        testFunctionalTest true
     }
 
     buildTypes {
@@ -35,6 +38,31 @@ android {
 
     dataBinding {
         enabled = true
+    }
+
+    testOptions {
+        reportDir "$rootDir/test-reports"
+        resultsDir "$rootDir/test-results"
+
+        unitTests {
+            // By default, local unit tests throw an exception any time the code you are testing tries to access
+            // Android platform APIs (unless you mock Android dependencies yourself or with a testing
+            // framework like Mockito). However, you can enable the following property so that the test
+            // returns either null or zero when accessing platform APIs, rather than throwing an exception.
+            returnDefaultValues true
+
+            // Encapsulates options for controlling how Gradle executes local unit tests. For a list
+            // of all the options you can specify, read Gradle's reference documentation.
+            all {
+                // Sets JVM argument(s) for the test JVM(s).
+                jvmArgs '-XX:MaxPermSize=256m'
+
+                // You can also check the task name to apply options to only the tests you specify.
+                if (it.name == 'testDebugUnitTest') {
+                    systemProperty 'debug', 'true'
+                }
+            }
+        }
     }
 }
 
