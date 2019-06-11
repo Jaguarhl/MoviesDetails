@@ -5,20 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import kotlin.coroutines.CoroutineContext
 
 class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
@@ -34,18 +27,25 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.action)
         }
 
+    var loading: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.loading)
+        }
+
     /** Section: Simple Properties. */
 
-    private var popularMovies: LiveData<PagedList<MovieObservable>>
+    var popularMovies: LiveData<PagedList<MovieObservable>>
 
     /** Section: Initialization. */
 
     init {
-        val config = PagedList.Config.Builder()
-            .setPageSize(20)
-            .setEnablePlaceholders(false)
-            .build()
-        popularMovies  = initializedPagedListBuilder(config).build()
+        val config = PagedList.Config.Builder().apply {
+            setPageSize(PAGE_SIZE)
+            setEnablePlaceholders(false)
+        }.build()
+        popularMovies = initializedPagedListBuilder(config).build()
     }
 
     /** Section: Common Methods. */

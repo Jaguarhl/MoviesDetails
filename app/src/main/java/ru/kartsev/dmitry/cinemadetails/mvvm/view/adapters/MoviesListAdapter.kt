@@ -8,7 +8,6 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.standalone.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.databinding.ItemLoadingBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieBinding
@@ -28,7 +27,7 @@ class MoviesListAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemMovieViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(viewModel, it) }
+        getItem(position)?.let {holder.bind(viewModel, it)}
     }
 
     class ItemMovieViewHolder(
