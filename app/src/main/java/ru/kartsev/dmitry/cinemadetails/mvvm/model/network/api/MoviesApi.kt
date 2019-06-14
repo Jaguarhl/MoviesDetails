@@ -9,6 +9,7 @@ import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_DETAILS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.POPULAR_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.MovieEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.TmdbMovieResponseEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 
 interface MoviesApi {
     @GET(POPULAR_MOVIE)
@@ -17,5 +18,5 @@ interface MoviesApi {
     ): Deferred<Response<TmdbMovieResponseEntity>>
 
     @GET(MOVIE_DETAILS)
-    fun getMovieByIdAsync(@Path("id") id:Int): Deferred<Response<MovieEntity>>
+    fun getMovieByIdAsync(@Path("id") id:Int): Deferred<Response<MovieDetailsEntity>>
 }

@@ -20,6 +20,8 @@ object NetworkModule {
     private const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
     private const val API_MOVIES = "network.api_movies"
     private const val PICASSO_NAME = "network.picasso"
+    private const val PICASSO_CLIENT_NAME = "network.picasso_client"
+    private const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
 
     val it: Module = module {
         single(HTTP_AUTH_INTERCEPTOR_NAME) {
@@ -56,8 +58,30 @@ object NetworkModule {
 
         single<Picasso>(PICASSO_NAME) {
             Picasso.Builder(get())
+                .downloader(OkHttp3Downloader(get<OkHttpClient>(PICASSO_CLIENT_NAME)))
                 .loggingEnabled(BuildConfig.DEBUG)
                 .build()
+        }
+
+        single<OkHttpClient>(PICASSO_CLIENT_NAME) {
+            OkHttpClient.Builder()
+                .addInterceptor(get(PICASSO_INTERCEPTOR_NAME))
+                .cache(get())
+                .build()
+        }
+
+        single(PICASSO_INTERCEPTOR_NAME) {
+            Interceptor {
+                val newUrl = it.request().url().newBuilder()
+                    .addEncodedPathSegment(BASE_URL)
+                    .build()
+
+                val newRequest = it.request().newBuilder()
+                    .url(newUrl)
+                    .build()
+
+                it.proceed(newRequest)
+            }
         }
     }
 }

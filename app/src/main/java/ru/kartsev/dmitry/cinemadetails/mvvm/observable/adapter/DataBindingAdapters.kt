@@ -25,7 +25,7 @@ object DataBindingAdapters : KoinComponent {
         errorPlaceholder: Drawable? = null,
         isCenterInside: Boolean = false
     ) {
-        if (uri == null) return
+        if (uri.isNullOrEmpty()) return
 
         val picasso = get<Picasso>()
         val creator = picasso.run {
