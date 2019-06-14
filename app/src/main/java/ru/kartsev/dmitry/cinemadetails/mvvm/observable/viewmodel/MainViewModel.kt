@@ -3,7 +3,6 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 import android.util.Log
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.CoroutineScope
@@ -15,15 +14,16 @@ import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import kotlin.coroutines.CoroutineContext
+import androidx.lifecycle.Transformations
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 
 class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
-    private val movieDataSource: MoviesDataSource by inject()
+    private val movieDataSourceFactory: MovieDataSourceFactory by inject()
     private val movieRepository: MovieRepository by inject()
 
     /** Section: Bindable Properties. */
@@ -56,14 +56,13 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     init {
         val config = PagedList.Config.Builder().apply {
             setPageSize(PAGE_SIZE)
-            setEnablePlaceholders(false)
+            setEnablePlaceholders(true)
         }.build()
+
         popularMovies = initializedPagedListBuilder(config).build()
     }
 
     /** Section: Common Methods. */
-
-    fun getMoviesList(): LiveData<PagedList<MovieObservable>> = popularMovies
 
     fun movieItemClicked(id: Int) {
         if (id == 0) return
@@ -111,12 +110,6 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     private fun initializedPagedListBuilder(config: PagedList.Config):
         LivePagedListBuilder<Int, MovieObservable> {
 
-        val dataSourceFactory = object : DataSource.Factory<Int, MovieObservable>() {
-            override fun create(): DataSource<Int, MovieObservable> {
-                return movieDataSource
-            }
-        }
-
-        return LivePagedListBuilder<Int, MovieObservable>(dataSourceFactory, config)
+        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config)
     }
 }

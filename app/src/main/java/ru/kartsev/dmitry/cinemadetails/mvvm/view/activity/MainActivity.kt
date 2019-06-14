@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     /** Section: Private Methods. */
 
     private fun observeLiveData() {
-        viewModel.getMoviesList().observe(this, Observer {
+        viewModel.popularMovies.observe(this, Observer {
             moviesAdapter.submitList(it)
         })
     }
