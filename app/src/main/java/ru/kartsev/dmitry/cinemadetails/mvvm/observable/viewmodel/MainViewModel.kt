@@ -5,10 +5,11 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
@@ -16,15 +17,17 @@ import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import kotlin.coroutines.CoroutineContext
-import androidx.lifecycle.Transformations
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieDetailsObservable
+import rx.functions.Func1
 
 class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieDataSourceFactory: MovieDataSourceFactory by inject()
     private val movieRepository: MovieRepository by inject()
+    private val compositeDisposable: CompositeDisposable by inject()
 
     /** Section: Bindable Properties. */
 
@@ -46,11 +49,6 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
 
     var popularMovies: LiveData<PagedList<MovieObservable>>
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private val scope = CoroutineScope(coroutineContext)
-
     /** Section: Initialization. */
 
     init {
@@ -67,49 +65,38 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     fun movieItemClicked(id: Int) {
         if (id == 0) return
 
-        scope.launch {
-            val result = movieRepository.getMovieDetails(id)
-            Log.d(this@MainViewModel::class.java.canonicalName, result.toString())
-        }
+        movieRepository.getMovieDetails(id)
+            .map { MovieDetailsObservable.fromMovieDetailsEntity(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<MovieDetailsObservable> {
+                override fun onSuccess(movie: MovieDetailsObservable) {
+                    Log.d(this@MainViewModel::class.java.canonicalName, movie.toString())
+                    action = ACTION_OPEN_DETAILS
+                }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onError(e: Throwable) {
+                    Log.e(this@MainViewModel::class.java.canonicalName, "Error occur: ", e)
+                }
+            })
     }
 
     /** Section: Private Methods. */
 
-    /*private fun fetchMovies(pageToDisplay: Int) {
-        scope.launch {
-            if (currentPage == totalPagesCount && totalPagesCount > 0) return@launch
-
-            val serverAnswer = movieRepository.getPopularMovies(pageToDisplay) ?: return@launch
-
-            with(serverAnswer) {
-                totalResultsCount = total_results
-                currentPage = page
-                totalPagesCount = total_pages
-                val observablesList = results.map {
-                    MovieObservable(
-                        it.id,
-                        it.vote_average.toString(),
-                        it.title,
-                        it.overview,
-                        it.posterPath ?: "",
-                        it.backdoorPath ?: "",
-                        it.adult,
-                        it.releaseDate ?: ""
-                    )
-                }
-
-                withContext(Dispatchers.Main) {
-                    popularMovies.addAll(observablesList)
-
-                    action = ACTION_DISPLAY_RESULTS
-                }
-            }
-        }
-    }*/
-
     private fun initializedPagedListBuilder(config: PagedList.Config):
         LivePagedListBuilder<Int, MovieObservable> {
 
-        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config)
+        return LivePagedListBuilder(movieDataSourceFactory, config)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
+    companion object {
+        const val ACTION_OPEN_DETAILS = 0
     }
 }

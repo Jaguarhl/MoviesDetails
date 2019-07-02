@@ -2,25 +2,40 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource
 
 import android.util.Log
 import androidx.paging.PositionalDataSource
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Action
+import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.TmdbMovieResponseEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import java.lang.Exception
 
 class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent {
 
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
+    private val compositeDisposable: CompositeDisposable by inject()
 
     /** Section: Constants. */
 
     companion object {
         private const val INITIAL_PAGE = 1
+    }
+
+    private var retryCompletable: Completable? = null
+
+    fun retry() {
+        if (retryCompletable != null) {
+            compositeDisposable.add(retryCompletable!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ }, { throwable -> Log.e(this.javaClass.canonicalName, throwable.message) })
+            )
+        }
     }
 
     /** Section: Common Methods. */
@@ -29,33 +44,24 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
         params: LoadInitialParams,
         callback: LoadInitialCallback<MovieObservable>
     ) {
-        GlobalScope.launch {
-            try {
-                val response = movieRepository.getPopularMovies(INITIAL_PAGE)
-                val list = convertToObservable(response)
-                val count = response?.total_pages ?: 0
-                Log.d(
-                    this@MoviesDataSource.javaClass.canonicalName, "Data fetched. Initial position: " +
-                        "${params.requestedStartPosition}, total pages count: $count, data loaded: $list"
-                )
-                callback.onResult(list ?: listOf(), params.requestedStartPosition, count)
-            } catch (exception: Exception) {
-                Log.e(this@MoviesDataSource.javaClass.canonicalName, "Failed to fetch initial data")
-            }
-        }
+        compositeDisposable.add(movieRepository.getPopularMovies(INITIAL_PAGE).subscribe({ movies ->
+            setRetry(null)
+            callback.onResult(
+                convertToObservable(movies) ?: listOf(),
+                params.requestedStartPosition,
+                movies?.total_pages ?: 0
+            )
+        }, { throwable ->
+            setRetry(Action { loadInitial(params, callback) })
+        }))
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<MovieObservable>) {
-        GlobalScope.launch {
-            try {
-
-                val response = movieRepository.getPopularMovies(params.startPosition)
-                val list = convertToObservable(response)
-                callback.onResult(list ?: listOf())
-            } catch (exception: Exception) {
-                Log.e(this@MoviesDataSource.javaClass.canonicalName, "Failed to fetch range data")
-            }
-        }
+        compositeDisposable.add(
+            movieRepository.getPopularMovies(params.startPosition).subscribe({ result ->
+                callback.onResult(convertToObservable(result) ?: listOf())
+            }, { throwable -> })
+        )
     }
 
     /** Section: Private Methods. */
@@ -72,6 +78,14 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 it.adult,
                 it.releaseDate ?: ""
             )
+        }
+    }
+
+    private fun setRetry(action: Action?) {
+        if (action == null) {
+            this.retryCompletable = null
+        } else {
+            this.retryCompletable = Completable.fromAction(action)
         }
     }
 }

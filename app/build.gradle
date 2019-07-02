@@ -83,14 +83,26 @@ dependencies {
     // Paging library
     implementation "android.arch.paging:runtime:$paging_version"
 
+    implementation "android.arch.persistence.room:rxjava2:$persistance_version"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rxJava_version"
+
+    // RxAndroid
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
+
+    // RxKotlin
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin_version"
+
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit2_kotlin_adapter_version"
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
     // Okhttp3
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
@@ -100,10 +112,6 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:$picassoVersion") {
         exclude group: "com.android.support"
     }
-
-    // Kotlin Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 
     // Koin
     implementation "org.koin:koin-core:$koin_version"

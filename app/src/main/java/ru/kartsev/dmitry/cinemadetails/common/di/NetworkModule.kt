@@ -1,6 +1,6 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.Interceptor
@@ -48,7 +48,7 @@ object NetworkModule {
             Retrofit.Builder().client(get(HTTP_CLIENT_RETROFIT_NAME))
                 .baseUrl(BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
         }
 
