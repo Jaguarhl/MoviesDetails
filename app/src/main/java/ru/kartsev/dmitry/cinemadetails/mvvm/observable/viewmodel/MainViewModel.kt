@@ -1,30 +1,24 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import kotlin.coroutines.CoroutineContext
-import androidx.lifecycle.Transformations
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 
 class MainViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieDataSourceFactory: MovieDataSourceFactory by inject()
-    private val movieRepository: MovieRepository by inject()
+    private val settingsRepository: TmdbSettingsRepository by inject()
 
     /** Section: Bindable Properties. */
 
@@ -46,14 +40,12 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
 
     var popularMovies: LiveData<PagedList<MovieObservable>>
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private val scope = CoroutineScope(coroutineContext)
+    var movieIdToOpenDetails: Int? = null
 
     /** Section: Initialization. */
 
     init {
+        getTmdbSettings()
         val config = PagedList.Config.Builder().apply {
             setPageSize(PAGE_SIZE)
             setEnablePlaceholders(true)
@@ -67,13 +59,17 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
     fun movieItemClicked(id: Int) {
         if (id == 0) return
 
-        scope.launch {
-            val result = movieRepository.getMovieDetails(id)
-            Log.d(this@MainViewModel::class.java.canonicalName, result.toString())
-        }
+        movieIdToOpenDetails = id
+        action = ACTION_OPEN_DETAILS
     }
 
     /** Section: Private Methods. */
+
+    private fun getTmdbSettings() {
+        runBlocking {
+            settingsRepository.getTmdbSettings()
+        }
+    }
 
     /*private fun fetchMovies(pageToDisplay: Int) {
         scope.launch {
@@ -111,5 +107,9 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
         LivePagedListBuilder<Int, MovieObservable> {
 
         return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config)
+    }
+
+    companion object {
+        const val ACTION_OPEN_DETAILS = 0
     }
 }

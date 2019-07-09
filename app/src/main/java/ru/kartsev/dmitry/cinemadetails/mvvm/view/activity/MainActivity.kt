@@ -2,12 +2,16 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.databinding.ActivityMainBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel.Companion.ACTION_OPEN_DETAILS
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.MoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 
@@ -18,8 +22,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
+            this,
+            R.layout.activity_main
+        )
+
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        
+        with (binding) {
+            lifecycleOwner = this@MainActivity
+            viewModel = this@MainActivity.viewModel
+        }
 
         if (savedInstanceState == null) {
 //            viewModel.initializeByDefault()
@@ -55,6 +68,9 @@ class MainActivity : AppCompatActivity() {
     ) : DefaultPropertyHandler<MainActivity>(reference) {
         override fun onPropertyChanged(reference: MainActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
+                BR.action -> when (viewModel.action) {
+                    ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(viewModel.movieIdToOpenDetails!!, this)
+                }
             }
         }
 

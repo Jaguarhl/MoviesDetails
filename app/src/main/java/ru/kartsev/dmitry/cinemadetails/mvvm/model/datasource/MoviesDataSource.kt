@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.TmdbMovieResponseEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import java.lang.Exception
@@ -21,6 +21,8 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
 
     companion object {
         private const val INITIAL_PAGE = 1
+        // FIXME: Made this option
+        private const val LANGUAGE = "ru-RU"
     }
 
     /** Section: Common Methods. */
@@ -31,7 +33,7 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
     ) {
         GlobalScope.launch {
             try {
-                val response = movieRepository.getPopularMovies(INITIAL_PAGE)
+                val response = movieRepository.getPopularMovies(INITIAL_PAGE, LANGUAGE)
                 val list = convertToObservable(response)
                 val count = response?.total_pages ?: 0
                 Log.d(
@@ -49,7 +51,7 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
         GlobalScope.launch {
             try {
 
-                val response = movieRepository.getPopularMovies(params.startPosition)
+                val response = movieRepository.getPopularMovies(params.startPosition, LANGUAGE)
                 val list = convertToObservable(response)
                 callback.onResult(list ?: listOf())
             } catch (exception: Exception) {
@@ -60,17 +62,17 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
 
     /** Section: Private Methods. */
 
-    private fun convertToObservable(response: TmdbMovieResponseEntity?): List<MovieObservable>? {
+    private fun convertToObservable(response: PopularMoviesEntity?): List<MovieObservable>? {
         return response?.results?.map {
             MovieObservable(
                 it.id,
                 it.vote_average.toString(),
                 it.title,
                 it.overview,
-                it.posterPath ?: "",
-                it.backdoorPath ?: "",
+                it.poster_path,
+                it.backdrop_path,
                 it.adult,
-                it.releaseDate ?: ""
+                it.release_date
             )
         }
     }

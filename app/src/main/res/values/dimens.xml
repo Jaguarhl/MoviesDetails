@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_vertical_margin">16dp</dimen>
+    <dimen name="primary_horizontal_margin">16dp</dimen>
+    <dimen name="text_title_size">22sp</dimen>
+    <dimen name="secondary_vertical_margin">8dp</dimen>
+    <dimen name="text_normal_size">16sp</dimen>
+</resources>

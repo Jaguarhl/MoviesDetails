@@ -28,9 +28,8 @@ object DataBindingAdapters : KoinComponent {
         if (uri.isNullOrEmpty()) return
 
         val picasso = get<Picasso>()
-        val creator = picasso.run {
-            if (Patterns.WEB_URL.matcher(uri).matches()) load(uri) else load(File(uri))
-        }
+        // FIXME: Make image size selectable.
+        val creator = picasso.load("w500$uri")
 
         with(creator) {
             errorPlaceholder?.let {

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Cinema details</string>
+
+    <!-- Section: Default Values. */ -->
+
+    <string name="movie_list_loading_state">Loading...</string>
 </resources>

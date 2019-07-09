@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".mvvm.view.activity.MovieDetailsActivity">
 
-</LinearLayout>
+    <data class="ActivityDetailsBinding">
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/primary_vertical_margin"
+        android:paddingStart="@dimen/primary_horizontal_margin"
+        android:paddingEnd="@dimen/primary_horizontal_margin">
+
+        <TextView
+            android:id="@+id/activityDetailsMovieTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.movieTitle}"
+            android:textSize="@dimen/text_title_size"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Movie title"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/secondary_vertical_margin"
+            android:text="@{viewModel.movieDescription}"
+            android:textSize="@dimen/text_normal_size"
+            app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@tools:sample/lorem/random"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

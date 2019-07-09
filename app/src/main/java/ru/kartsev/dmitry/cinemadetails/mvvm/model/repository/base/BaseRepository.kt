@@ -1,6 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import org.koin.standalone.KoinComponent
 import retrofit2.Response
 import java.io.IOException
@@ -18,9 +19,7 @@ open class BaseRepository : KoinComponent {
             }
         }
 
-
         return data
-
     }
 
     private suspend fun <T: Any> safeApiResult(call: suspend ()-> Response<T>, errorMessage: String) : Result<T> {
