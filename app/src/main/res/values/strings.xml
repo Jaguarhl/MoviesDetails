@@ -10,4 +10,8 @@
 
     <string name="font_sans_serif" translatable="false">sans-serif</string>
     <string name="font_sans_serif_medium" translatable="false">sans-serif-medium</string>
+
+    <!-- Section: Movie Details Activity. -->
+
+    <string name="movie_details_title">Movie details</string>
 </resources>

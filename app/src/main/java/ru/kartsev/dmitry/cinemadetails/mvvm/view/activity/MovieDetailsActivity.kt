@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.app_bar_default.*
+import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
@@ -27,14 +28,15 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
-        with (binding) {
+        with(binding) {
             lifecycleOwner = this@MovieDetailsActivity
             viewModel = this@MovieDetailsActivity.viewModel
         }
 
-        setSupportActionBar(toolbarDefault)
+        setSupportActionBar(toolbarNoElevation)
         supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
+            setDisplayShowTitleEnabled(true)
+            title = getString(R.string.movie_details_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }
@@ -75,6 +77,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     ) : DefaultPropertyHandler<MovieDetailsActivity>(reference) {
         override fun onPropertyChanged(reference: MovieDetailsActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
+                BR.action -> when (viewModel.action) { }
             }
         }
 

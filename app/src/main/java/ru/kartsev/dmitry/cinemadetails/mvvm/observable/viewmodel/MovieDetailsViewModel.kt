@@ -64,6 +64,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.moviePosterPath)
         }
 
+    var movieBackdropPath: String = ""
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieBackdropPath)
+        }
+
     var movieReleaseDate: String = ""
         @Bindable get() = field
         set(value) {
@@ -78,9 +85,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
 
+    var movieBackdropSize: String = ""
+
     /** Section: Initialization. */
 
     fun initializeWithMovieId(id: Int) {
+        // FIXME: Set it from settings repository.
+        movieBackdropSize = "w780"
         scope.launch {
             loadMovieData(id)
         }.invokeOnCompletion {
@@ -102,6 +113,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             movieTitleOriginal = "(${resultDetails?.original_title ?: ""})"
             movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
             moviePosterPath = resultDetails?.poster_path ?: ""
+            movieBackdropPath = resultDetails?.backdrop_path ?: ""
             movieReleaseDate = resultDetails?.release_date ?: ""
             Log.d(this@MovieDetailsViewModel::class.java.simpleName, translationDetails.toString())
 

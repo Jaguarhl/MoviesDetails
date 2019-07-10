@@ -3,5 +3,13 @@
     <string name="app_name">Кино в деталях</string>
 
     <string name="movie_list_loading_state">Загрузка…</string>
+
+    <!-- Section: Movie Common. -->
+
     <string name="item_movie_release_date_label">Дата выхода:</string>
+
+    <!-- Section: Movie Details Activity. -->
+
+    <string name="movie_details_title">Подробнее о ленте</string>
+
 </resources>

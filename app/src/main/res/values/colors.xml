@@ -7,4 +7,5 @@
     <color name="loadingForeground">#FFFFFFFF</color>
     <color name="colorMovieTitleView">#DCDCDC</color>
     <color name="colorFontMain">#2F4F4F</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

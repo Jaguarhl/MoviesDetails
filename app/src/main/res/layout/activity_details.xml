@@ -16,8 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/primary_vertical_margin">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/appBar"
@@ -25,22 +24,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/activityDetailsMovieBackdrop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:image_uri="@{viewModel.movieBackdropPath}"
+            app:image_placeholder="@{@drawable/ic_image}"
+            app:image_size="@{viewModel.movieBackdropSize}"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <View
             android:id="@+id/activityDetailsMovieTitleView"
             android:layout_width="0dp"
             android:layout_height="@dimen/activity_details_movie_title_height"
-            android:background="@color/colorMovieTitleView"
+            android:background="@drawable/background_movie_title"
             app:layout_constraintTop_toTopOf="@id/activityDetailsMoviePoster"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/activityDetailsMoviePoster"/>
 
-        <ImageView
+        <View
+            android:id="@+id/activityDetailsMovieBottomView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/activityDetailsMoviePoster"
             android:layout_width="@dimen/activity_details_poster_height"
             android:layout_height="@dimen/activity_details_poster_height"
             android:layout_marginStart="@dimen/primary_horizontal_margin"
-            android:layout_marginTop="@dimen/primary_vertical_margin"
+            android:layout_marginTop="@dimen/activity_details_backdrop_height"
             app:image_uri="@{viewModel.moviePosterPath}"
             app:image_placeholder="@{@drawable/ic_image}"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,9 +125,27 @@
             android:text="@{viewModel.movieDescription}"
             android:textSize="@dimen/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/activityDetailsMoviePoster"
+            app:layout_constraintStart_toStartOf="@id/activityDetailsMovieBottomView"
+            app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieBottomView"
+            tools:text="@tools:sample/lorem/random"/>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/loadingForeground"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="@tools:sample/lorem/random"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            bind:viewVisibility="@{viewModel.loading}"
+            tools:visibility="gone">
+
+            <ProgressBar
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

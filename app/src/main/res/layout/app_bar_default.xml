@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    android:theme="@style/AppTheme.AppBarOverlay">
+    android:theme="@style/AppTheme.AppBarOverlay"
+    android:background="@color/colorMovieTitleView"
+    app:elevation="0dp">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarDefault"
+        android:id="@+id/toolbarNoElevation"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimaryLight"
+        android:background="@android:color/transparent"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
