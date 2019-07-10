@@ -6,9 +6,9 @@ data class ProductionCompany(
     @Json(name = "id")
     var id: Int? = null,
     @Json(name = "logo_path")
-    var logoPath: String? = null,
+    var logo_path: String? = null,
     @Json(name = "name")
     var name: String? = null,
     @Json(name = "origin_country")
-    var originCountry: String? = null
+    var origin_country: String? = null
 )

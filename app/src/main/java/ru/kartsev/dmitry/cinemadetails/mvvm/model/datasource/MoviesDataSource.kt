@@ -6,6 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
@@ -21,8 +22,6 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
 
     companion object {
         private const val INITIAL_PAGE = 1
-        // FIXME: Made this option
-        private const val LANGUAGE = "ru-RU"
     }
 
     /** Section: Common Methods. */

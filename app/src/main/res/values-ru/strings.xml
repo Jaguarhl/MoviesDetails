@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Кино в деталях</string>
+
+    <string name="movie_list_loading_state">Загрузка…</string>
+    <string name="item_movie_release_date_label">Дата выхода:</string>
+</resources>

@@ -4,4 +4,6 @@ import ru.kartsev.dmitry.cinemadetails.BuildConfig
 
 object AppConfig {
     const val TMDB_API_KEY = BuildConfig.TMDB_API_KEY
+    // FIXME: Made this option
+    const val LANGUAGE = "ru-RU"
 }

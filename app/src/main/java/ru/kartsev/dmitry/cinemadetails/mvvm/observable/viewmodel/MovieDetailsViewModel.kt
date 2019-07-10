@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
+import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import kotlin.coroutines.CoroutineContext
@@ -42,11 +43,32 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieTitle)
         }
 
+    var movieTitleOriginal: String = ""
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieTitleOriginal)
+        }
+
     var movieDescription: String = ""
         @Bindable get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.movieDescription)
+        }
+
+    var moviePosterPath: String = ""
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.moviePosterPath)
+        }
+
+    var movieReleaseDate: String = ""
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieReleaseDate)
         }
 
     /** Section: Simple Properties. */
@@ -69,15 +91,18 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     private suspend fun loadMovieData(id: Int) {
         loading = true
-        val resultDetails = movieRepository.getMovieDetails(id)
+        val resultDetails = movieRepository.getMovieDetails(id, LANGUAGE)
 
-        // FIXME: Move language param to variable. WTF? iso codes come as null?
+        // FIXME: Move language param to variable.
         val translationDetails = movieRepository.getMovieTranslations(id)?.translations?.
             first { it.iso_639_1.equals("ru", true) }?.data
 
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
+            movieTitleOriginal = "(${resultDetails?.original_title ?: ""})"
             movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
+            moviePosterPath = resultDetails?.poster_path ?: ""
+            movieReleaseDate = resultDetails?.release_date ?: ""
             Log.d(this@MovieDetailsViewModel::class.java.simpleName, translationDetails.toString())
 
             loading = false

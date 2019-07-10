@@ -23,7 +23,8 @@ interface MoviesApi {
 
     @GET(MOVIE_DETAILS)
     fun getMovieByIdAsync(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("language") language: String?
     ): Deferred<Response<MovieDetailsEntity>>
 
     @GET(MOVIE_ALTERNATIVE_TITLES)

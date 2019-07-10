@@ -15,7 +15,7 @@ object DataBindingAdapters : KoinComponent {
 
     @JvmStatic
     @BindingAdapter(
-        value = ["bind:image_uri", "bind:image_placeholder", "bind:image_error", "bind:image_center_inside"],
+        value = ["bind:image_uri", "bind:image_placeholder", "bind:image_error", "bind:image_center_inside", "bind:image_size"],
         requireAll = false
     )
     fun adapterImage(
@@ -23,13 +23,14 @@ object DataBindingAdapters : KoinComponent {
         uri: String?,
         defaultPlaceholder: Drawable? = null,
         errorPlaceholder: Drawable? = null,
-        isCenterInside: Boolean = false
+        isCenterInside: Boolean = false,
+        imageSize: String?
     ) {
         if (uri.isNullOrEmpty()) return
 
         val picasso = get<Picasso>()
-        // FIXME: Make image size selectable.
-        val creator = picasso.load("w500$uri")
+        val size = imageSize ?: "w300"
+        val creator = picasso.load("$size$uri")
 
         with(creator) {
             errorPlaceholder?.let {

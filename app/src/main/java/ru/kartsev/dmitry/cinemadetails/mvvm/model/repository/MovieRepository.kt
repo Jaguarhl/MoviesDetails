@@ -20,9 +20,9 @@ class MovieRepository : BaseRepository() {
         )
     }
 
-    suspend fun getMovieDetails(movieId: Int): MovieDetailsEntity? {
+    suspend fun getMovieDetails(movieId: Int, language: String? = null): MovieDetailsEntity? {
         return safeApiCall(
-            call = { moviesApi.getMovieByIdAsync(movieId).await() },
+            call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
             errorMessage = "Error Fetching Movie Details."
         )
     }

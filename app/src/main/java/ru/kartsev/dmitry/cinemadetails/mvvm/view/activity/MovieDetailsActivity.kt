@@ -3,9 +3,12 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.app_bar_default.*
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
@@ -29,14 +32,38 @@ class MovieDetailsActivity : AppCompatActivity() {
             viewModel = this@MovieDetailsActivity.viewModel
         }
 
+        setSupportActionBar(toolbarDefault)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+        }
+
+        propertyHandler.attach()
+
         intent?.apply {
             if (!hasExtra(MOVIE_ID_KEY)) return@apply
 
             val movieId = getIntExtra(MOVIE_ID_KEY, 0)
             viewModel.initializeWithMovieId(movieId)
         }
+    }
 
-        propertyHandler.attach()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_default, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     /** Section: Property Handler. */

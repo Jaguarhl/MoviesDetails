@@ -3,5 +3,11 @@
 
     <!-- Section: Default Values. */ -->
 
-    <string name="movie_list_loading_state">Loading...</string>
+    <string name="movie_list_loading_state">Loading…</string>
+    <string name="item_movie_release_date_label">Release date:</string>
+
+    <!-- Section: Style Fonts. -->
+
+    <string name="font_sans_serif" translatable="false">sans-serif</string>
+    <string name="font_sans_serif_medium" translatable="false">sans-serif-medium</string>
 </resources>
