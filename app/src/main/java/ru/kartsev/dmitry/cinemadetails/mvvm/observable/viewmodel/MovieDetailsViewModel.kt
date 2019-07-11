@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import android.util.Log
 import androidx.databinding.Bindable
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -12,13 +13,18 @@ import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
+import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
+    private val util: Util by inject()
 
     /** Section: Bindable Properties. */
 
@@ -71,11 +77,32 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieBackdropPath)
         }
 
+    var movieOverallInfo: String = ""
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieOverallInfo)
+        }
+
     var movieReleaseDate: String = ""
         @Bindable get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.movieReleaseDate)
+        }
+
+    var movieRuntime: Int = 0
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieRuntime)
+        }
+
+    var moviePopularity: Double = 0.0
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.moviePopularity)
         }
 
     /** Section: Simple Properties. */
@@ -86,6 +113,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val scope = CoroutineScope(coroutineContext)
 
     var movieBackdropSize: String = ""
+    val movieGenresLiveData: MutableLiveData<List<GenreObservable>> = MutableLiveData()
 
     /** Section: Initialization. */
 
@@ -105,19 +133,36 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         val resultDetails = movieRepository.getMovieDetails(id, LANGUAGE)
 
         // FIXME: Move language param to variable.
-        val translationDetails = movieRepository.getMovieTranslations(id)?.translations?.
-            first { it.iso_639_1.equals("ru", true) }?.data
+        val translationDetails =
+            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals("ru", true) }
+                ?.data
 
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
-            movieTitleOriginal = "(${resultDetails?.original_title ?: ""})"
+            movieTitleOriginal = resultDetails?.original_title ?: ""
             movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
             moviePosterPath = resultDetails?.poster_path ?: ""
             movieBackdropPath = resultDetails?.backdrop_path ?: ""
+            movieOverallInfo = "${resultDetails?.production_countries?.map { it.name}?.joinToString(" / ")}"
             movieReleaseDate = resultDetails?.release_date ?: ""
-            Log.d(this@MovieDetailsViewModel::class.java.simpleName, translationDetails.toString())
-
-            loading = false
+            movieRuntime = resultDetails?.runtime ?: 0
+            moviePopularity = resultDetails?.popularity ?: 0.0
+            resultDetails?.genres?.let { responseGenres ->
+                movieGenresLiveData.postValue(
+                    responseGenres.map {
+                        GenreObservable(
+                            it.id ?: 0,
+                            it.name ?: ""
+                        )
+                    }
+                )
+            }
         }
+        Log.d(
+            this@MovieDetailsViewModel::class.java.simpleName,
+            "${translationDetails.toString()} \n ${movieGenresLiveData.value}"
+        )
+
+        loading = false
     }
 }

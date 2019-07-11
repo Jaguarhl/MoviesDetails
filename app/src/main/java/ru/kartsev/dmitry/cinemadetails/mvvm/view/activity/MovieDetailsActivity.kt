@@ -7,16 +7,21 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.app_bar_default.*
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.GenresListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
+    lateinit var genresAdapter: GenresListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +41,16 @@ class MovieDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbarNoElevation)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(true)
-            title = getString(R.string.movie_details_title)
+            title = getString(R.string.item_movie_details_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
+        }
+
+        genresAdapter = GenresListAdapter(viewModel)
+
+        activityDetailsMovieGenresListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = genresAdapter
         }
 
         propertyHandler.attach()
@@ -49,6 +61,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             val movieId = getIntExtra(MOVIE_ID_KEY, 0)
             viewModel.initializeWithMovieId(movieId)
         }
+
+        observeLiveData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,6 +80,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    /** Section: Private Methods. */
+
+    private fun observeLiveData() {
+        viewModel.movieGenresLiveData.observe(this, Observer {
+            genresAdapter.updateItems(it)
+        })
     }
 
     /** Section: Property Handler. */

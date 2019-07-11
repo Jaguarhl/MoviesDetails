@@ -4,11 +4,15 @@ import android.graphics.drawable.Drawable
 import android.util.Patterns
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
+import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import java.io.File
+import java.lang.StringBuilder
 
 object DataBindingAdapters : KoinComponent {
     /** Section: Adapters. */
@@ -46,6 +50,35 @@ object DataBindingAdapters : KoinComponent {
 
             into(view)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter(
+        value = ["bind:overall_info", "bind:overall_release_date", "bind:overall_runtime"],
+        requireAll = true
+    )
+    fun formatOverallInfo(
+        view: TextView,
+        info: String?,
+        releaseDate: String?,
+        runtime: Int
+    ) = with(view) {
+        val util = get<Util>()
+        val string = StringBuilder(info ?: "")
+        releaseDate?.let {
+            string.append(
+                " / ${
+                resources.getString(
+                    R.string.date_release_year,
+                    util.formatTime(
+                        it, "yyyy-MM-dd", "yyyy"
+                    )
+                )}"
+            )
+        }
+        string.append(" / ${resources.getString(R.string.date_runtime_minutes, runtime)}")
+
+        text = string
     }
 
     @JvmStatic

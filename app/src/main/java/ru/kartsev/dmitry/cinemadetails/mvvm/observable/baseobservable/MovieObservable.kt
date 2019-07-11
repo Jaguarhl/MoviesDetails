@@ -1,5 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable
 
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DiffItemObservable
+
 data class MovieObservable(
     val id: Int,
     val vote_average: String = "",
@@ -9,19 +11,6 @@ data class MovieObservable(
     val backdoorPath: String = "",
     val adult: Boolean = false,
     val releaseDate: String = ""
-) {
+): DiffItemObservable {
     val isPosterVisible = posterPath.isNotEmpty()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is MovieObservable) return false
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return id
-    }
 }

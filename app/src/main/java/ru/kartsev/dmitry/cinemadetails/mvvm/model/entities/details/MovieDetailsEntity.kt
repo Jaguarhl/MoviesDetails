@@ -36,7 +36,7 @@ data class MovieDetailsEntity(
     @Json(name = "release_date")
     var release_date: String? = null,
     @Json(name = "revenue")
-    var revenue: Int? = null,
+    var revenue: Long? = null,
     @Json(name = "runtime")
     var runtime: Int? = null,
     @Json(name = "spoken_languages")

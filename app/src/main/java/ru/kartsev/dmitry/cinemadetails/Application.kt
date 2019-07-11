@@ -4,6 +4,7 @@ import android.app.Application
 import org.koin.android.ext.android.startKoin
 import org.koin.android.logger.AndroidLogger
 import org.koin.log.EmptyLogger
+import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule
 
@@ -14,7 +15,7 @@ class Application : Application() {
         // Initialize Koin DI modules.
         startKoin(
             this,
-            listOf(NetworkModule.it, RepositoryModule.it),
+            listOf(ContextModule.it, NetworkModule.it, RepositoryModule.it),
             logger = if (BuildConfig.DEBUG) AndroidLogger() else EmptyLogger()
         )
     }

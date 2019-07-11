@@ -16,6 +16,10 @@
     <dimen name="item_movie_poster_size">112dp</dimen>
 
     <dimen name="activity_details_movie_title_height">80dp</dimen>
+    <dimen name="activity_details_poster_width">64dp</dimen>
     <dimen name="activity_details_poster_height">96dp</dimen>
     <dimen name="activity_details_backdrop_height">128dp</dimen>
+    <dimen name="item_genre_height">22dp</dimen>
+    <dimen name="item_genre_horizontal_margin">4dp</dimen>
+    <dimen name="item_genre_vertical_margin">2dp</dimen>
 </resources>

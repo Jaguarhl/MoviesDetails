@@ -5,11 +5,19 @@
     <string name="movie_list_loading_state">Загрузка…</string>
 
     <!-- Section: Movie Common. -->
-
-    <string name="item_movie_release_date_label">Дата выхода:</string>
+    <string name="menu_search_title">Поиск</string>
 
     <!-- Section: Movie Details Activity. -->
 
-    <string name="movie_details_title">Подробнее о ленте</string>
+    <string name="item_movie_details_title">Подробнее о ленте</string>
+    <string name="item_movie_release_date_label">Дата выхода:</string>
+    <string name="item_movie_title_original_label">Оригинальное название:</string>
+    <string name="item_movie_popularity_label">Зрители:</string>
+    <string name="item_movie_popularity_count">%1$s млн</string>
+
+    <!-- Section: Date. -->
+
+    <string name="date_release_year">%1$s г.</string>
+    <string name="date_runtime_minutes">%1$d мин.</string>
 
 </resources>
