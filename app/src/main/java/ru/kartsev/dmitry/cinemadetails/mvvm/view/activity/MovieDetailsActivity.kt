@@ -56,7 +56,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         propertyHandler.attach()
 
         intent?.apply {
-            if (!hasExtra(MOVIE_ID_KEY)) return@apply
+            if (!hasExtra(MOVIE_ID_KEY) || savedInstanceState != null) return@apply
 
             val movieId = getIntExtra(MOVIE_ID_KEY, 0)
             viewModel.initializeWithMovieId(movieId)
@@ -136,6 +136,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         fun openActivityWithMovieId(id: Int, context: Context) {
             val intent = Intent(context, MovieDetailsActivity::class.java).apply {
                 putExtra(MOVIE_ID_KEY, id)
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
 
             context.startActivity(intent)
