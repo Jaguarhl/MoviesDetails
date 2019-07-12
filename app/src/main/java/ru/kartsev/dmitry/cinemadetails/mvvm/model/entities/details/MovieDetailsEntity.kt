@@ -10,7 +10,7 @@ data class MovieDetailsEntity(
     @Json(name = "belongs_to_collection")
     var belongs_to_collection: Any? = null,
     @Json(name = "budget")
-    var budget: Int? = null,
+    var budget: Long? = null,
     @Json(name = "genres")
     var genres: List<MovieGenre>? = null,
     @Json(name = "homepage")

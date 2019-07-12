@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/itemMoviePoster"
-            android:layout_width="@dimen/item_movie_poster_size"
-            android:layout_height="@dimen/item_movie_poster_size"
+            android:layout_width="@dimen/activity_details_movie_poster_size"
+            android:layout_height="@dimen/activity_details_movie_poster_size"
             android:layout_marginTop="@dimen/primary_vertical_margin"
             android:layout_marginStart="@dimen/primary_horizontal_margin"
             app:viewVisibility="@{baseObservable.isPosterVisible}"

@@ -82,6 +82,17 @@ object DataBindingAdapters : KoinComponent {
     }
 
     @JvmStatic
+    @BindingAdapter("bind:finance")
+    fun formatFinance(view: TextView, sum: Long) = with(view) {
+        val result = String.format("%,d", sum)
+        text = if (sum > 0) {
+            resources.getString(R.string.item_movie_finance, result)
+        } else {
+            resources.getString(R.string.item_movie_no_data)
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("bind:viewVisibility")
     fun viewVisibility(view: View, isVisible: Boolean) {
         view.visibility = if (isVisible) View.VISIBLE else View.GONE

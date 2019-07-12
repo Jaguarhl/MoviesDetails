@@ -16,8 +16,12 @@
     <string name="item_movie_details_title">Movie details</string>
     <string name="item_movie_release_date_label">Release date:</string>
     <string name="item_movie_title_original_label">Original title:</string>
+    <string name="item_movie_budged_label">Budget:</string>
+    <string name="item_movie_revenue_label">Revenue:</string>
     <string name="item_movie_popularity_label">Popularity:</string>
     <string name="item_movie_popularity_count">%1$s bil.</string>
+    <string name="item_movie_finance" translatable="false">$ %1$s</string>
+    <string name="item_movie_no_data">No data available</string>
 
     <!-- Section: Date. -->
 

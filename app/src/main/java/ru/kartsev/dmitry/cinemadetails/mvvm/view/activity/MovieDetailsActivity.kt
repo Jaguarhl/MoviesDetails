@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_details.*
-import kotlinx.android.synthetic.main.app_bar_default.*
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
@@ -38,10 +39,9 @@ class MovieDetailsActivity : AppCompatActivity() {
             viewModel = this@MovieDetailsActivity.viewModel
         }
 
-        setSupportActionBar(toolbarNoElevation)
+        setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            setDisplayShowTitleEnabled(true)
-            title = getString(R.string.item_movie_details_title)
+            setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }
@@ -62,6 +62,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             viewModel.initializeWithMovieId(movieId)
         }
 
+        initListeners()
         observeLiveData()
     }
 
@@ -83,6 +84,29 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     /** Section: Private Methods. */
+
+    private fun initListeners() {
+        detailsScrollView
+            ?.setOnScrollChangeListener { _: NestedScrollView?, _: Int, newScroll: Int, _: Int, oldScroll: Int ->
+                if (oldScroll == 0 && newScroll > 0) app_bar_layout.setExpanded(false)
+                else if (oldScroll > 0 && newScroll == 0) app_bar_layout.setExpanded(true)
+            }
+
+        app_bar_layout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+            var scrollRange = -1
+
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.totalScrollRange
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    viewModel.movieToolbarCollapsed = true
+                } else if (viewModel.movieToolbarCollapsed) {
+                    viewModel.movieToolbarCollapsed = false
+                }
+            }
+        })
+    }
 
     private fun observeLiveData() {
         viewModel.movieGenresLiveData.observe(this, Observer {

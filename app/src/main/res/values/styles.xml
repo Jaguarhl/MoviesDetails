@@ -1,6 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -17,7 +18,14 @@
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:fontFamily">@string/font_sans_serif_medium</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_secondary_title</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorFontMain</item>
+    </style>
+
+    <style name="TitleCollapsed">
+        <item name="android:fontFamily">@string/font_sans_serif_medium</item>
+        <item name="android:textSize">@dimen/text_secondary_title</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorFontMain</item>
     </style>

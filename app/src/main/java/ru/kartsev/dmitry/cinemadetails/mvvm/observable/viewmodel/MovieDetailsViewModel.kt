@@ -42,6 +42,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.loading)
         }
 
+    var movieToolbarCollapsed: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieToolbarCollapsed)
+        }
+
     var movieTitle: String = ""
         @Bindable get() = field
         set(value) {
@@ -105,6 +112,21 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.moviePopularity)
         }
 
+    var movieBudget: Long = 0
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieBudget)
+        }
+
+    var movieRevenue: Long = 0
+        @Bindable get() = field
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.movieRevenue)
+        }
+
+
     /** Section: Simple Properties. */
 
     private val parentJob = Job()
@@ -147,6 +169,8 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             movieReleaseDate = resultDetails?.release_date ?: ""
             movieRuntime = resultDetails?.runtime ?: 0
             moviePopularity = resultDetails?.popularity ?: 0.0
+            movieBudget = resultDetails?.budget ?: 0
+            movieRevenue = resultDetails?.revenue ?: 0
             resultDetails?.genres?.let { responseGenres ->
                 movieGenresLiveData.postValue(
                     responseGenres.map {
