@@ -8,6 +8,7 @@ object NetworkConfig {
     const val MOVIE_DETAILS = "movie/{id}"
     const val MOVIE_ALTERNATIVE_TITLES = "movie/{movie_id}/alternative_titles"
     const val MOVIE_TRANSLATIONS = "movie/{movie_id}/translations"
+    const val MOVIE_VIDEOS = "movie/{movie_id}/videos"
     const val TMDB_SETTINGS = "configuration"
     const val TMDB_LANGUAGES = "configuration/languages"
 

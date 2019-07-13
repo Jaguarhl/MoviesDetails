@@ -101,6 +101,12 @@ dependencies {
         exclude group: "com.android.support"
     }
 
+    // Android youtube player
+    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayerVersion"
+
+    // GravitySnapHelper
+    implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
+
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"

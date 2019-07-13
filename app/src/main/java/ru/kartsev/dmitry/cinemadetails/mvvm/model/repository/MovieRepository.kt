@@ -5,6 +5,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternat
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 
@@ -38,6 +39,13 @@ class MovieRepository : BaseRepository() {
         return safeApiCall(
             call = { moviesApi.getMovieTranslationsAsync(movieId).await() },
             errorMessage = "Error Fetching Movie Translations."
+        )
+    }
+
+    suspend fun getMovieVideos(movieId: Int, language: String? = null): MovieVideosEntity? {
+        return safeApiCall(
+            call = { moviesApi.getMovieVideosAsync(movieId, language).await() },
+            errorMessage = "Error Fetching Movie Videos."
         )
     }
 }

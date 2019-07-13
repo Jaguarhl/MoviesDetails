@@ -231,6 +231,7 @@
                     tools:listitem="@layout/item_genre" />
 
                 <TextView
+                    android:id="@+id/activityDetailsMovieOverview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
@@ -242,6 +243,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresListRecycler"
                     tools:text="@tools:sample/lorem/random" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activityDetailsMovieVideosListRecycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_horizontal_margin"
+                    android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_video" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

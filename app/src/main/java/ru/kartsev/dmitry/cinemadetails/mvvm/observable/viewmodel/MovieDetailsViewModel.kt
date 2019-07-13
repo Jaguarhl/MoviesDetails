@@ -13,18 +13,17 @@ import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
-import ru.kartsev.dmitry.cinemadetails.common.utils.Util
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
-    private val util: Util by inject()
 
     /** Section: Bindable Properties. */
 
@@ -126,7 +125,6 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieRevenue)
         }
 
-
     /** Section: Simple Properties. */
 
     private val parentJob = Job()
@@ -136,6 +134,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     var movieBackdropSize: String = ""
     val movieGenresLiveData: MutableLiveData<List<GenreObservable>> = MutableLiveData()
+    val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
 
     /** Section: Initialization. */
 
@@ -159,34 +158,55 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals("ru", true) }
                 ?.data
 
+        val resultVideos = movieRepository.getMovieVideos(id, LANGUAGE)
+
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
             movieTitleOriginal = resultDetails?.original_title ?: ""
             movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
             moviePosterPath = resultDetails?.poster_path ?: ""
             movieBackdropPath = resultDetails?.backdrop_path ?: ""
-            movieOverallInfo = "${resultDetails?.production_countries?.map { it.name}?.joinToString(" / ")}"
+            movieOverallInfo = "${resultDetails?.production_countries?.map { it.name }?.joinToString(" / ")}"
             movieReleaseDate = resultDetails?.release_date ?: ""
             movieRuntime = resultDetails?.runtime ?: 0
             moviePopularity = resultDetails?.popularity ?: 0.0
             movieBudget = resultDetails?.budget ?: 0
             movieRevenue = resultDetails?.revenue ?: 0
-            resultDetails?.genres?.let { responseGenres ->
-                movieGenresLiveData.postValue(
-                    responseGenres.map {
-                        GenreObservable(
-                            it.id ?: 0,
-                            it.name ?: ""
-                        )
-                    }
-                )
-            }
+
+            resultDetails?.genres?.let { getMovieGenres(it) }
+
+            resultVideos?.results?.let { getMovieVideos(it) }
         }
         Log.d(
             this@MovieDetailsViewModel::class.java.simpleName,
-            "${translationDetails.toString()} \n ${movieGenresLiveData.value}"
+            "[$id]: ${translationDetails.toString()} \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
         )
 
         loading = false
+    }
+
+    private fun getMovieVideos(list: List<MovieVideo>) {
+        movieVideosLiveData.postValue(
+            list.map {
+                VideoObservable(
+                    it.key,
+                    it.name,
+                    it.site,
+                    it.size,
+                    it.type
+                )
+            }
+        )
+    }
+
+    private fun getMovieGenres(responseGenres: List<MovieGenre>) {
+        movieGenresLiveData.postValue(
+            responseGenres.map {
+                GenreObservable(
+                    it.id ?: 0,
+                    it.name ?: ""
+                )
+            }
+        )
     }
 }

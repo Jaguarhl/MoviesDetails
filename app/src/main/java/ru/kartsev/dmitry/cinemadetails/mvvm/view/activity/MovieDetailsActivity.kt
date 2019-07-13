@@ -18,11 +18,14 @@ import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.GenresListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.VideoListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
+import androidx.recyclerview.widget.LinearSnapHelper
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
     lateinit var genresAdapter: GenresListAdapter
+    lateinit var videosAdapter: VideoListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,15 @@ class MovieDetailsActivity : AppCompatActivity() {
         activityDetailsMovieGenresListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = genresAdapter
+        }
+
+        videosAdapter = VideoListAdapter(lifecycle)
+
+        activityDetailsMovieVideosListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = videosAdapter
+            LinearSnapHelper().attachToRecyclerView(this)
         }
 
         propertyHandler.attach()
@@ -111,6 +123,10 @@ class MovieDetailsActivity : AppCompatActivity() {
     private fun observeLiveData() {
         viewModel.movieGenresLiveData.observe(this, Observer {
             genresAdapter.updateItems(it)
+        })
+
+        viewModel.movieVideosLiveData.observe(this, Observer {
+            videosAdapter.updateItems(it)
         })
     }
 

@@ -8,11 +8,13 @@ import retrofit2.http.Query
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_ALTERNATIVE_TITLES
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_DETAILS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_TRANSLATIONS
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_VIDEOS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.POPULAR_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 
 interface MoviesApi {
     @GET(POPULAR_MOVIE)
@@ -37,4 +39,10 @@ interface MoviesApi {
     fun getMovieTranslationsAsync(
         @Path("movie_id") movie_id: Int
     ): Deferred<Response<MovieTranslationsEntity>>
+
+    @GET(MOVIE_VIDEOS)
+    fun getMovieVideosAsync(
+        @Path("movie_id") movie_id: Int,
+        @Query("language") language: String?
+    ): Deferred<Response<MovieVideosEntity>>
 }
