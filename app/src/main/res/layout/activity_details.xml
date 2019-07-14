@@ -63,6 +63,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.movieTitle}"
                         android:textAppearance="@style/TitleCollapsed"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         bind:viewVisibility="@{viewModel.movieToolbarCollapsed}"/>
 
