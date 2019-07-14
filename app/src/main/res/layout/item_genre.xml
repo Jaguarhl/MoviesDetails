@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".mvvm.view.activity.MovieDetailsActivity">
 
     <data class="ItemGenreBinding">
@@ -16,22 +17,21 @@
             type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
     </data>
 
-    <LinearLayout
+    <com.google.android.material.chip.Chip
+        style="@style/Widget.MaterialComponents.Chip.Action"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_genre_height"
+        android:layout_height="wrap_content"
+        android:text="@{baseObservable.name}"
+        android:textAppearance="@style/genreChipTextAppearance"
+        android:textColor="@color/colorFontMain"
+        app:chipBackgroundColor="@color/colorWhite"
+        app:chipStrokeColor="@color/colorFontMain"
+        app:chipStrokeWidth="1dp"
+        app:chipCornerRadius="11dp"
+        app:chipIconEnabled="false"
         android:paddingTop="@dimen/item_genre_vertical_margin"
-        android:paddingEnd="@dimen/item_genre_horizontal_margin"
         android:paddingBottom="@dimen/item_genre_vertical_margin"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{baseObservable.name}"
-            android:textSize="@dimen/text_tertiary"
-            android:textStyle="italic"
-            tools:text="боевик"/>
-
-    </LinearLayout>
+        android:layout_marginEnd="@dimen/secondary_horizontal_margin"
+        tools:text="боевик"/>
 
 </layout>
