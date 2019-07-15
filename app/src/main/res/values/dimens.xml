@@ -24,4 +24,7 @@
     <dimen name="activity_details_movie_title_margin">-16dp</dimen>
     <dimen name="item_video_width">320dp</dimen>
     <dimen name="item_video_height">180dp</dimen>
+    <dimen name="item_cast_image_width">85dp</dimen>
+    <dimen name="item_cast_image_height">127dp</dimen>
+    <dimen name="tertiary_horizontal_margin">4dp</dimen>
 </resources>

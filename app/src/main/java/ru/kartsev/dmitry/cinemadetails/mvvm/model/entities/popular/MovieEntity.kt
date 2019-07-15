@@ -1,6 +1,5 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular
 
-
 import com.squareup.moshi.Json
 
 data class MovieEntity(

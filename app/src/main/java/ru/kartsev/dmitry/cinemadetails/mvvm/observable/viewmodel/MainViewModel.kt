@@ -48,7 +48,7 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
         getTmdbSettings()
         val config = PagedList.Config.Builder().apply {
             setPageSize(PAGE_SIZE)
-            setEnablePlaceholders(true)
+            setEnablePlaceholders(false)
         }.build()
 
         popularMovies = initializedPagedListBuilder(config).build()
@@ -70,38 +70,6 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
             settingsRepository.getTmdbSettings()
         }
     }
-
-    /*private fun fetchMovies(pageToDisplay: Int) {
-        scope.launch {
-            if (currentPage == totalPagesCount && totalPagesCount > 0) return@launch
-
-            val serverAnswer = movieRepository.getPopularMovies(pageToDisplay) ?: return@launch
-
-            with(serverAnswer) {
-                totalResultsCount = total_results
-                currentPage = page
-                totalPagesCount = total_pages
-                val observablesList = results.map {
-                    MovieObservable(
-                        it.id,
-                        it.vote_average.toString(),
-                        it.title,
-                        it.overview,
-                        it.posterPath ?: "",
-                        it.backdoorPath ?: "",
-                        it.adult,
-                        it.releaseDate ?: ""
-                    )
-                }
-
-                withContext(Dispatchers.Main) {
-                    popularMovies.addAll(observablesList)
-
-                    action = ACTION_DISPLAY_RESULTS
-                }
-            }
-        }
-    }*/
 
     private fun initializedPagedListBuilder(config: PagedList.Config):
         LivePagedListBuilder<Int, MovieObservable> {

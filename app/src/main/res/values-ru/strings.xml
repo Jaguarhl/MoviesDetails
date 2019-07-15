@@ -17,6 +17,7 @@
     <string name="item_movie_popularity_label">Зрители:</string>
     <string name="item_movie_popularity_count">%1$s млн</string>
     <string name="item_movie_no_data">Нет данных</string>
+    <string name="item_movie_cast_credits_label">В главных ролях:</string>
 
 
     <!-- Section: Date. -->

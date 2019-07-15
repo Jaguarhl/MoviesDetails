@@ -220,33 +220,73 @@
                     app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRevenueLabel"
                     tools:text="160000000 $"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activityDetailsMovieGenresListRecycler"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/activityDetailsMovieGenresListGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/item_genre_height"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
                     android:layout_marginEnd="@dimen/primary_horizontal_margin"
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:singleSelection="true"
+                    app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
+                    app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRevenue"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/item_genre" />
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRevenue" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/activityDetailsMovieKeywordsListGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/item_genre_height"
+                    android:layout_marginTop="@dimen/primary_vertical_margin"
+                    android:layout_marginEnd="@dimen/primary_horizontal_margin"
+                    android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:singleSelection="true"
+                    app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
+                    app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresListGroup" />
 
                 <TextView
                     android:id="@+id/activityDetailsMovieOverview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
-                    android:text="@{viewModel.movieDescription}"
-                    android:textSize="@dimen/text_secondary"
                     android:layout_marginStart="@dimen/primary_horizontal_margin"
                     android:layout_marginEnd="@dimen/primary_horizontal_margin"
+                    android:text="@{viewModel.movieDescription}"
+                    android:textSize="@dimen/text_secondary"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresListRecycler"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieKeywordsListGroup"
                     tools:text="@tools:sample/lorem/random" />
+
+                <TextView
+                    android:id="@+id/activityDetailsMovieCreditsCastLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_vertical_margin"
+                    android:text="@string/item_movie_cast_credits_label"
+                    android:textSize="@dimen/text_secondary"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activityDetailsMovieCastListRecycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/secondary_horizontal_margin"
+                    android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCreditsCastLabel"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_credits" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activityDetailsMovieVideosListRecycler"
@@ -256,7 +296,7 @@
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_video" />
 

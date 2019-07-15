@@ -12,11 +12,16 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
+import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
 import kotlin.coroutines.CoroutineContext
 
@@ -134,6 +139,8 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     var movieBackdropSize: String = ""
     val movieGenresLiveData: MutableLiveData<List<GenreObservable>> = MutableLiveData()
+    val movieKeywordsLiveData: MutableLiveData<List<KeywordObservable>> = MutableLiveData()
+    val movieCreditsCastLiveData: MutableLiveData<List<CastObservable>> = MutableLiveData()
     val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
 
     /** Section: Initialization. */
@@ -155,10 +162,12 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
         // FIXME: Move language param to variable.
         val translationDetails =
-            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals("ru", true) }
+            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals(LANGUAGE, true) }
                 ?.data
 
         val resultVideos = movieRepository.getMovieVideos(id, LANGUAGE)
+        val resultKeywords = movieRepository.getMovieKeywords(id)
+        val resultCredits = movieRepository.getMovieCredites(id)
 
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
@@ -175,6 +184,10 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
             resultDetails?.genres?.let { getMovieGenres(it) }
 
+            resultKeywords?.keywords?.let { getMovieKeywords(it) }
+
+            resultCredits?.cast?.let { getMovieCastCredits(it) }
+
             resultVideos?.results?.let { getMovieVideos(it) }
         }
         Log.d(
@@ -183,6 +196,22 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         )
 
         loading = false
+    }
+
+    private fun getMovieCastCredits(list: List<Cast>) {
+        movieCreditsCastLiveData.postValue(
+            list.filter {
+                it.order <= MAX_CAST_ORDER
+            }
+                .map {
+                CastObservable(
+                    it.name,
+                    it.credit_id,
+                    it.cast_id,
+                    it.profile_path ?: ""
+                )
+            }
+        )
     }
 
     private fun getMovieVideos(list: List<MovieVideo>) {
@@ -205,6 +234,17 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
                 GenreObservable(
                     it.id ?: 0,
                     it.name ?: ""
+                )
+            }
+        )
+    }
+
+    private fun getMovieKeywords(list: List<Keyword>) {
+        movieKeywordsLiveData.postValue(
+            list.map {
+                KeywordObservable(
+                    it.name,
+                    it.id
                 )
             }
         )

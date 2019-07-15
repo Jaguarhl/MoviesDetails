@@ -34,6 +34,7 @@
         <item name="android:textSize">@dimen/text_tertiary</item>
         <item name="android:fontFamily">monospace</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:color">@color/colorFontMain</item>
     </style>
 
 </resources>

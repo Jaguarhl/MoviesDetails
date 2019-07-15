@@ -1,9 +1,12 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
 import org.koin.standalone.inject
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
@@ -18,6 +21,13 @@ class MovieRepository : BaseRepository() {
         return safeApiCall(
             call = { moviesApi.getPopularMovieAsync(language, page).await() },
             errorMessage = "Error Fetching Popular Movies."
+        )
+    }
+
+    suspend fun getNowPlayingMovie(page: Int, language: String? = null, region: String? = language): NowPlayingMoviesEntity? {
+        return safeApiCall(
+            call = { moviesApi.getNowPlayingMovieAsync(language, page, region).await() },
+            errorMessage = "Error Fetching Now Playing Movies."
         )
     }
 
@@ -46,6 +56,20 @@ class MovieRepository : BaseRepository() {
         return safeApiCall(
             call = { moviesApi.getMovieVideosAsync(movieId, language).await() },
             errorMessage = "Error Fetching Movie Videos."
+        )
+    }
+
+    suspend fun getMovieKeywords(movieId: Int): MovieKeywordsEntity? {
+        return safeApiCall(
+            call = { moviesApi.getMovieKeywordsAsync(movieId).await() },
+            errorMessage = "Error Fetching Movie Keywords."
+        )
+    }
+
+    suspend fun getMovieCredites(movieId: Int): MovieCreditsEntity? {
+        return safeApiCall(
+            call = { moviesApi.getMovieCreditsAsync(movieId).await() },
+            errorMessage = "Erroro Fetching Movie Credits."
         )
     }
 }

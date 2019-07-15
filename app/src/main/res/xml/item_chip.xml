@@ -1,0 +1,8 @@
+<chip style="@style/Widget.MaterialComponents.Chip.Action"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:textAppearance="@style/genreChipTextAppearance"
+    app:chipCornerRadius="22dp"
+    app:chipIconEnabled="false"
+    app:chipEndPadding="@dimen/secondary_horizontal_margin"
+    android:checkable="false" />

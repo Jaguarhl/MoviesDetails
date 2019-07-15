@@ -22,8 +22,9 @@ class Util {
     }
 
     fun formatTime(time: String, innerPattern: String, pattern: String): String {
+        if (time.isEmpty()) return ""
         val inDateFormat = SimpleDateFormat(innerPattern, Locale.getDefault())
-        var result: String = ""
+        var result = ""
         try {
             val timeFromString = inDateFormat.parse(time)
 

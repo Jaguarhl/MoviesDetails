@@ -28,7 +28,7 @@ object DataBindingAdapters : KoinComponent {
         defaultPlaceholder: Drawable? = null,
         errorPlaceholder: Drawable? = null,
         isCenterInside: Boolean = false,
-        imageSize: String?
+        imageSize: String? = null
     ) {
         if (uri.isNullOrEmpty()) return
 

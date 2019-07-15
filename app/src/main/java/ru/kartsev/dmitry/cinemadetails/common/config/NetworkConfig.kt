@@ -5,10 +5,13 @@ object NetworkConfig {
 
     const val BASE_URL = "https://api.themoviedb.org/3/"
     const val POPULAR_MOVIE = "movie/popular"
+    const val NOW_PLAYING_MOVIE = "movie/now_playing"
     const val MOVIE_DETAILS = "movie/{id}"
     const val MOVIE_ALTERNATIVE_TITLES = "movie/{movie_id}/alternative_titles"
     const val MOVIE_TRANSLATIONS = "movie/{movie_id}/translations"
     const val MOVIE_VIDEOS = "movie/{movie_id}/videos"
+    const val MOVIE_KEYWORDS = "movie/{movie_id}/keywords"
+    const val MOVIE_CREDITS = "movie/{movie_id}/credits"
     const val TMDB_SETTINGS = "configuration"
     const val TMDB_LANGUAGES = "configuration/languages"
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+
+    <data class="ItemCastBinding">
+        <variable
+            name="baseObservable"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable" />
+
+        <variable
+            name="viewModel"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+    </data>
+    
+    <LinearLayout
+        android:layout_width="@dimen/item_cast_image_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/tertiary_horizontal_margin"
+        android:orientation="vertical">
+        
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/item_cast_image_width"
+            android:layout_height="@dimen/item_cast_image_height"
+            android:scaleType="fitXY"
+            bind:image_uri="@{baseObservable.profilePath}"
+            bind:image_size="@{baseObservable.imageSize}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/secondary_horizontal_margin"
+            android:layout_marginEnd="@dimen/secondary_horizontal_margin"
+            android:text="@{baseObservable.name}"
+            android:textSize="@dimen/text_secondary"
+            android:textColor="@color/colorBlack"
+            tools:text="@tools:sample/lorem"/>
+        
+    </LinearLayout>
+    
+</layout>

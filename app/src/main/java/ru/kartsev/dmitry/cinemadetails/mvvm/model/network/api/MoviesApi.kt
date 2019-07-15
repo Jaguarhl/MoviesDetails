@@ -6,13 +6,19 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_ALTERNATIVE_TITLES
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_CREDITS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_DETAILS
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_KEYWORDS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_TRANSLATIONS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_VIDEOS
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.NOW_PLAYING_MOVIE
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.POPULAR_MOVIE
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 
@@ -45,4 +51,21 @@ interface MoviesApi {
         @Path("movie_id") movie_id: Int,
         @Query("language") language: String?
     ): Deferred<Response<MovieVideosEntity>>
+
+    @GET(MOVIE_KEYWORDS)
+    fun getMovieKeywordsAsync(
+        @Path("movie_id") movie_id: Int
+    ): Deferred<Response<MovieKeywordsEntity>>
+
+    @GET(NOW_PLAYING_MOVIE)
+    fun getNowPlayingMovieAsync(
+        @Query("language") language: String?,
+        @Query("page") page: Int,
+        @Query("region") region: String?
+    ): Deferred<Response<NowPlayingMoviesEntity>>
+
+    @GET(MOVIE_CREDITS)
+    fun getMovieCreditsAsync(
+        @Path("movie_id") movie_id: Int
+    ): Deferred<Response<MovieCreditsEntity>>
 }

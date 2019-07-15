@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -17,14 +18,18 @@ import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.GenresListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.VideoListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 import androidx.recyclerview.widget.LinearSnapHelper
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
-    lateinit var genresAdapter: GenresListAdapter
+    lateinit var castAdapter: CreditsCastListAdapter
     lateinit var videosAdapter: VideoListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +54,12 @@ class MovieDetailsActivity : AppCompatActivity() {
             setHomeButtonEnabled(true)
         }
 
-        genresAdapter = GenresListAdapter(viewModel)
+        castAdapter = CreditsCastListAdapter(viewModel)
 
-        activityDetailsMovieGenresListRecycler.apply {
+        activityDetailsMovieCastListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = genresAdapter
+            setHasFixedSize(true)
+            adapter = castAdapter
         }
 
         videosAdapter = VideoListAdapter(lifecycle)
@@ -122,12 +128,43 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun observeLiveData() {
         viewModel.movieGenresLiveData.observe(this, Observer {
-            genresAdapter.updateItems(it)
+            addGenresChips(it)
         })
 
         viewModel.movieVideosLiveData.observe(this, Observer {
             videosAdapter.updateItems(it)
         })
+
+        viewModel.movieKeywordsLiveData.observe(this, Observer {
+            addKeywords(it)
+        })
+
+        viewModel.movieCreditsCastLiveData.observe(this, Observer {
+            castAdapter.updateItems(it)
+        })
+    }
+
+    private fun addKeywords(list: List<KeywordObservable>?) {
+        list?.forEach {
+            activityDetailsMovieKeywordsListGroup.addView(getChip(it.name, it.id))
+        }
+    }
+
+    private fun addGenresChips(list: List<GenreObservable>?) {
+        list?.forEach {
+            activityDetailsMovieGenresListGroup.addView(getChip(it.name, it.id))
+        }
+    }
+
+    private fun getChip(textToSet: String, genreId: Int): Chip {
+        return Chip(this).apply {
+            setChipDrawable(ChipDrawable.createFromResource(context, R.xml.item_chip))
+            text = textToSet
+            setOnClickListener {
+                // FIXME: Implement click action
+                Toast.makeText(context, "Chip with id: $genreId clicked.", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     /** Section: Property Handler. */
@@ -139,7 +176,8 @@ class MovieDetailsActivity : AppCompatActivity() {
     ) : DefaultPropertyHandler<MovieDetailsActivity>(reference) {
         override fun onPropertyChanged(reference: MovieDetailsActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
-                BR.action -> when (viewModel.action) { }
+                BR.action -> when (viewModel.action) {
+                }
             }
         }
 

@@ -22,6 +22,7 @@
     <string name="item_movie_popularity_count">%1$s bil.</string>
     <string name="item_movie_finance" translatable="false">$ %1$s</string>
     <string name="item_movie_no_data">No data available</string>
+    <string name="item_movie_cast_credits_label">Top Billed Cast</string>
 
     <!-- Section: Date. -->
 
