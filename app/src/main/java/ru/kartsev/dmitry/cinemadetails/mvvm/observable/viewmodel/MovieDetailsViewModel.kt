@@ -56,6 +56,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieVideoEnabled)
         }
 
+    var movieSimilarMoviesEnabled: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieSimilarMoviesEnabled)
+        }
+
     var movieToolbarCollapsed: Boolean = false
         @Bindable get() = field
         set(value) {
@@ -228,6 +235,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     }
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
+        movieSimilarMoviesEnabled = list.isNotEmpty()
         movieSimilarMoviesLiveData.postValue(
             list.take(MAX_SIMILAR_MOVIES)
                 .map {
@@ -248,7 +256,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     }
 
     private fun getMovieVideos(list: List<MovieVideo>) {
-        movieVideoEnabled = true
+        movieVideoEnabled = list.isNotEmpty()
         movieVideosLiveData.postValue(
             list.map {
                 VideoObservable(it.key, it.name, it.site, it.size, it.type)

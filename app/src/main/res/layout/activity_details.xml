@@ -329,7 +329,8 @@
                     android:textSize="@dimen/text_secondary"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler" />
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler"
+                    bind:viewVisibility="@{viewModel.movieSimilarMoviesEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activityDetailsMovieSimilarListRecycler"
