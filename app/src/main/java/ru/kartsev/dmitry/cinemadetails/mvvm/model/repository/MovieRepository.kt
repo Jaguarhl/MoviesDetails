@@ -8,6 +8,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslat
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
@@ -69,7 +70,18 @@ class MovieRepository : BaseRepository() {
     suspend fun getMovieCredites(movieId: Int): MovieCreditsEntity? {
         return safeApiCall(
             call = { moviesApi.getMovieCreditsAsync(movieId).await() },
-            errorMessage = "Erroro Fetching Movie Credits."
+            errorMessage = "Error Fetching Movie Credits."
+        )
+    }
+
+    suspend fun getSimilarMovies(
+        movieId: Int,
+        page: Int? = null,
+        language: String? = null
+    ): SimilarMoviesEntity? {
+        return safeApiCall(
+            call = { moviesApi.getSimilarMoviesAsync(movieId, language, page).await() },
+            errorMessage = "Error Fetching Similar Movies."
         )
     }
 }

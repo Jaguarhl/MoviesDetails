@@ -7,4 +7,5 @@ object AppConfig {
     // FIXME: Made this option
     const val LANGUAGE = "ru"
     const val MAX_CAST_ORDER = 4
+    const val MAX_SIMILAR_MOVIES = 7
 }

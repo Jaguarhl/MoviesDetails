@@ -10,8 +10,8 @@ android {
         applicationId "ru.kartsev.dmitry.cinemadetails.test"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
-        versionName "0.1.7"
+        versionCode 5
+        versionName "0.1.9"
         testApplicationId "ru.kartsev.dmitry.cinemadetails"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
@@ -106,6 +106,10 @@ dependencies {
 
     // GravitySnapHelper
     implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
+
+    // Skeleton (shimmer loading)
+    implementation "com.ethanhua:skeleton:$skeletonVersion"
+    implementation "io.supercharge:shimmerlayout:$shimmerLayoutVersion"
 
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"

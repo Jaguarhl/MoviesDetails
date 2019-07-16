@@ -6,37 +6,37 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.databinding.ItemGenreBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
+import ru.kartsev.dmitry.cinemadetails.databinding.ItemSimilarMovieBinding
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DefaultDiffCallback
 
-class GenresListAdapter(
+class SimilarMoviesListAdapter(
     private val viewModel: MovieDetailsViewModel
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items: MutableList<GenreObservable> = mutableListOf()
+    private val items: MutableList<SimilarMovieObservable> = mutableListOf()
 
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate(
-            inflater, R.layout.item_genre,
+            inflater, R.layout.item_similar_movie,
             parent, false
-        ) as ItemGenreBinding
+        ) as ItemSimilarMovieBinding
 
-        return ItemGenreViewHolder(binding)
+        return ItemSimilarMovieViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val observable = items[position]
 
-        with(holder as ItemGenreViewHolder) {
+        with(holder as ItemSimilarMovieViewHolder) {
             bind(observable, viewModel)
         }
     }
 
-    fun updateItems(list: List<GenreObservable>) {
+    fun updateItems(list: List<SimilarMovieObservable>) {
         val callback = DefaultDiffCallback(items, list)
         val result = DiffUtil.calculateDiff(callback)
 
@@ -48,11 +48,12 @@ class GenresListAdapter(
         result.dispatchUpdatesTo(this)
     }
 
-    class ItemGenreViewHolder(
-        private val binding: ItemGenreBinding) :
+    class ItemSimilarMovieViewHolder(
+        private val binding: ItemSimilarMovieBinding
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            observable: GenreObservable,
+            observable: SimilarMovieObservable,
             viewModel: MovieDetailsViewModel) {
             binding.baseObservable = observable
             binding.viewModel = viewModel

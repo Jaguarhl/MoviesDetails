@@ -25,12 +25,15 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObser
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.SimilarMoviesListAdapter
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
     lateinit var castAdapter: CreditsCastListAdapter
     lateinit var videosAdapter: VideoListAdapter
+    lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,22 +57,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             setHomeButtonEnabled(true)
         }
 
-        castAdapter = CreditsCastListAdapter(viewModel)
-
-        activityDetailsMovieCastListRecycler.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = castAdapter
-        }
-
-        videosAdapter = VideoListAdapter(lifecycle)
-
-        activityDetailsMovieVideosListRecycler.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = videosAdapter
-            LinearSnapHelper().attachToRecyclerView(this)
-        }
+        initRecyclerViews()
 
         propertyHandler.attach()
 
@@ -82,6 +70,34 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         initListeners()
         observeLiveData()
+    }
+
+    private fun initRecyclerViews() {
+        castAdapter = CreditsCastListAdapter(viewModel)
+
+        activityDetailsMovieCastListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = castAdapter
+        }
+
+        similarMoviesListAdapter = SimilarMoviesListAdapter(viewModel)
+
+        activityDetailsMovieSimilarListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = similarMoviesListAdapter
+            LinearSnapHelper().attachToRecyclerView(this)
+        }
+
+        videosAdapter = VideoListAdapter(lifecycle)
+
+        activityDetailsMovieVideosListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = videosAdapter
+            LinearSnapHelper().attachToRecyclerView(this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -136,23 +152,33 @@ class MovieDetailsActivity : AppCompatActivity() {
         })
 
         viewModel.movieKeywordsLiveData.observe(this, Observer {
-            addKeywords(it)
+            addKeywordsChips(it)
         })
 
         viewModel.movieCreditsCastLiveData.observe(this, Observer {
             castAdapter.updateItems(it)
         })
+
+        viewModel.movieSimilarMoviesLiveData.observe(this, Observer {
+            similarMoviesListAdapter.updateItems(it)
+        })
     }
 
-    private fun addKeywords(list: List<KeywordObservable>?) {
-        list?.forEach {
-            activityDetailsMovieKeywordsListGroup.addView(getChip(it.name, it.id))
+    private fun addKeywordsChips(list: List<KeywordObservable>?) {
+        with(activityDetailsMovieKeywordsListGroup) {
+            removeAllViews()
+            list?.forEach {
+                addView(getChip(it.name, it.id))
+            }
         }
     }
 
     private fun addGenresChips(list: List<GenreObservable>?) {
-        list?.forEach {
-            activityDetailsMovieGenresListGroup.addView(getChip(it.name, it.id))
+        with(activityDetailsMovieGenresListGroup) {
+            removeAllViews()
+            list?.forEach {
+                addView(getChip(it.name, it.id))
+            }
         }
     }
 
@@ -177,7 +203,15 @@ class MovieDetailsActivity : AppCompatActivity() {
         override fun onPropertyChanged(reference: MovieDetailsActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
                 BR.action -> when (viewModel.action) {
+                    ACTION_OPEN_MOVIE -> {
+                        finish()
+                        viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
+                    }
+
+                    else -> return@with
                 }
+
+                else -> return@with
             }
         }
 

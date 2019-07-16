@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+
+    <data class="ItemSimilarMovieBinding">
+
+        <import type="android.view.View" />
+
+        <variable
+            name="baseObservable"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable" />
+
+        <variable
+            name="viewModel"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/secondary_horizontal_margin"
+        android:onClick="@{(view) -> viewModel.movieSimilarItemClicked(baseObservable.id)}">
+
+        <ImageView
+            android:id="@+id/itemSimilarMoviePoster"
+            android:layout_width="240dp"
+            android:layout_height="135dp"
+            android:layout_marginTop="@dimen/tertiary_vertical_margin"
+            app:image_uri="@{baseObservable.image}"
+            app:image_placeholder="@{@drawable/ic_image}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic"/>
+
+        <TextView
+            android:id="@+id/itemSimilarMovieTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{baseObservable.title}"
+            android:textSize="@dimen/text_secondary"
+            app:layout_constraintTop_toBottomOf="@id/itemSimilarMoviePoster"
+            app:layout_constraintStart_toStartOf="@id/itemSimilarMoviePoster"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Movie title"/>
+
+        <TextView
+            android:id="@+id/itemSimilarMovieRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{baseObservable.voteAverage}"
+            android:textSize="@dimen/text_secondary"
+            android:layout_marginStart="@dimen/secondary_horizontal_margin"
+            android:layout_marginEnd="@dimen/tertiary_horizontal_margin"
+            app:layout_constraintTop_toTopOf="@id/itemSimilarMovieTitle"
+            app:layout_constraintEnd_toStartOf="@id/itemSimilarMovieRatingStar"
+            tools:text="8.5"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemSimilarMovieRatingStar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="@color/colorFontMain"
+            app:srcCompat="@drawable/ic_star_black"
+            app:layout_constraintTop_toTopOf="@id/itemSimilarMovieTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/itemSimilarMovieTitle"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

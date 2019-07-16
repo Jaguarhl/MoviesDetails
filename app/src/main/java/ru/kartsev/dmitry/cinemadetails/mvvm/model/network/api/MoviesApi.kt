@@ -9,6 +9,7 @@ import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_ALTERNA
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_CREDITS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_DETAILS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_KEYWORDS
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_SIMILAR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_TRANSLATIONS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_VIDEOS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.NOW_PLAYING_MOVIE
@@ -20,6 +21,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslat
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 
 interface MoviesApi {
@@ -68,4 +70,11 @@ interface MoviesApi {
     fun getMovieCreditsAsync(
         @Path("movie_id") movie_id: Int
     ): Deferred<Response<MovieCreditsEntity>>
+
+    @GET(MOVIE_SIMILAR)
+    fun getSimilarMoviesAsync(
+        @Path("movie_id") movie_id: Int,
+        @Query("language") language: String?,
+        @Query("page") page: Int?
+    ): Deferred<Response<SimilarMoviesEntity>>
 }

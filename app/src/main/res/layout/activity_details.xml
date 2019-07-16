@@ -177,13 +177,45 @@
                     tools:text="Movie title original" />
 
                 <TextView
+                    android:id="@+id/activityDetailsMovieRatingLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_movie_rating_label"
+                    android:textSize="@dimen/text_tertiary"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleOriginalLabel" />
+
+                <TextView
+                    android:id="@+id/activityDetailsMovieRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/secondary_horizontal_margin"
+                    android:text="@{viewModel.movieRating}"
+                    android:textSize="@dimen/text_tertiary"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieRatingLabel"
+                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRatingLabel"
+                    tools:text="8.5" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/itemDetailsMovieRatingStar"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:tint="@color/colorFontMain"
+                    android:layout_marginStart="@dimen/tertiary_horizontal_margin"
+                    app:srcCompat="@drawable/ic_star_black"
+                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRating"
+                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieRating"
+                    app:layout_constraintBottom_toBottomOf="@id/activityDetailsMovieRating"/>
+
+                <TextView
                     android:id="@+id/activityDetailsMovieBudgetLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/item_movie_budged_label"
                     android:textSize="@dimen/text_tertiary"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleOriginal" />
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRatingLabel" />
 
                 <TextView
                     android:id="@+id/activityDetailsMovieBudget"
@@ -288,6 +320,41 @@
                     tools:itemCount="3"
                     tools:listitem="@layout/item_credits" />
 
+                <TextView
+                    android:id="@+id/activityDetailsMovieSimilarLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_vertical_margin"
+                    android:text="@string/item_movie_similar_label"
+                    android:textSize="@dimen/text_secondary"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activityDetailsMovieSimilarListRecycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/secondary_horizontal_margin"
+                    android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarLabel"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_similar_movie" />
+
+                <TextView
+                    android:id="@+id/activityDetailsMovieVideosLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_vertical_margin"
+                    android:text="@string/item_movie_details_videos_label"
+                    android:textSize="@dimen/text_secondary"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarListRecycler"
+                    bind:viewVisibility="@{viewModel.movieVideoEnabled}"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activityDetailsMovieVideosListRecycler"
                     android:layout_width="0dp"
@@ -296,7 +363,7 @@
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieVideosLabel"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_video" />
 

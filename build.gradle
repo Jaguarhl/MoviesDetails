@@ -21,6 +21,8 @@ buildscript {
         picassoVersion = "2.71828"
         youtubePlayerVersion = "10.0.3"
         gravitySnapHelperVersion = "2.0"
+        skeletonVersion = '1.1.2'
+        shimmerLayoutVersion = '2.1.0'
     }
     repositories {
         google()
@@ -39,7 +41,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
     }
 }
 
