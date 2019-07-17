@@ -13,6 +13,7 @@ object NetworkConfig {
     const val MOVIE_KEYWORDS = "movie/{movie_id}/keywords"
     const val MOVIE_CREDITS = "movie/{movie_id}/credits"
     const val MOVIE_SIMILAR = "movie/{movie_id}/similar"
+    const val MOVIE_RELEASE_DATES = "movie/{movie_id}/release_dates"
     const val TMDB_SETTINGS = "configuration"
     const val TMDB_LANGUAGES = "configuration/languages"
 

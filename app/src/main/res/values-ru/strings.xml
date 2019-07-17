@@ -10,7 +10,7 @@
     <!-- Section: Movie Details Activity. -->
 
     <string name="item_movie_details_title">Подробнее о ленте</string>
-    <string name="item_movie_release_date_label">Дата выхода:</string>
+    <string name="item_movie_release_date_label">Премьера:</string>
     <string name="item_movie_title_original_label">Оригинальное название:</string>
     <string name="item_movie_budged_label">Бюджет:</string>
     <string name="item_movie_revenue_label">Сборы:</string>

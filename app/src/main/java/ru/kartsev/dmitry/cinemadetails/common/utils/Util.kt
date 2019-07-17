@@ -21,9 +21,13 @@ class Util {
         format(Date(time))
     }
 
-    fun formatTime(time: String, innerPattern: String, pattern: String): String {
+    fun formatTime(time: String, innerPattern: String? = null, pattern: String): String {
         if (time.isEmpty()) return ""
-        val inDateFormat = SimpleDateFormat(innerPattern, Locale.getDefault())
+        val inDateFormat = if (innerPattern.isNullOrEmpty().not()) {
+            SimpleDateFormat(innerPattern, Locale.getDefault())
+        } else {
+            SimpleDateFormat(time, Locale.getDefault())
+        }
         var result = ""
         try {
             val timeFromString = inDateFormat.parse(time)

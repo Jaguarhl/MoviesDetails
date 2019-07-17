@@ -15,7 +15,9 @@ import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_SIMILAR_MOVIES
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
+import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
@@ -32,6 +34,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
+    private val util: Util by inject()
 
     /** Section: Bindable Properties. */
 
@@ -205,6 +208,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         val resultKeywords = movieRepository.getMovieKeywords(id)
         val resultCredits = movieRepository.getMovieCredites(id)
         val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = LANGUAGE)
+        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
@@ -225,21 +229,29 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             resultCredits?.cast?.let { getMovieCastCredits(it) }
             resultSimilarMovies?.results?.let { getSimilarMovies(it) }
             resultVideos?.results?.let { getMovieVideos(it) }
+            movieReleaseDate = "${resultDetails?.release_date}\n${resultReleaseDates?.results?.let { getReleaseDates(it) }}"
         }
         Log.d(
             this@MovieDetailsViewModel::class.java.simpleName,
-            "[$id]: ${translationDetails.toString()} \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
+            "[$id]: ${translationDetails.toString()} \n $resultDetails \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
         )
 
         loading = false
     }
+
+    private fun getReleaseDates(list: List<Result>): String =
+        list.first { it.iso_3166_1.equals(LANGUAGE, true) }.release_dates.map {
+            "${if (it.note.isNotEmpty()) {
+                "${it.note}:"
+            } else ""} ${util.formatTime(it.release_date, pattern = "yyyy-MM-dd")}"
+        }.toString()
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
         movieSimilarMoviesEnabled = list.isNotEmpty()
         movieSimilarMoviesLiveData.postValue(
             list.take(MAX_SIMILAR_MOVIES)
                 .map {
-                    SimilarMovieObservable(it.id, it.title, it.backdrop_path ?: "", it.vote_average.toString())
+                    SimilarMovieObservable(it.id, it.title, it.backdrop_path, it.vote_average.toString())
                 }
         )
     }

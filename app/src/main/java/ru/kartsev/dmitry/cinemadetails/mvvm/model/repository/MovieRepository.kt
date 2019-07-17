@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.ReleaseDatesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
@@ -82,6 +83,15 @@ class MovieRepository : BaseRepository() {
         return safeApiCall(
             call = { moviesApi.getSimilarMoviesAsync(movieId, language, page).await() },
             errorMessage = "Error Fetching Similar Movies."
+        )
+    }
+
+    suspend fun getMovieReleaseDates(
+        movieId: Int
+    ): ReleaseDatesEntity? {
+        return safeApiCall(
+            call = { moviesApi.getMovieReleaseDatesAsync(movieId).await() },
+            errorMessage = "Error Fetching Movie Release Dates."
         )
     }
 }

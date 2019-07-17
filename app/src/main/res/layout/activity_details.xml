@@ -252,6 +252,27 @@
                     app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRevenueLabel"
                     tools:text="160000000 $"/>
 
+                <TextView
+                    android:id="@+id/activityDetailsMovieReleaseDateLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_movie_release_date_label"
+                    android:textSize="@dimen/text_tertiary"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieBudget" />
+
+                <TextView
+                    android:id="@+id/activityDetailsMovieReleaseDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_tertiary"
+                    android:textStyle="italic"
+                    android:layout_marginStart="@dimen/secondary_horizontal_margin"
+                    android:text="@{viewModel.movieReleaseDate}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieReleaseDateLabel"
+                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieReleaseDateLabel" />
+
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/activityDetailsMovieGenresListGroup"
                     android:layout_width="0dp"

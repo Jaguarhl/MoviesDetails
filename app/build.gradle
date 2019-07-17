@@ -107,10 +107,6 @@ dependencies {
     // GravitySnapHelper
     implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
 
-    // Skeleton (shimmer loading)
-    implementation "com.ethanhua:skeleton:$skeletonVersion"
-    implementation "io.supercharge:shimmerlayout:$shimmerLayoutVersion"
-
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
