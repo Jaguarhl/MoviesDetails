@@ -120,12 +120,6 @@ class MovieDetailsActivity : AppCompatActivity() {
     /** Section: Private Methods. */
 
     private fun initListeners() {
-        detailsScrollView
-            ?.setOnScrollChangeListener { _: NestedScrollView?, _: Int, newScroll: Int, _: Int, oldScroll: Int ->
-                if (oldScroll == 0 && newScroll > 0) app_bar_layout.setExpanded(false)
-                else if (oldScroll > 0 && newScroll == 0) app_bar_layout.setExpanded(true)
-            }
-
         app_bar_layout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             var scrollRange = -1
 
@@ -224,7 +218,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         fun openActivityWithMovieId(id: Int, context: Context) {
             val intent = Intent(context, MovieDetailsActivity::class.java).apply {
                 putExtra(MOVIE_ID_KEY, id)
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
 
             context.startActivity(intent)

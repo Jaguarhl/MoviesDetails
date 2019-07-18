@@ -22,6 +22,8 @@
     <string name="item_movie_similar_label">Similar movies:</string>
     <string name="item_movie_details_videos_label">Videos:</string>
     <string name="item_movie_popularity_label">Popularity:</string>
+    <string name="item_movie_details_genres_label">Genres:</string>
+    <string name="item_movie_details_tags_label">Keywords:</string>
     <string name="item_movie_rating_label">Rating:</string>
     <string name="item_movie_popularity_count">%1$s bil.</string>
     <string name="item_movie_finance" translatable="false">$ %1$s</string>
@@ -30,5 +32,16 @@
     <!-- Section: Date. -->
 
     <string name="date_release_year">%1$s yeah</string>
+    <string name="date_runtime">%1$dh %2$dm</string>
     <string name="date_runtime_minutes">%1$d min.</string>
+    <string name="date_release_world">%1$s world premiere</string>
+
+    <!-- Certifications. -->
+
+    <string name="certification_premiere">Premiere</string>
+    <string name="certification_theatrical_limited">Theatrical (limited)</string>
+    <string name="certification_theatrical">Theatrical</string>
+    <string name="certification_digital">Digital</string>
+    <string name="certification_physical">Physical</string>
+    <string name="certification_tv">TV</string>
 </resources>

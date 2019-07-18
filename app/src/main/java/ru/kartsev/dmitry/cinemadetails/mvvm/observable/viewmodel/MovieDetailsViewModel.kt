@@ -66,6 +66,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieSimilarMoviesEnabled)
         }
 
+    var movieKeywordsEnabled: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieKeywordsEnabled)
+        }
+
     var movieToolbarCollapsed: Boolean = false
         @Bindable get() = field
         set(value) {
@@ -165,6 +172,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val scope = CoroutineScope(coroutineContext)
 
     var movieBackdropSize: String = ""
+    var movieSimilarMovieBackdropSize: String = ""
     val movieGenresLiveData: MutableLiveData<List<GenreObservable>> = MutableLiveData()
     val movieKeywordsLiveData: MutableLiveData<List<KeywordObservable>> = MutableLiveData()
     val movieCreditsCastLiveData: MutableLiveData<List<CastObservable>> = MutableLiveData()
@@ -178,6 +186,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     fun initializeWithMovieId(id: Int) {
         // FIXME: Set it from settings repository.
         movieBackdropSize = "w780"
+        movieSimilarMovieBackdropSize = "w300"
         scope.launch {
             loadMovieData(id)
         }.invokeOnCompletion {
@@ -207,8 +216,9 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         val resultVideos = movieRepository.getMovieVideos(id, LANGUAGE)
         val resultKeywords = movieRepository.getMovieKeywords(id)
         val resultCredits = movieRepository.getMovieCredites(id)
+        val resultMovieImages = movieRepository.getMovieImages(id, LANGUAGE)
         val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = LANGUAGE)
-        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
+//        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
         withContext(Dispatchers.Main) {
             movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
@@ -229,7 +239,10 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             resultCredits?.cast?.let { getMovieCastCredits(it) }
             resultSimilarMovies?.results?.let { getSimilarMovies(it) }
             resultVideos?.results?.let { getMovieVideos(it) }
-            movieReleaseDate = "${resultDetails?.release_date}\n${resultReleaseDates?.results?.let { getReleaseDates(it) }}"
+//            movieReleaseDate = mutableListOf<String?>().apply {
+//                add(resultDetails?.release_date)
+//                resultReleaseDates?.results?.let { getReleaseDates(it) }?.let { addAll(it) }
+//            }.toString()
         }
         Log.d(
             this@MovieDetailsViewModel::class.java.simpleName,
@@ -239,19 +252,19 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         loading = false
     }
 
-    private fun getReleaseDates(list: List<Result>): String =
+    private fun getReleaseDates(list: List<Result>): List<String> =
         list.first { it.iso_3166_1.equals(LANGUAGE, true) }.release_dates.map {
-            "${if (it.note.isNotEmpty()) {
+            "$LANGUAGE: ${if (it.note.isNotEmpty()) {
                 "${it.note}:"
-            } else ""} ${util.formatTime(it.release_date, pattern = "yyyy-MM-dd")}"
-        }.toString()
+            } else ""} ${util.formatTime(it.release_date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd")}"
+        }
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
         movieSimilarMoviesEnabled = list.isNotEmpty()
         movieSimilarMoviesLiveData.postValue(
             list.take(MAX_SIMILAR_MOVIES)
                 .map {
-                    SimilarMovieObservable(it.id, it.title, it.backdrop_path, it.vote_average.toString())
+                    SimilarMovieObservable(it.id, it.title, it.backdrop_path ?: "", it.vote_average.toString())
                 }
         )
     }
@@ -285,6 +298,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     }
 
     private fun getMovieKeywords(list: List<Keyword>) {
+        movieKeywordsEnabled = list.isNotEmpty()
         movieKeywordsLiveData.postValue(
             list.map {
                 KeywordObservable(it.name, it.id)

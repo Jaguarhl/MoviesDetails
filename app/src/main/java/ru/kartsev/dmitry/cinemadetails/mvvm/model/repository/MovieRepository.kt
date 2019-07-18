@@ -6,6 +6,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.ReleaseDatesEnt
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.MovieImagesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
@@ -92,6 +93,17 @@ class MovieRepository : BaseRepository() {
         return safeApiCall(
             call = { moviesApi.getMovieReleaseDatesAsync(movieId).await() },
             errorMessage = "Error Fetching Movie Release Dates."
+        )
+    }
+
+    suspend fun getMovieImages(
+        movieId: Int,
+        language: String? = null,
+        includeLanguages: String? = null
+    ): MovieImagesEntity? {
+        return safeApiCall(
+            call = { moviesApi.getMovieImagesAsync(movieId, language, includeLanguages.toString()).await() },
+            errorMessage = "Error Fetching Movie Images."
         )
     }
 }

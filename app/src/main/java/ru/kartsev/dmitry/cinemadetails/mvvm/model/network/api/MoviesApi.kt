@@ -8,6 +8,7 @@ import retrofit2.http.Query
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_ALTERNATIVE_TITLES
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_CREDITS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_DETAILS
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_IMAGES
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_KEYWORDS
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_RELEASE_DATES
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.MOVIE_SIMILAR
@@ -20,6 +21,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.ReleaseDatesEnt
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.MovieImagesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
@@ -84,4 +86,11 @@ interface MoviesApi {
         @Query("language") language: String?,
         @Query("page") page: Int?
     ): Deferred<Response<SimilarMoviesEntity>>
+
+    @GET(MOVIE_IMAGES)
+    fun getMovieImagesAsync(
+        @Path("movie_id") movie_id: Int,
+        @Query("language") language: String?,
+        @Query("include_image_language") includeImageLanguage: String
+    ): Deferred<Response<MovieImagesEntity>>
 }
