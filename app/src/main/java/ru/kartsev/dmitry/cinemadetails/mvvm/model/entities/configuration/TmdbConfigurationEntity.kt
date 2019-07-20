@@ -1,7 +1,6 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.configuration
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
 data class TmdbConfigurationEntity(
     @Json(name = "change_keys")
