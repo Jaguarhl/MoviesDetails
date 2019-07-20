@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.common.di
 
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
+import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.SETTINGS_REPOSITORY_LIFETIME_H
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
@@ -15,7 +16,7 @@ object RepositoryModule {
 
     val it : Module = module {
         single(TMDB_SETTINGS_REPOSITORY_NAME) {
-            TmdbSettingsRepository()
+            TmdbSettingsRepository(SETTINGS_REPOSITORY_LIFETIME_H)
         }
         single(MOVIES_REPOSITORY_NAME) {
             MovieRepository()

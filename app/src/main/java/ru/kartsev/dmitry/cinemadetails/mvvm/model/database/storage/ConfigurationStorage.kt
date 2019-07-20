@@ -31,7 +31,7 @@ class ConfigurationStorage : KoinComponent {
         null
     }
 
-    suspend fun clearPosterSizes() = try {
+    suspend fun clearConfiguration() = try {
         Timber.d("Clear poster configuration list: START.")
         configurationDao.clear()
         Timber.d("Clear poster configuration list: FINISH.")

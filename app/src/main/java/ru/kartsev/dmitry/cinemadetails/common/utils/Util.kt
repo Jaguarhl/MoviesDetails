@@ -1,10 +1,13 @@
 package ru.kartsev.dmitry.cinemadetails.common.utils
 
+import timber.log.Timber
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class Util {
     fun formatTime(time: Date, pattern: String): String = SimpleDateFormat(
@@ -31,10 +34,15 @@ class Util {
             result = formatTime(timeFromString, pattern)
 
         } catch (exception: Exception) {
-            // FIXME: Replace by Timber logger
-            exception.printStackTrace()
+            Timber.w(exception)
         }
 
         return result
+    }
+
+    fun isExpired(time: Long, periodInHours: Int): Boolean {
+        val difference = abs(System.currentTimeMillis() - time)
+
+        return periodInHours < TimeUnit.HOURS.convert(difference, TimeUnit.MILLISECONDS)
     }
 }

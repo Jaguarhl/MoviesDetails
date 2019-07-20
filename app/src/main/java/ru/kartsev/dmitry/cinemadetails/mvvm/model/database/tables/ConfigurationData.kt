@@ -10,7 +10,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationD
 @Entity(tableName = TABLE_NAME)
 data class ConfigurationData(
     @PrimaryKey
-    @ColumnInfo(name = TIMESTAMP_FIELD) var timeStamp: Long,
+    @ColumnInfo(name = TIMESTAMP_FIELD) var timeStamp: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = BASE_URL_FIELD) var baseUrl: String? = null,
     @ColumnInfo(name = SECURE_BASE_URL_FIELD) var secureBaseUrl: String? = null,

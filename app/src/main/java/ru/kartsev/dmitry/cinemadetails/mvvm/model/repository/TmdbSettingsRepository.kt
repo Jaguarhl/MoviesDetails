@@ -1,14 +1,16 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
 import org.koin.standalone.inject
+import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 
-class TmdbSettingsRepository : BaseRepository() {
+class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     /** Section: Injections. */
 
+    private val util: Util by inject()
     private val settingsApi: SettingsApi by inject()
     private val configurationStorage: ConfigurationStorage by inject()
 
@@ -21,7 +23,7 @@ class TmdbSettingsRepository : BaseRepository() {
     suspend fun getTmdbSettings() {
         val data = configurationStorage.loadConfiguration()
 
-        if (data != null) {
+        if (data != null && !util.isExpired(data.timeStamp, lifeTime)) {
             imagesBaseUrl = data.baseUrl
             backdropSizes.addAll(data.backdropSizes ?: listOf())
             posterSizes.addAll(data.posterSizes ?: listOf())
@@ -33,6 +35,7 @@ class TmdbSettingsRepository : BaseRepository() {
             )
 
             if (settings?.images == null) return
+            configurationStorage.clearConfiguration()
 
             with(settings) {
                 configurationStorage.saveConfiguration(
