@@ -25,10 +25,11 @@
 
         <ImageView
             android:id="@+id/itemSimilarMoviePoster"
-            android:layout_width="240dp"
-            android:layout_height="135dp"
+            android:layout_width="@dimen/item_similar_movie_width"
+            android:layout_height="@dimen/item_similar_movie_height"
             android:layout_marginTop="@dimen/tertiary_vertical_margin"
             app:image_uri="@{baseObservable.image}"
+            app:image_size="@{viewModel.movieSimilarMovieBackdropSize}"
             app:image_placeholder="@{@drawable/ic_image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

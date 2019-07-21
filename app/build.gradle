@@ -96,6 +96,11 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_interceptor_version"
 
+    // Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
     // Picasso for Image Loading
     implementation ("com.squareup.picasso:picasso:$picassoVersion") {
         exclude group: "com.android.support"
@@ -107,13 +112,12 @@ dependencies {
     // GravitySnapHelper
     implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
 
-    // Skeleton (shimmer loading)
-    implementation "com.ethanhua:skeleton:$skeletonVersion"
-    implementation "io.supercharge:shimmerlayout:$shimmerLayoutVersion"
-
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // Koin
     implementation "org.koin:koin-core:$koin_version"

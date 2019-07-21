@@ -70,7 +70,7 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 it.title,
                 it.overview,
                 it.poster_path,
-                it.backdrop_path,
+                it.backdrop_path ?: "",
                 it.adult,
                 it.release_date
             )

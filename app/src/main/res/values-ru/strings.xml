@@ -10,11 +10,13 @@
     <!-- Section: Movie Details Activity. -->
 
     <string name="item_movie_details_title">Подробнее о ленте</string>
-    <string name="item_movie_release_date_label">Дата выхода:</string>
+    <string name="item_movie_release_date_label">Премьера:</string>
     <string name="item_movie_title_original_label">Оригинальное название:</string>
     <string name="item_movie_budged_label">Бюджет:</string>
     <string name="item_movie_revenue_label">Сборы:</string>
     <string name="item_movie_popularity_label">Зрители:</string>
+    <string name="item_movie_details_genres_label">Жанры:</string>
+    <string name="item_movie_details_tags_label">Тэги:</string>
     <string name="item_movie_cast_credits_label">В главных ролях:</string>
     <string name="item_movie_details_videos_label">Видео:</string>
     <string name="item_movie_rating_label">Рейтинг:</string>
@@ -27,5 +29,16 @@
 
     <string name="date_release_year">%1$s г.</string>
     <string name="date_runtime_minutes">%1$d мин.</string>
+    <string name="date_runtime">%1$dч %2$dм</string>
+    <string name="date_release_world">мировая премьера %1$s</string>
+
+    <!-- Certifications. -->
+
+    <string name="certification_premiere">Премьера</string>
+    <string name="certification_theatrical_limited">Ограниченный прокат</string>
+    <string name="certification_theatrical">Прокат</string>
+    <string name="certification_digital">Цифровые носители</string>
+    <string name="certification_physical">Physical</string>
+    <string name="certification_tv">ТВ</string>
 
 </resources>
