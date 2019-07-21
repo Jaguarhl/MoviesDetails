@@ -14,28 +14,28 @@ class ConfigurationStorage : KoinComponent {
     /** Section: Public Methods. */
 
     suspend fun saveConfiguration(data: ConfigurationData) = try {
-        Timber.d("Insert poster configuration list: START.")
+        Timber.d("Insert configuration data: START. ($data)")
         configurationDao.insert(data)
-        Timber.d("Insert poster configuration list: FINISH.")
+        Timber.d("Insert configuration data: FINISH.")
     } catch (exception: Exception) {
-        Timber.w(exception, "Insert poster configuration list: FAILED.")
+        Timber.w(exception, "Insert configuration data: FAILED.")
     }
 
     suspend fun loadConfiguration(): ConfigurationData? = try {
-        Timber.d("Get poster configuration list: START.")
+        Timber.d("Get configuration data: START.")
         val result = configurationDao.configuration()
-        Timber.d("Insert poster configuration list: FINISH.")
+        Timber.d("Get configuration data: FINISH. ($result)")
         result
     } catch (exception: Exception) {
-        Timber.w(exception, "Clear poster configuration list: FAILED.")
+        Timber.w(exception, "Load configuration data: FAILED.")
         null
     }
 
     suspend fun clearConfiguration() = try {
-        Timber.d("Clear poster configuration list: START.")
+        Timber.d("Clear configuration data: START.")
         configurationDao.clear()
-        Timber.d("Clear poster configuration list: FINISH.")
+        Timber.d("Clear configuration data: FINISH.")
     } catch (exception: Exception) {
-        Timber.w(exception, "Clear poster configuration list: FAILED.")
+        Timber.w(exception, "Clear configuration data: FAILED.")
     }
 }

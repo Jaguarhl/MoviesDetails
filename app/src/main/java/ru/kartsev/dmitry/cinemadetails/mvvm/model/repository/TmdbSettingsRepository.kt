@@ -21,6 +21,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     val profileSizes = mutableListOf<String>()
 
     suspend fun getTmdbSettings() {
+        // TODO: Implement exceptions handler and message to user.
         val data = configurationStorage.loadConfiguration()
 
         if (data != null && !util.isExpired(data.timeStamp, lifeTime)) {
