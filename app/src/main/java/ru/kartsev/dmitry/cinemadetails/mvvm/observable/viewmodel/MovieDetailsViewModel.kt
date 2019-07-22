@@ -23,17 +23,20 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
+    private val configurationRepository: TmdbSettingsRepository by inject()
     private val util: Util by inject()
 
     /** Section: Bindable Properties. */
@@ -183,14 +186,14 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     /** Section: Initialization. */
 
-    fun initializeWithMovieId(id: Int) {
+    fun initializeWithMovieId(id: Int, widthPixels: Int) {
         // FIXME: Set it from settings repository.
         movieBackdropSize = "w780"
         movieSimilarMovieBackdropSize = "w300"
         scope.launch {
             loadMovieData(id)
         }.invokeOnCompletion {
-            Log.d(this@MovieDetailsViewModel::class.java.simpleName, movieTitle)
+            Timber.d("$movieTitle, screen width: $widthPixels, backdropSize: $movieBackdropSize, similarMovieBackdropSize: $movieSimilarMovieBackdropSize")
 
         }
     }

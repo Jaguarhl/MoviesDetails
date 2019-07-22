@@ -3,9 +3,12 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
+import timber.log.Timber
 
 class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     /** Section: Injections. */
@@ -13,6 +16,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     private val util: Util by inject()
     private val settingsApi: SettingsApi by inject()
     private val configurationStorage: ConfigurationStorage by inject()
+    private val languageStorage: LanguageStorage by inject()
 
     var imagesBaseUrl: String? = null
     val languagesList = mutableListOf<String>()
@@ -24,7 +28,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
         // TODO: Implement exceptions handler and message to user.
         val data = configurationStorage.loadConfiguration()
 
-        if (data != null && !util.isExpired(data.timeStamp, lifeTime)) {
+        if (data != null && util.isExpired(data.timeStamp, lifeTime).not()) {
             imagesBaseUrl = data.baseUrl
             backdropSizes.addAll(data.backdropSizes ?: listOf())
             posterSizes.addAll(data.posterSizes ?: listOf())
@@ -56,21 +60,33 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                 }
             }
         }
+
+        languagesList.addAll(getLanguagesList() ?: listOf())
+        Timber.d("$languagesList")
     }
 
-    suspend fun getLanguagesList(): List<String> {
-        // FIXME: Implement loading and caching languages.
-//        if (settings?.images == null) return
-//
-//        val languages = safeApiCall(
-//            call = { settingsApi.getSupportedLanguages().await() },
-//            errorMessage = "Error Fetching TMDB Languages."
-//        )
-//
-//
-//        languages?.let { list->
-//            languagesList.addAll(list.map { it.iso_639_1 })
-//        }
-        return listOf()
+    suspend fun getLanguagesList(): List<String>? {
+        val data = languageStorage.loadLanguagesList()
+
+        return if (data.isNullOrEmpty()) {
+            val languages = safeApiCall(
+                call = { settingsApi.getSupportedLanguages().await() },
+                errorMessage = "Error Fetching TMDB Languages."
+            )
+
+            languages?.let { list ->
+                languageStorage.saveLanguagesList(list.map {
+                    LanguageData(
+                        englishName = it.english_name,
+                        isoCode = it.iso_639_1,
+                        name = it.name
+                    )
+                })
+
+                list.map { it.iso_639_1 }
+            }
+        } else {
+            data.map { it.isoCode!! }
+        }
     }
 }
