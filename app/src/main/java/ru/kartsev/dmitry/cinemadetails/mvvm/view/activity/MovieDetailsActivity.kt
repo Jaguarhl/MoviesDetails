@@ -197,10 +197,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         override fun onPropertyChanged(reference: MovieDetailsActivity, propertyId: Int) = with(reference) {
             when (propertyId) {
                 BR.action -> when (viewModel.action) {
-                    ACTION_OPEN_MOVIE -> {
-                        finish()
-                        viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
-                    }
+                    ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
 
                     else -> return@with
                 }
