@@ -1,10 +1,10 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables
+package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieDetailsData.Companion.TABLE_NAME
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData.Companion.TABLE_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.Language
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.ProductionCompany
@@ -30,7 +30,7 @@ data class MovieDetailsData(
 
     @ColumnInfo(name = GENRES_FIELD)
     @Json(name = "genres")
-    var genres: List<MovieGenre>? = null,
+    var genres: List<MovieGenreData>? = null,
 
     @ColumnInfo(name = HOMEPAGE_FIELD)
     @Json(name = "homepage")

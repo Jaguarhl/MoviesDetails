@@ -1,11 +1,11 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables
+package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.DatabaseConverters
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData.Companion.TABLE_NAME
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
 data class ConfigurationData(

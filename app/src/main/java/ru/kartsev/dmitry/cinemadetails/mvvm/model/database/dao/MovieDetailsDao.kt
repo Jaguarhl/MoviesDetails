@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieDetailsData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieDetailsData.Companion.ID_FIELD
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieDetailsData.Companion.TABLE_NAME
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData.Companion.ID_FIELD
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData.Companion.TABLE_NAME
 
 @Dao
 interface MovieDetailsDao {

@@ -7,9 +7,9 @@ import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.ConfigurationDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieDetailsData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
 
 @Database(
     entities = [

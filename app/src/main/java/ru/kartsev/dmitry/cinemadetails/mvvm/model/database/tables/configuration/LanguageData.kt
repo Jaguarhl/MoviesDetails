@@ -1,9 +1,9 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables
+package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData.Companion.TABLE_NAME
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
 data class LanguageData(

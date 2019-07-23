@@ -3,7 +3,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import timber.log.Timber
 
 class LanguageStorage : KoinComponent {

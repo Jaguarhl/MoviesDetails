@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData.Companion.TABLE_NAME
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData.Companion.TABLE_NAME
 
 @Dao
 interface LanguagesDao {

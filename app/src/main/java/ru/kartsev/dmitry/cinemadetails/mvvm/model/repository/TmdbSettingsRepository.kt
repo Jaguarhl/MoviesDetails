@@ -4,8 +4,8 @@ import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.LanguageData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import timber.log.Timber
