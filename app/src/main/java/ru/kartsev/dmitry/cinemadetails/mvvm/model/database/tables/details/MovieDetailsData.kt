@@ -3,7 +3,9 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.squareup.moshi.Json
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.DatabaseConverters
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData.Companion.TABLE_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.Language
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
@@ -12,6 +14,9 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.ProductionCou
 
 @Entity(tableName = TABLE_NAME)
 data class MovieDetailsData(
+    @ColumnInfo(name = DATA_IS_EXPIRED)
+    var isExpired: Boolean = false,
+
     @ColumnInfo(name = ADULT_FIELD)
     @Json(name = "adult")
     var adult: Boolean? = null,
@@ -20,17 +25,18 @@ data class MovieDetailsData(
     @Json(name = "backdrop_path")
     var backdrop_path: String? = null,
 
-    @ColumnInfo(name = BELONGS_TO_COLLECTION_FIELD)
-    @Json(name = "belongs_to_collection")
-    var belongs_to_collection: Any? = null,
+//    @ColumnInfo(name = BELONGS_TO_COLLECTION_FIELD)
+//    @Json(name = "belongs_to_collection")
+//    var belongs_to_collection: Any? = null,
 
     @ColumnInfo(name = BUDGET_FIELD)
     @Json(name = "budget")
     var budget: Long? = null,
 
     @ColumnInfo(name = GENRES_FIELD)
+    @TypeConverters(DatabaseConverters::class)
     @Json(name = "genres")
-    var genres: List<MovieGenreData>? = null,
+    var genres: List<GenreData>? = null,
 
     @ColumnInfo(name = HOMEPAGE_FIELD)
     @Json(name = "homepage")
@@ -65,13 +71,13 @@ data class MovieDetailsData(
     @Json(name = "poster_path")
     var poster_path: String? = null,
 
-    @ColumnInfo(name = PRODUCTION_COMPANIES_FIELD)
-    @Json(name = "production_companies")
-    var production_companies: List<ProductionCompany>? = null,
+//    @ColumnInfo(name = PRODUCTION_COMPANIES_FIELD)
+//    @Json(name = "production_companies")
+//    var production_companies: List<ProductionCompany>? = null,
 
-    @ColumnInfo(name = PRODUCTION_COUNTRIES_FIELD)
-    @Json(name = "production_countries")
-    var production_countries: List<ProductionCountry>? = null,
+//    @ColumnInfo(name = PRODUCTION_COUNTRIES_FIELD)
+//    @Json(name = "production_countries")
+//    var production_countries: List<ProductionCountry>? = null,
 
     @ColumnInfo(name = RELEASE_DATE_FIELD)
     @Json(name = "release_date")
@@ -85,9 +91,9 @@ data class MovieDetailsData(
     @Json(name = "runtime")
     var runtime: Int? = null,
 
-    @ColumnInfo(name = SPOKEN_LANGUAGES_FIELD)
-    @Json(name = "spoken_languages")
-    var spoken_languages: List<Language>? = null,
+//    @ColumnInfo(name = SPOKEN_LANGUAGES_FIELD)
+//    @Json(name = "spoken_languages")
+//    var spoken_languages: List<Language>? = null,
 
     @ColumnInfo(name = STATUS_FIELD)
     @Json(name = "status")
@@ -116,6 +122,7 @@ data class MovieDetailsData(
     companion object {
         const val TABLE_NAME = "movie_details"
 
+        const val DATA_IS_EXPIRED = "is_expired"
         const val ADULT_FIELD = "adult"
         const val BACKDROP_PATH_FIELD = "backdrop_path"
         const val BELONGS_TO_COLLECTION_FIELD = "belongs_to_collection"

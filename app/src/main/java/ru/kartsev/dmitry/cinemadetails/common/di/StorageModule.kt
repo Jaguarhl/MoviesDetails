@@ -18,6 +18,7 @@ object StorageModule {
     const val CONFIGURATION_STORAGE_DAO = "storage.configuration_dao"
     const val LANGUAGES_STORAGE_DAO = "storage.languages_dao"
     const val MOVIE_DETAILS_STORAGE_DAO = "storage.movie_details_dao"
+    const val MOVIE_GENRES_STORAGE_DAO = "storage.movie_genres_dao"
 
     /** Section: Modules. */
 
@@ -52,6 +53,9 @@ object StorageModule {
 
         single(MOVIE_DETAILS_STORAGE_DAO) {
             get<MovieDatabase>().movieDetailsDao()
+        }
+        single(MOVIE_GENRES_STORAGE_DAO) {
+            get<MovieDatabase>().genresDao()
         }
     }
 }

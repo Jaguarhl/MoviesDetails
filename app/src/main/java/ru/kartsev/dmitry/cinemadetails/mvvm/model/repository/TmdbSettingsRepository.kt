@@ -4,8 +4,10 @@ import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import timber.log.Timber
@@ -17,12 +19,15 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     private val settingsApi: SettingsApi by inject()
     private val configurationStorage: ConfigurationStorage by inject()
     private val languageStorage: LanguageStorage by inject()
+    private val movieDetailsStorage: MovieDetailsStorage by inject()
 
     var imagesBaseUrl: String? = null
+    var currentLanguage: String? = null
     val languagesList = mutableListOf<String>()
     val backdropSizes = mutableListOf<String>()
     val posterSizes = mutableListOf<String>()
     val profileSizes = mutableListOf<String>()
+    val genresList = mutableListOf<GenreData>()
 
     suspend fun getTmdbSettings() {
         // TODO: Implement exceptions handler and message to user.
@@ -62,7 +67,25 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
         }
 
         languagesList.addAll(getLanguagesList() ?: listOf())
-        Timber.d("$languagesList")
+        currentLanguage = if (languagesList.contains(util.getLocale())) { util.getLocale() } else languagesList[0]
+        loadGenresList()
+        Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
+    }
+
+    suspend fun loadGenresList() {
+        val data = movieDetailsStorage.loadLanguagesList()
+
+        if (data.isNullOrEmpty() || data[0].language.equals(util.getLocale(), true).not()) {
+            val genres = safeApiCall(
+                call = { settingsApi.getMovieGenresAsync(currentLanguage).await() },
+                errorMessage = "Error Fetching Movie Genres For $currentLanguage Locale"
+            )
+
+            genres?.genres?.let {
+                movieDetailsStorage.saveGenresList(it)
+                genresList.addAll(it)
+            }
+        } else genresList.addAll(data)
     }
 
     suspend fun getLanguagesList(): List<String>? {
@@ -70,7 +93,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
 
         return if (data.isNullOrEmpty()) {
             val languages = safeApiCall(
-                call = { settingsApi.getSupportedLanguages().await() },
+                call = { settingsApi.getSupportedLanguagesAsync().await() },
                 errorMessage = "Error Fetching TMDB Languages."
             )
 

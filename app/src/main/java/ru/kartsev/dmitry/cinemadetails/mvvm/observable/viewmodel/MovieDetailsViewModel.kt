@@ -209,7 +209,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     private suspend fun loadMovieData(id: Int) {
         loading = true
-        val resultDetails = movieRepository.getMovieDetails(id, LANGUAGE)
+        val resultDetails = movieRepository.getMovieDetails(id, configurationRepository.currentLanguage)
 
         // FIXME: Move language param to variable.
         val translationDetails =

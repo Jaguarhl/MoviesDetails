@@ -45,4 +45,6 @@ class Util {
 
         return periodInHours < TimeUnit.HOURS.convert(difference, TimeUnit.MILLISECONDS)
     }
+
+    fun getLocale(): String = Locale.getDefault().language
 }
