@@ -15,18 +15,9 @@ object DatabaseConverters : KoinComponent {
 
     @TypeConverter
     @JvmStatic
-    fun fromGenresList(string: String): List<GenreData> {
-        val list = string.split(",").map { it }
-        return list.map {
-            GenreData(
-                it.split("-")[0].toInt(),
-                it.split("-")[1],
-                it.split("-")[2]
-
-        ) }
-    }
+    fun fromIntList(list: List<Int>): String = list.joinToString(",") { it.toString() }
 
     @TypeConverter
     @JvmStatic
-    fun fromGenresList(list: List<GenreData>): String = list.joinToString(",") { "${it.id}-${it.language}-${it.name}" }
+    fun toIntList(string: String): List<Int> = string.split(",").map { it.toInt() }
 }

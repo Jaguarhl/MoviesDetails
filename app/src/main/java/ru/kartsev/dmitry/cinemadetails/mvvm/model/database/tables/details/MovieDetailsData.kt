@@ -18,25 +18,19 @@ data class MovieDetailsData(
     var isExpired: Boolean = false,
 
     @ColumnInfo(name = ADULT_FIELD)
-    @Json(name = "adult")
     var adult: Boolean? = null,
 
     @ColumnInfo(name = BACKDROP_PATH_FIELD)
-    @Json(name = "backdrop_path")
     var backdrop_path: String? = null,
 
 //    @ColumnInfo(name = BELONGS_TO_COLLECTION_FIELD)
-//    @Json(name = "belongs_to_collection")
 //    var belongs_to_collection: Any? = null,
 
     @ColumnInfo(name = BUDGET_FIELD)
-    @Json(name = "budget")
     var budget: Long? = null,
 
     @ColumnInfo(name = GENRES_FIELD)
-    @TypeConverters(DatabaseConverters::class)
-    @Json(name = "genres")
-    var genres: List<GenreData>? = null,
+    var genres: List<Int>? = null,
 
     @ColumnInfo(name = HOMEPAGE_FIELD)
     @Json(name = "homepage")
@@ -44,79 +38,60 @@ data class MovieDetailsData(
 
     @PrimaryKey
     @ColumnInfo(name = ID_FIELD)
-    @Json(name = "id")
     var id: Int? = null,
 
     @ColumnInfo(name = TMDB_ID_FIELD)
-    @Json(name = "imdb_id")
     var imdb_id: String? = null,
 
     @ColumnInfo(name = ORIGINAL_LANGUAGE_FIELD)
-    @Json(name = "original_language")
     var original_language: String? = null,
 
     @ColumnInfo(name = ORIGINAL_TITLE_FIELD)
-    @Json(name = "original_title")
     var original_title: String? = null,
 
     @ColumnInfo(name = OVERVIEW_FIELD)
-    @Json(name = "overview")
     var overview: String? = null,
 
     @ColumnInfo(name = POPULARITY_FIELD)
-    @Json(name = "popularity")
     var popularity: Double? = null,
 
     @ColumnInfo(name = POSTER_PATH_FIELD)
-    @Json(name = "poster_path")
     var poster_path: String? = null,
 
-//    @ColumnInfo(name = PRODUCTION_COMPANIES_FIELD)
-//    @Json(name = "production_companies")
-//    var production_companies: List<ProductionCompany>? = null,
+    @ColumnInfo(name = PRODUCTION_COMPANIES_FIELD)
+    var production_companies: List<Int>? = null,
 
-//    @ColumnInfo(name = PRODUCTION_COUNTRIES_FIELD)
-//    @Json(name = "production_countries")
-//    var production_countries: List<ProductionCountry>? = null,
+    @ColumnInfo(name = PRODUCTION_COUNTRIES_FIELD)
+    var production_countries: List<Int>? = null,
 
     @ColumnInfo(name = RELEASE_DATE_FIELD)
-    @Json(name = "release_date")
     var release_date: String? = null,
 
     @ColumnInfo(name = REVENUE_FIELD)
-    @Json(name = "revenue")
     var revenue: Long? = null,
 
     @ColumnInfo(name = RUNTIME_FIELD)
-    @Json(name = "runtime")
     var runtime: Int? = null,
 
-//    @ColumnInfo(name = SPOKEN_LANGUAGES_FIELD)
-//    @Json(name = "spoken_languages")
-//    var spoken_languages: List<Language>? = null,
+    @ColumnInfo(name = SPOKEN_LANGUAGES_FIELD)
+    var spoken_languages: List<Int>? = null,
 
     @ColumnInfo(name = STATUS_FIELD)
-    @Json(name = "status")
     var status: String? = null,
 
     @ColumnInfo(name = TAGLINE_FIELD)
-    @Json(name = "tagline")
     var tagline: String? = null,
 
     @ColumnInfo(name = TITLE_FIELD)
-    @Json(name = "title")
     var title: String? = null,
 
     @ColumnInfo(name = VIDEO_FIELD)
-    @Json(name = "video")
     var video: Boolean? = null,
 
     @ColumnInfo(name = VOTE_AVERAGE_FIELD)
-    @Json(name = "vote_average")
     var vote_average: Double? = null,
 
     @ColumnInfo(name = VOTE_COUNT_FIELD)
-    @Json(name = "vote_count")
     var vote_count: Int? = null
 ) {
     companion object {
