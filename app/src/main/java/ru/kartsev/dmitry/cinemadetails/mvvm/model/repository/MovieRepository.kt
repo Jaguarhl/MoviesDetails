@@ -1,10 +1,14 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
 import org.koin.standalone.inject
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.ReleaseDatesEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.Language
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.MovieImagesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
@@ -19,6 +23,8 @@ class MovieRepository : BaseRepository() {
     /** Section: Injections. */
 
     private val moviesApi: MoviesApi by inject()
+    private val movieDetailsStorage: MovieDetailsStorage by inject()
+    private val settingsRepository: TmdbSettingsRepository by inject()
 
     suspend fun getPopularMovies(page: Int, language: String? = null): PopularMoviesEntity? {
         return safeApiCall(
@@ -35,10 +41,51 @@ class MovieRepository : BaseRepository() {
     }
 
     suspend fun getMovieDetails(movieId: Int, language: String? = null): MovieDetailsEntity? {
-        return safeApiCall(
-            call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
-            errorMessage = "Error Fetching Movie Details."
-        )
+        val data = movieDetailsStorage.loadMovieDetailsById(movieId)
+        var response: MovieDetailsEntity? = null
+
+        if (data == null) {
+            response = safeApiCall(
+                call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
+                errorMessage = "Error Fetching Movie Details."
+            )
+        } else {
+            response = convertDataToEntity(data)
+        }
+
+        return response
+    }
+
+    private suspend fun convertDataToEntity(data: MovieDetailsData): MovieDetailsEntity? {
+        val genresList = settingsRepository.genresList
+        val languagesList = settingsRepository.languagesList
+
+        return with (data) {
+            MovieDetailsEntity(
+                adult,
+                backdrop_path,
+                null,
+                budget,
+                genresList.filter { genres!!.contains(it.id) }.map { MovieGenre(it.id, it.name) },
+                homepage,
+                id,
+                imdb_id,
+                original_language,
+                original_title,
+                overview,
+                popularity,
+                poster_path,
+                listOf(),
+                listOf(),
+                release_date,
+                revenue,
+                runtime,
+                languagesList.filter { spoken_languages!!.contains(it.id.toInt()) }.map { Language(it.isoCode, it.name) },
+                status,
+                tagline,
+                title
+            )
+        }
     }
 
     suspend fun getMovieAlternativeTitles(movieId: Int, country: String? = null): MovieAlternativeTitlesEntity? {

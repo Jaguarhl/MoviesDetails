@@ -23,7 +23,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
 
     var imagesBaseUrl: String? = null
     var currentLanguage: String? = null
-    val languagesList = mutableListOf<String>()
+    val languagesList = mutableListOf<LanguageData>()
     val backdropSizes = mutableListOf<String>()
     val posterSizes = mutableListOf<String>()
     val profileSizes = mutableListOf<String>()
@@ -73,7 +73,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     }
 
     suspend fun loadGenresList() {
-        val data = movieDetailsStorage.loadLanguagesList()
+        val data = movieDetailsStorage.loadGenresList()
 
         if (data.isNullOrEmpty() || data[0].language.equals(util.getLocale(), true).not()) {
             val genres = safeApiCall(
@@ -88,7 +88,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
         } else genresList.addAll(data)
     }
 
-    suspend fun getLanguagesList(): List<String>? {
+    suspend fun getLanguagesList(): List<LanguageData>? {
         val data = languageStorage.loadLanguagesList()
 
         return if (data.isNullOrEmpty()) {
@@ -97,19 +97,22 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                 errorMessage = "Error Fetching TMDB Languages."
             )
 
+            var result: List<LanguageData>? = null
+
             languages?.let { list ->
-                languageStorage.saveLanguagesList(list.map {
+                result = list.map {
                     LanguageData(
                         englishName = it.english_name,
                         isoCode = it.iso_639_1,
                         name = it.name
-                    )
-                })
+                    )}
 
-                list.map { it.iso_639_1 }
+                languageStorage.saveLanguagesList(result!!)
             }
+
+            result ?: listOf<LanguageData>()
         } else {
-            data.map { it.isoCode!! }
+            data
         }
     }
 }

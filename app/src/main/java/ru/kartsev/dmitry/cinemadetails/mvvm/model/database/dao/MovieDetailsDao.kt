@@ -14,7 +14,7 @@ interface MovieDetailsDao {
     suspend fun save(language: MovieDetailsData): Long
 
     @Query("SELECT * FROM $TABLE_NAME WHERE $ID_FIELD LIKE :movieId")
-    suspend fun getById(movieId: Int): MovieDetailsData?
+    suspend fun loadById(movieId: Int): MovieDetailsData?
 
     @Query(
         """
