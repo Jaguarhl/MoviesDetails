@@ -68,7 +68,7 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 it.vote_average.toString(),
                 it.title,
                 it.overview,
-                it.poster_path,
+                it.poster_path ?: "",
                 it.backdrop_path ?: "",
                 it.adult,
                 it.release_date

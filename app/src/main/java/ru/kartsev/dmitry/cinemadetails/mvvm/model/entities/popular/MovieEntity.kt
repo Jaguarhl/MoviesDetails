@@ -20,7 +20,7 @@ data class MovieEntity(
     @Json(name = "popularity")
     val popularity: Double,
     @Json(name = "poster_path")
-    val poster_path: String,
+    val poster_path: String?,
     @Json(name = "release_date")
     val release_date: String,
     @Json(name = "title")

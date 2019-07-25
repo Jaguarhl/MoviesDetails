@@ -33,7 +33,6 @@ data class MovieDetailsData(
     var genres: List<Int>? = null,
 
     @ColumnInfo(name = HOMEPAGE_FIELD)
-    @Json(name = "homepage")
     var homepage: String? = null,
 
     @PrimaryKey
@@ -62,7 +61,7 @@ data class MovieDetailsData(
     var production_companies: List<Int>? = null,
 
     @ColumnInfo(name = PRODUCTION_COUNTRIES_FIELD)
-    var production_countries: List<Int>? = null,
+    var production_countries: List<String>? = null,
 
     @ColumnInfo(name = RELEASE_DATE_FIELD)
     var release_date: String? = null,
@@ -74,7 +73,7 @@ data class MovieDetailsData(
     var runtime: Int? = null,
 
     @ColumnInfo(name = SPOKEN_LANGUAGES_FIELD)
-    var spoken_languages: List<Int>? = null,
+    var spoken_languages: List<String>? = null,
 
     @ColumnInfo(name = STATUS_FIELD)
     var status: String? = null,

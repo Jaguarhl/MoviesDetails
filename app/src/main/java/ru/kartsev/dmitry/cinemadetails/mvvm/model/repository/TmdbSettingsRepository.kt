@@ -8,6 +8,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsS
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.configuration.Genre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import timber.log.Timber
@@ -67,7 +68,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
         }
 
         languagesList.addAll(getLanguagesList() ?: listOf())
-        currentLanguage = if (languagesList.contains(util.getLocale())) { util.getLocale() } else languagesList[0]
+        currentLanguage = if (languagesList.any { it.isoCode.equals(util.getLocale(), true) }) { util.getLocale() } else languagesList[0].isoCode
         loadGenresList()
         Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
     }
@@ -82,8 +83,9 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
             )
 
             genres?.genres?.let {
-                movieDetailsStorage.saveGenresList(it)
-                genresList.addAll(it)
+                val list = Genre.toGenreDataList(it)
+                movieDetailsStorage.saveGenresList(list)
+                genresList.addAll(list)
             }
         } else genresList.addAll(data)
     }

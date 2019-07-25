@@ -16,7 +16,7 @@ data class GenreData(
     var id: Int,
 
     @ColumnInfo(name = GENRE_LANGUAGE_FIELD)
-    var language: String? = get(Util::class.java).getLocale(),
+    var language: String = get(Util::class.java).getLocale(),
 
     @ColumnInfo(name = GENRE_NAME_FIELD)
     @Json(name = "name")

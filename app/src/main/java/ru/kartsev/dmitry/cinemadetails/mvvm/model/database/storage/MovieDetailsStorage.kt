@@ -6,6 +6,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.GenresDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import timber.log.Timber
 
 class MovieDetailsStorage : KoinComponent {
@@ -50,5 +51,13 @@ class MovieDetailsStorage : KoinComponent {
     } catch (exception: Exception) {
         Timber.w(exception, "Load movie details by id($movieId): FAILED.")
         null
+    }
+
+    suspend fun saveMovieDetails(data: MovieDetailsData) = try {
+        Timber.d("Save movie details ($data): START.")
+        movieDetailsDao.save(data)
+        Timber.d("Save movie details ($data): FINISH.")
+    } catch (exception: Exception) {
+        Timber.w(exception, "Save movie details ($data): FAILED.")
     }
 }
