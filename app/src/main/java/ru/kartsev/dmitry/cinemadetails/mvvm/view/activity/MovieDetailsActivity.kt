@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_details.*
 import ru.kartsev.dmitry.cinemadetails.BR
-import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.VideoListAdapter
@@ -28,6 +26,8 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObs
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.SimilarMoviesListAdapter
+import android.util.DisplayMetrics
+import ru.kartsev.dmitry.cinemadetails.R
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
@@ -61,11 +61,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         propertyHandler.attach()
 
+        val metrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(metrics)
+
         intent?.apply {
             if (!hasExtra(MOVIE_ID_KEY) || savedInstanceState != null) return@apply
 
             val movieId = getIntExtra(MOVIE_ID_KEY, 0)
-            viewModel.initializeWithMovieId(movieId)
+            viewModel.initializeWithMovieId(movieId, metrics.widthPixels)
         }
 
         initListeners()

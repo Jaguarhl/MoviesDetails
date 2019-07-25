@@ -3,7 +3,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.ConfigurationDao
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.ConfigurationData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import timber.log.Timber
 
 class ConfigurationStorage : KoinComponent {
