@@ -30,9 +30,9 @@ class MovieRepository : BaseRepository() {
         )
     }
 
-    suspend fun getNowPlayingMovie(page: Int, language: String? = null, region: String? = language): NowPlayingMoviesEntity? {
+    suspend fun getNowPlayingMovie(page: Int, language: String? = null): NowPlayingMoviesEntity? {
         return safeApiCall(
-            call = { moviesApi.getNowPlayingMovieAsync(language, page, region).await() },
+            call = { moviesApi.getNowPlayingMovieAsync(language, page).await() },
             errorMessage = "Error Fetching Now Playing Movies."
         )
     }
@@ -41,13 +41,13 @@ class MovieRepository : BaseRepository() {
         val data = movieDetailsStorage.loadMovieDetailsById(movieId)
         var response: MovieDetailsEntity?
 
-        if (data == null || data.isExpired) {
+        if (data == null || data.isExpired || data.language.equals(settingsRepository.currentLanguage, true).not()) {
             response = safeApiCall(
                 call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
                 errorMessage = "Error Fetching Movie Details."
             )
 
-            response?.let { movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it)) }
+            response?.let { movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it, settingsRepository.currentLanguage)) }
         } else {
             response = MovieDetailsEntity.getDetailsEntityFromData(data, settingsRepository.genresList, settingsRepository.languagesList)
         }

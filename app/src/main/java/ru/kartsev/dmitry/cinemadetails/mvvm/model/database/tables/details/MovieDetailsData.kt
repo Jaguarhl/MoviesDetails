@@ -17,6 +17,9 @@ data class MovieDetailsData(
     @ColumnInfo(name = DATA_IS_EXPIRED)
     var isExpired: Boolean = false,
 
+    @ColumnInfo(name = LANGUAGE)
+    var language: String? = null,
+
     @ColumnInfo(name = ADULT_FIELD)
     var adult: Boolean? = null,
 
@@ -97,6 +100,7 @@ data class MovieDetailsData(
         const val TABLE_NAME = "movie_details"
 
         const val DATA_IS_EXPIRED = "is_expired"
+        const val LANGUAGE = "language"
         const val ADULT_FIELD = "adult"
         const val BACKDROP_PATH_FIELD = "backdrop_path"
         const val BELONGS_TO_COLLECTION_FIELD = "belongs_to_collection"

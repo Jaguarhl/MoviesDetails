@@ -11,7 +11,6 @@ import kotlinx.coroutines.withContext
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.BR
-import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.LANGUAGE
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_SIMILAR_MOVIES
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
@@ -173,6 +172,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
+    private var language: String = configurationRepository.currentLanguage ?: ""
 
     var movieBackdropSize: String = ""
     var movieSimilarMovieBackdropSize: String = ""
@@ -209,22 +209,22 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     private suspend fun loadMovieData(id: Int) {
         loading = true
-        val resultDetails = movieRepository.getMovieDetails(id, configurationRepository.currentLanguage)
+        val resultDetails = movieRepository.getMovieDetails(id, language)
 
         // FIXME: Move language param to variable.
         val translationDetails =
-            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals(LANGUAGE, true) }
+            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals(language, true) }
                 ?.data
 
-        val resultVideos = movieRepository.getMovieVideos(id, LANGUAGE)
+        val resultVideos = movieRepository.getMovieVideos(id, language)
         val resultKeywords = movieRepository.getMovieKeywords(id)
         val resultCredits = movieRepository.getMovieCredites(id)
-        val resultMovieImages = movieRepository.getMovieImages(id, LANGUAGE)
-        val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = LANGUAGE)
+        val resultMovieImages = movieRepository.getMovieImages(id, language)
+        val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = language)
 //        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
         withContext(Dispatchers.Main) {
-            movieTitle = translationDetails?.title ?: resultDetails?.title ?: ""
+            movieTitle = getMovieTitle(translationDetails?.title, resultDetails?.title)
             movieTitleOriginal = resultDetails?.original_title ?: ""
             movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
             moviePosterPath = resultDetails?.poster_path ?: ""
@@ -255,9 +255,15 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         loading = false
     }
 
+    private fun getMovieTitle(translatedTitle: String?, originalTitle: String?): String = if (!translatedTitle.isNullOrEmpty()) {
+        translatedTitle
+    } else if (!originalTitle.isNullOrEmpty()) {
+        originalTitle
+    } else ""
+
     private fun getReleaseDates(list: List<Result>): List<String> =
-        list.first { it.iso_3166_1.equals(LANGUAGE, true) }.release_dates.map {
-            "$LANGUAGE: ${if (it.note.isNotEmpty()) {
+        list.first { it.iso_3166_1.equals(configurationRepository.currentLanguage, true) }.release_dates.map {
+            "$configurationRepository.currentLanguage: ${if (it.note.isNotEmpty()) {
                 "${it.note}:"
             } else ""} ${util.formatTime(it.release_date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd")}"
         }

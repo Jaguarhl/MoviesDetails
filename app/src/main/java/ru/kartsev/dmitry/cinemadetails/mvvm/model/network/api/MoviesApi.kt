@@ -71,8 +71,7 @@ interface MoviesApi {
     @GET(NOW_PLAYING_MOVIE)
     fun getNowPlayingMovieAsync(
         @Query("language") language: String?,
-        @Query("page") page: Int,
-        @Query("region") region: String?
+        @Query("page") page: Int
     ): Deferred<Response<NowPlayingMoviesEntity>>
 
     @GET(MOVIE_CREDITS)

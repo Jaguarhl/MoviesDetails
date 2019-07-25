@@ -58,9 +58,12 @@ data class MovieDetailsEntity(
     var vote_count: Int? = null
 ) {
     companion object {
-        fun getDetailsData(entity: MovieDetailsEntity): MovieDetailsData = with(entity) {
+        fun getDetailsData(
+            entity: MovieDetailsEntity,
+            language: String?
+        ): MovieDetailsData = with(entity) {
             MovieDetailsData(
-                false, adult, backdrop_path, budget, genres?.map { it.id!! } ?: listOf(),
+                false, language, adult, backdrop_path, budget, genres?.map { it.id!! } ?: listOf(),
                 homepage, id, imdb_id, original_language, original_title,
                 overview, popularity, poster_path, production_companies!!.map { it.id!! },
                 production_countries!!.map { it.name!! }, release_date, revenue, runtime,
