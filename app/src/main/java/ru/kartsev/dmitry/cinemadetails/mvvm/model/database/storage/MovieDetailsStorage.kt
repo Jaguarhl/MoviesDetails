@@ -72,9 +72,9 @@ class MovieDetailsStorage : KoinComponent {
         Timber.w(exception, "Delete movie details by id($movieId): FAILED.")
     }
 
-    suspend fun loadMovieVideosById(movieId: Int): List<MovieVideoData>? = try {
+    suspend fun loadMovieVideosById(movieId: Int, language: String): List<MovieVideoData>? = try {
         Timber.d("Load movie videos by id($movieId): START.")
-        val result = movieVideosDao.loadByMovieId(movieId)
+        val result = movieVideosDao.loadByMovieId(movieId, language)
         Timber.d("Load movie videos by id($movieId): FINISH. ($result)")
         result
     } catch (exception: Exception) {

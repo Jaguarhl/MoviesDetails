@@ -55,9 +55,11 @@ object StorageModule {
         single(MOVIE_DETAILS_STORAGE_DAO) {
             get<MovieDatabase>().movieDetailsDao()
         }
+
         single(MOVIE_GENRES_STORAGE_DAO) {
             get<MovieDatabase>().genresDao()
         }
+
         single(MOVIE_VIDEOS_STORAGE_DAO) {
             get<MovieDatabase>().movieVideosDao()
         }

@@ -14,7 +14,6 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayin
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 
@@ -74,12 +73,12 @@ class MovieRepository : BaseRepository() {
     }
 
     suspend fun getMovieVideos(movieId: Int, language: String? = null): List<MovieVideoData>? {
-        val currentLanguage = settingsRepository.currentLanguage
-        val data = movieDetailsStorage.loadMovieVideosById(movieId)
+        val currentLanguage = settingsRepository.currentLanguage!!
+        val data = movieDetailsStorage.loadMovieVideosById(movieId, language ?: currentLanguage)
 
         val response: List<MovieVideoData>?
 
-        if (data == null || data[0].iso_639_1.equals(currentLanguage, true).not()) {
+        if (data.isNullOrEmpty() || data[0].iso_639_1.equals(currentLanguage, true).not()) {
             response = safeApiCall(
                 call = { moviesApi.getMovieVideosAsync(movieId, language).await() },
                 errorMessage = "Error Fetching Movie Videos."
@@ -101,7 +100,7 @@ class MovieRepository : BaseRepository() {
         )
     }
 
-    suspend fun getMovieCredites(movieId: Int): MovieCreditsEntity? {
+    suspend fun getMovieCredits(movieId: Int): MovieCreditsEntity? {
         return safeApiCall(
             call = { moviesApi.getMovieCreditsAsync(movieId).await() },
             errorMessage = "Error Fetching Movie Credits."
