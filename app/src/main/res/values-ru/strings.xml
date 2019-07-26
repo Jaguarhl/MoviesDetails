@@ -6,6 +6,7 @@
 
     <!-- Section: Movie Common. -->
     <string name="menu_search_title">Поиск</string>
+    <string name="menu_send_title">Отправить</string>
 
     <!-- Section: Movie Details Activity. -->
 

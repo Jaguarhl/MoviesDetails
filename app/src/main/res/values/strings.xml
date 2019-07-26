@@ -5,6 +5,7 @@
 
     <string name="movie_list_loading_state">Loading…</string>
     <string name="menu_search_title">Search</string>
+    <string name="menu_send_title">Send</string>
 
     <!-- Section: Style Fonts. -->
 

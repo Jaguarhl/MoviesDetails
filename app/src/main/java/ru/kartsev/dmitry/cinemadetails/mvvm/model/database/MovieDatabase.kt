@@ -13,10 +13,12 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 
 @Database(
     entities = [
-        ConfigurationData::class, LanguageData::class, MovieDetailsData::class, GenreData::class
+        ConfigurationData::class, LanguageData::class, MovieDetailsData::class, GenreData::class,
+        MovieVideoData::class
     ],
     version = StorageConfig.DATABASE_VERSION,
     exportSchema = false

@@ -217,7 +217,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
                 ?.data
 
         val resultVideos = movieRepository.getMovieVideos(id, language)
-        val resultKeywords = movieRepository.getMovieKeywords(id, language)
+        val resultKeywords = movieRepository.getMovieKeywords(id)
         val resultCredits = movieRepository.getMovieCredits(id)
         val resultMovieImages = movieRepository.getMovieImages(id, language)
         val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = language)
