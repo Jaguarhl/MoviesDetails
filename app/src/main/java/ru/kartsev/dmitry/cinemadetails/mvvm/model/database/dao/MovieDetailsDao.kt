@@ -22,10 +22,10 @@ interface MovieDetailsDao {
         WHERE $ID_FIELD LIKE :movieId;
         """
     )
-    fun deleteById(movieId: Int)
+    suspend fun deleteById(movieId: Int)
 
     @Query("SELECT * FROM $TABLE_NAME;")
-    fun getAll(): List<MovieDetailsData>
+    suspend fun getAll(): List<MovieDetailsData>
 
     @Query("DELETE FROM $TABLE_NAME;")
     suspend fun clear()

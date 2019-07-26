@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
 import org.koin.standalone.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.ReleaseDatesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieAlternativeTitlesEntity
@@ -12,7 +13,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideosEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 
@@ -38,16 +39,18 @@ class MovieRepository : BaseRepository() {
     }
 
     suspend fun getMovieDetails(movieId: Int, language: String? = null): MovieDetailsEntity? {
+        val currentLanguage = settingsRepository.currentLanguage
         val data = movieDetailsStorage.loadMovieDetailsById(movieId)
-        var response: MovieDetailsEntity?
+        val response: MovieDetailsEntity?
 
-        if (data == null || data.isExpired || data.language.equals(settingsRepository.currentLanguage, true).not()) {
+        if (data == null || data.isExpired || data.language.equals(currentLanguage, true).not()) {
             response = safeApiCall(
                 call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
                 errorMessage = "Error Fetching Movie Details."
             )
 
-            response?.let { movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it, settingsRepository.currentLanguage)) }
+            response?.
+                let {movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it, language)) }
         } else {
             response = MovieDetailsEntity.getDetailsEntityFromData(data, settingsRepository.genresList, settingsRepository.languagesList)
         }
@@ -69,11 +72,25 @@ class MovieRepository : BaseRepository() {
         )
     }
 
-    suspend fun getMovieVideos(movieId: Int, language: String? = null): MovieVideosEntity? {
-        return safeApiCall(
-            call = { moviesApi.getMovieVideosAsync(movieId, language).await() },
-            errorMessage = "Error Fetching Movie Videos."
-        )
+    suspend fun getMovieVideos(movieId: Int, language: String? = null): List<MovieVideoData>? {
+        val currentLanguage = settingsRepository.currentLanguage!!
+        val data = movieDetailsStorage.loadMovieVideosById(movieId, language ?: currentLanguage)
+
+        val response: List<MovieVideoData>?
+
+        if (data.isNullOrEmpty() || data[0].iso_639_1.equals(currentLanguage, true).not()) {
+            response = safeApiCall(
+                call = { moviesApi.getMovieVideosAsync(movieId, language).await() },
+                errorMessage = "Error Fetching Movie Videos."
+            )?.results?.map { MovieVideo.getMovieVideoData(movieId, it) }
+
+            response?.let { movieDetailsStorage.saveMovieVideosList(it) }
+
+        } else {
+            response = data
+        }
+
+        return response
     }
 
     suspend fun getMovieKeywords(movieId: Int): MovieKeywordsEntity? {
@@ -83,7 +100,7 @@ class MovieRepository : BaseRepository() {
         )
     }
 
-    suspend fun getMovieCredites(movieId: Int): MovieCreditsEntity? {
+    suspend fun getMovieCredits(movieId: Int): MovieCreditsEntity? {
         return safeApiCall(
             call = { moviesApi.getMovieCreditsAsync(movieId).await() },
             errorMessage = "Error Fetching Movie Credits."

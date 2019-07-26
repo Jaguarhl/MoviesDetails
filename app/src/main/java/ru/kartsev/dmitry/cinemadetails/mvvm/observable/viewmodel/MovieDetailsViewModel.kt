@@ -15,12 +15,12 @@ import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_SIMILAR_MOVIES
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
@@ -172,7 +172,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
-    private var language: String = configurationRepository.currentLanguage ?: ""
+    private var language: String? = configurationRepository.currentLanguage
 
     var movieBackdropSize: String = ""
     var movieSimilarMovieBackdropSize: String = ""
@@ -217,8 +217,8 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
                 ?.data
 
         val resultVideos = movieRepository.getMovieVideos(id, language)
-        val resultKeywords = movieRepository.getMovieKeywords(id)
-        val resultCredits = movieRepository.getMovieCredites(id)
+        val resultKeywords = movieRepository.getMovieKeywords(id, language)
+        val resultCredits = movieRepository.getMovieCredits(id)
         val resultMovieImages = movieRepository.getMovieImages(id, language)
         val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = language)
 //        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
@@ -241,7 +241,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             resultKeywords?.keywords?.let { getMovieKeywords(it) }
             resultCredits?.cast?.let { getMovieCastCredits(it) }
             resultSimilarMovies?.results?.let { getSimilarMovies(it) }
-            resultVideos?.results?.let { getMovieVideos(it) }
+            resultVideos?.let { getMovieVideos(it) }
 //            movieReleaseDate = mutableListOf<String?>().apply {
 //                add(resultDetails?.release_date)
 //                resultReleaseDates?.results?.let { getReleaseDates(it) }?.let { addAll(it) }
@@ -289,7 +289,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         )
     }
 
-    private fun getMovieVideos(list: List<MovieVideo>) {
+    private fun getMovieVideos(list: List<MovieVideoData>) {
         movieVideoEnabled = list.isNotEmpty()
         movieVideosLiveData.postValue(
             list.map {
