@@ -8,6 +8,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.ConfigurationDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.GenresDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieVideosDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
@@ -26,4 +27,5 @@ abstract class MovieDatabase : RoomDatabase() {
     abstract fun languagesDao(): LanguagesDao
     abstract fun movieDetailsDao(): MovieDetailsDao
     abstract fun genresDao(): GenresDao
+    abstract fun movieVideosDao(): MovieVideosDao
 }

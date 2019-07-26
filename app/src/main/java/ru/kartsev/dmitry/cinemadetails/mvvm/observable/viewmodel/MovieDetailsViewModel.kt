@@ -172,7 +172,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
-    private var language: String = configurationRepository.currentLanguage ?: ""
+    private var language: String? = configurationRepository.currentLanguage
 
     var movieBackdropSize: String = ""
     var movieSimilarMovieBackdropSize: String = ""
