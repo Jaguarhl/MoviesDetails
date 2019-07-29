@@ -1,11 +1,11 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.standalone.KoinComponent
@@ -18,7 +18,9 @@ import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
@@ -61,6 +63,13 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieVideoEnabled)
         }
 
+    var movieVideosCount: Int? = null
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieVideosCount)
+        }
+
     var movieSimilarMoviesEnabled: Boolean = false
         @Bindable get() = field
         set(value) {
@@ -68,11 +77,25 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.movieSimilarMoviesEnabled)
         }
 
+    var movieSimilarMoviesCount: Int? = null
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieSimilarMoviesCount)
+        }
+
     var movieKeywordsEnabled: Boolean = false
         @Bindable get() = field
         set(value) {
             field = if (field == value) return else value
             notifyPropertyChanged(BR.movieKeywordsEnabled)
+        }
+
+    var movieCreditsCastEnabled: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieCreditsCastEnabled)
         }
 
     var movieToolbarCollapsed: Boolean = false
@@ -190,12 +213,8 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         // FIXME: Set it from settings repository.
         movieBackdropSize = "w780"
         movieSimilarMovieBackdropSize = "w300"
-        scope.launch {
-            loadMovieData(id)
-        }.invokeOnCompletion {
-            Timber.d("$movieTitle, screen width: $widthPixels, backdropSize: $movieBackdropSize, similarMovieBackdropSize: $movieSimilarMovieBackdropSize")
 
-        }
+        loadMovieData(id)
     }
 
     /** Section: Public Methods. */
@@ -207,59 +226,78 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     /** Section: Private Methods. */
 
-    private suspend fun loadMovieData(id: Int) {
-        loading = true
-        val resultDetails = movieRepository.getMovieDetails(id, language)
+    private fun loadMovieData(id: Int) = try {
+        scope.launch {
+            loading = true
+            val gettingResultsJob = async { movieRepository.getMovieDetails(id, language) }
+            val gettingTranslationsJob = async { movieRepository.getMovieTranslations(id) }
 
-        // FIXME: Move language param to variable.
-        val translationDetails =
-            movieRepository.getMovieTranslations(id)?.translations?.firstOrNull { it.iso_639_1.equals(language, true) }
-                ?.data
+            withContext(Dispatchers.Main) {
+                displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
+            }
 
-        val resultVideos = movieRepository.getMovieVideos(id, language)
-        val resultKeywords = movieRepository.getMovieKeywords(id)
-        val resultCredits = movieRepository.getMovieCredits(id)
-        val resultMovieImages = movieRepository.getMovieImages(id, language)
-        val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = language)
-//        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
+            val resultVideos = movieRepository.getMovieVideos(id, language)
+            val resultKeywords = movieRepository.getMovieKeywords(id)
+            val resultCredits = movieRepository.getMovieCredits(id)
+            val resultMovieImages = movieRepository.getMovieImages(id, language)
+            val resultSimilarMovies = movieRepository.getSimilarMovies(id, language = language)
 
-        withContext(Dispatchers.Main) {
-            movieTitle = getMovieTitle(translationDetails?.title, resultDetails?.title)
-            movieTitleOriginal = resultDetails?.original_title ?: ""
-            movieDescription = translationDetails?.overview ?: resultDetails?.overview ?: ""
-            moviePosterPath = resultDetails?.poster_path ?: ""
-            movieBackdropPath = resultDetails?.backdrop_path ?: ""
-            movieOverallInfo = "${resultDetails?.production_countries?.map { it.name }?.joinToString(" / ")}"
-            movieReleaseDate = resultDetails?.release_date ?: ""
-            movieRuntime = resultDetails?.runtime ?: 0
-            moviePopularity = resultDetails?.popularity ?: 0.0
-            movieBudget = resultDetails?.budget ?: 0
-            movieRevenue = resultDetails?.revenue ?: 0
-            movieRating = resultDetails?.vote_average.toString()
+            withContext(Dispatchers.Main) {
+                resultKeywords?.keywords?.let { getMovieKeywords(it) }
+                resultCredits?.cast?.let { getMovieCastCredits(it) }
+                resultSimilarMovies?.results?.let { getSimilarMovies(it) }
+                resultVideos?.let { getMovieVideos(it) }
 
-            resultDetails?.genres?.let { getMovieGenres(it) }
-            resultKeywords?.keywords?.let { getMovieKeywords(it) }
-            resultCredits?.cast?.let { getMovieCastCredits(it) }
-            resultSimilarMovies?.results?.let { getSimilarMovies(it) }
-            resultVideos?.let { getMovieVideos(it) }
 //            movieReleaseDate = mutableListOf<String?>().apply {
 //                add(resultDetails?.release_date)
 //                resultReleaseDates?.results?.let { getReleaseDates(it) }?.let { addAll(it) }
 //            }.toString()
+            }
+//        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
+
+//            Timber.d(
+//                "[$id]: ${translationDetails.toString()} \n $resultDetails \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
+//            )
+        }.invokeOnCompletion {
+            Timber.d("$movieTitle, backdropSize: $movieBackdropSize, similarMovieBackdropSize: $movieSimilarMovieBackdropSize")
+
         }
-        Log.d(
-            this@MovieDetailsViewModel::class.java.simpleName,
-            "[$id]: ${translationDetails.toString()} \n $resultDetails \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
-        )
+    } catch (exception: Exception) {
+        Timber.w(exception)
+    }
+
+    private fun displayDetails(resultDetails: MovieDetailsEntity?, translationDetails: MovieTranslationsEntity?) {
+        val translated = translationDetails?.translations?.firstOrNull {
+            it.iso_639_1.equals(
+                language,
+                true
+            )
+        }
+            ?.data
+
+        movieTitle = getMovieTitle(translated?.title, resultDetails?.title)
+        movieTitleOriginal = resultDetails?.original_title ?: ""
+        movieDescription = translated?.overview ?: resultDetails?.overview ?: ""
+        moviePosterPath = resultDetails?.poster_path ?: ""
+        movieBackdropPath = resultDetails?.backdrop_path ?: ""
+        movieOverallInfo = "${resultDetails?.production_countries?.map { it.name }?.joinToString(" / ")}"
+        movieReleaseDate = resultDetails?.release_date ?: ""
+        movieRuntime = resultDetails?.runtime ?: 0
+        moviePopularity = resultDetails?.popularity ?: 0.0
+        movieBudget = resultDetails?.budget ?: 0
+        movieRevenue = resultDetails?.revenue ?: 0
+        movieRating = resultDetails?.vote_average.toString()
+        resultDetails?.genres?.let { getMovieGenres(it) }
 
         loading = false
     }
 
-    private fun getMovieTitle(translatedTitle: String?, originalTitle: String?): String = if (!translatedTitle.isNullOrEmpty()) {
-        translatedTitle
-    } else if (!originalTitle.isNullOrEmpty()) {
-        originalTitle
-    } else ""
+    private fun getMovieTitle(translatedTitle: String?, originalTitle: String?): String =
+        if (!translatedTitle.isNullOrEmpty()) {
+            translatedTitle
+        } else if (!originalTitle.isNullOrEmpty()) {
+            originalTitle
+        } else ""
 
     private fun getReleaseDates(list: List<Result>): List<String> =
         list.first { it.iso_3166_1.equals(configurationRepository.currentLanguage, true) }.release_dates.map {
@@ -270,8 +308,9 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
         movieSimilarMoviesEnabled = list.isNotEmpty()
+        movieSimilarMoviesCount = /*if (list.size > MAX_SIMILAR_MOVIES) { MAX_SIMILAR_MOVIES } else */list.size
         movieSimilarMoviesLiveData.postValue(
-            list.take(MAX_SIMILAR_MOVIES)
+            list/*.take(MAX_SIMILAR_MOVIES)*/
                 .map {
                     SimilarMovieObservable(it.id, it.title, it.backdrop_path ?: "", it.vote_average.toString())
                 }
@@ -279,6 +318,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     }
 
     private fun getMovieCastCredits(list: List<Cast>) {
+        movieCreditsCastEnabled = list.isNotEmpty()
         movieCreditsCastLiveData.postValue(
             list.filter {
                 it.order <= MAX_CAST_ORDER
@@ -291,6 +331,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
 
     private fun getMovieVideos(list: List<MovieVideoData>) {
         movieVideoEnabled = list.isNotEmpty()
+        movieVideosCount = list.size
         movieVideosLiveData.postValue(
             list.map {
                 VideoObservable(it.key, it.name, it.site, it.size, it.type)

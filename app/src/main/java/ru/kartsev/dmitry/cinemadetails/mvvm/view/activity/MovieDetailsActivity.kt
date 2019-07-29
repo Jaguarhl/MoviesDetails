@@ -54,6 +54,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
             setHomeButtonEnabled(true)
         }
 

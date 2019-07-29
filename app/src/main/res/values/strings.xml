@@ -20,8 +20,8 @@
     <string name="item_movie_budged_label">Budget:</string>
     <string name="item_movie_revenue_label">Revenue:</string>
     <string name="item_movie_cast_credits_label">Top Billed Cast:</string>
-    <string name="item_movie_similar_label">Similar movies:</string>
-    <string name="item_movie_details_videos_label">Videos:</string>
+    <string name="item_movie_similar_label">Similar movies (%1$d):</string>
+    <string name="item_movie_details_videos_label">Videos (%1$d):</string>
     <string name="item_movie_popularity_label">Popularity:</string>
     <string name="item_movie_details_genres_label">Genres:</string>
     <string name="item_movie_details_tags_label">Keywords:</string>

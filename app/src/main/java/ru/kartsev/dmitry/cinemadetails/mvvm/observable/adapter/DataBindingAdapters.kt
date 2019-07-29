@@ -90,6 +90,20 @@ fun formatFinance(view: TextView, sum: Long) = with(view) {
     }
 }
 
+@BindingAdapter("bind:similar_movies_label")
+fun labelSimilarMovies(view: TextView, count: Int?) = with(view) {
+    count?.let {
+        text = resources.getString(R.string.item_movie_similar_label, it)
+    }
+}
+
+@BindingAdapter("bind:movie_videos_label")
+fun labelMovieVideos(view: TextView, count: Int?) = with(view) {
+    count?.let {
+        text = resources.getString(R.string.item_movie_details_videos_label, it)
+    }
+}
+
 @BindingAdapter("bind:release_date_world")
 fun viewReleaseDates(view: TextView, date: String) = with(view) {
     val util = get(Util::class.java)

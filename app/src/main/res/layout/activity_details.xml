@@ -199,8 +199,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/itemDetailsMovieRatingStar"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/activity_details_movie_rating_icon_size"
+                    android:layout_height="@dimen/activity_details_movie_rating_icon_size"
                     android:tint="@color/colorFontMain"
                     android:layout_marginStart="@dimen/tertiary_horizontal_margin"
                     app:srcCompat="@drawable/ic_star_black"
@@ -320,7 +320,8 @@
                     app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTagsLabel" />
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTagsLabel"
+                    bind:viewVisibility="@{viewModel.movieKeywordsEnabled}" />
 
                 <TextView
                     android:id="@+id/activityDetailsMovieOverview"
@@ -346,7 +347,8 @@
                     android:textSize="@dimen/text_secondary"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview" />
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview"
+                    bind:viewVisibility="@{viewModel.movieCreditsCastEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activityDetailsMovieCastListRecycler"
@@ -357,6 +359,7 @@
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCreditsCastLabel"
+                    bind:viewVisibility="@{viewModel.movieCreditsCastEnabled}"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_credits" />
 
@@ -370,6 +373,7 @@
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler"
+                    bind:similar_movies_label="@{viewModel.movieSimilarMoviesCount}"
                     bind:viewVisibility="@{viewModel.movieSimilarMoviesEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -394,6 +398,7 @@
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarListRecycler"
+                    bind:movie_videos_label="@{viewModel.movieVideosCount}"
                     bind:viewVisibility="@{viewModel.movieVideoEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
