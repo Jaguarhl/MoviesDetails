@@ -5,7 +5,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemCastBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
@@ -48,10 +52,15 @@ class CreditsCastListAdapter(
         result.dispatchUpdatesTo(this)
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ItemCastViewHolder).cleanupImagesTask()
+        super.onViewRecycled(holder)
+    }
+
     class ItemCastViewHolder(
         private val binding: ItemCastBinding
     ) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), KoinComponent {
         fun bind(
             observable: CastObservable,
             viewModel: MovieDetailsViewModel
@@ -59,6 +68,10 @@ class CreditsCastListAdapter(
             binding.baseObservable = observable
             binding.viewModel = viewModel
             binding.executePendingBindings()
+        }
+
+        fun cleanupImagesTask() {
+            get<Picasso>(PICASSO_NAME).cancelRequest(binding.itemCreditsPersonPhoto)
         }
     }
 }

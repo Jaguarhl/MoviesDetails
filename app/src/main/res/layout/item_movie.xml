@@ -31,6 +31,7 @@
             app:viewVisibility="@{baseObservable.isPosterVisible}"
             app:image_uri="@{baseObservable.posterPath}"
             app:image_placeholder="@{@drawable/ic_image}"
+            app:image_size="@{viewModel.moviePosterSize}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic"/>

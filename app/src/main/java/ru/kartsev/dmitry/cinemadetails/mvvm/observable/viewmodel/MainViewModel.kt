@@ -38,6 +38,7 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
 
     /** Section: Simple Properties. */
 
+    var moviePosterSize: String? = null
     var popularMovies: LiveData<PagedList<MovieObservable>>
 
     var movieIdToOpenDetails: Int? = null
@@ -46,6 +47,7 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
 
     init {
         getTmdbSettings()
+        moviePosterSize = settingsRepository.posterSizes[0]
         val config = PagedList.Config.Builder().apply {
             setPageSize(PAGE_SIZE)
             setEnablePlaceholders(false)

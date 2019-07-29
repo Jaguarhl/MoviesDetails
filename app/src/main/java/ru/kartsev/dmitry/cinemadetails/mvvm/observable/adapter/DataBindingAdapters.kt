@@ -28,11 +28,10 @@ fun adapterImage(
     isCenterInside: Boolean = false,
     imageSize: String? = null
 ) {
-    if (uri.isNullOrEmpty()) return
+//    if (uri.isNullOrEmpty()) return
 
     val picasso = get(Picasso::class.java)
-    val size = imageSize ?: "w300"
-    val creator = picasso.load("$size$uri")
+    val creator = picasso.load("${imageSize.toString()}${uri.toString()}")
 
     with(creator) {
         errorPlaceholder?.let {

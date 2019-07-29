@@ -116,6 +116,7 @@
                     android:outlineProvider="bounds"
                     app:image_placeholder="@{@drawable/ic_image}"
                     app:image_uri="@{viewModel.moviePosterPath}"
+                    app:image_size="@{viewModel.moviePosterSize}"
                     app:layout_constraintEnd_toStartOf="@id/activityDetailsMovieTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

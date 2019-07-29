@@ -29,12 +29,14 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/itemCreditsPersonPhoto"
                 android:layout_width="@dimen/item_cast_image_width"
                 android:layout_height="@dimen/item_cast_image_height"
-                android:scaleType="fitXY"
                 bind:image_size="@{baseObservable.imageSize}"
                 bind:image_uri="@{baseObservable.profilePath}"
-                bind:image_error="@{@drawable/ic_person_black}"/>
+                bind:image_placeholder="@{@drawable/ic_person_black}"
+                bind:image_error="@{@drawable/ic_person_white}"
+                bind:image_center_inside="@{true}"/>
 
             <TextView
                 android:layout_width="match_parent"

@@ -28,6 +28,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.SimilarMoviesListAdapter
 import android.util.DisplayMetrics
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
@@ -62,14 +63,11 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         propertyHandler.attach()
 
-        val metrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(metrics)
-
         intent?.apply {
             if (!hasExtra(MOVIE_ID_KEY) || savedInstanceState != null) return@apply
 
             val movieId = getIntExtra(MOVIE_ID_KEY, 0)
-            viewModel.initializeWithMovieId(movieId, metrics.widthPixels)
+            viewModel.initializeWithMovieId(movieId)
         }
 
         initListeners()
@@ -102,6 +100,14 @@ class MovieDetailsActivity : AppCompatActivity() {
             adapter = videosAdapter
             LinearSnapHelper().attachToRecyclerView(this)
         }
+    }
+
+    override fun onDestroy() {
+        activityDetailsMovieCastListRecycler.adapter = null
+        activityDetailsMovieSimilarListRecycler.adapter = null
+        activityDetailsMovieVideosListRecycler.adapter = null
+        propertyHandler.detach()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -202,6 +208,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             when (propertyId) {
                 BR.action -> when (viewModel.action) {
                     ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
+
+                    ACTION_COLLAPSE_TOOLBAR -> { actionBar?.hide() }
 
                     else -> return@with
                 }

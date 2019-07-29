@@ -5,7 +5,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemSimilarMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
@@ -36,6 +40,11 @@ class SimilarMoviesListAdapter(
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ItemSimilarMovieViewHolder).cleanupImagesTask()
+        super.onViewRecycled(holder)
+    }
+
     fun updateItems(list: List<SimilarMovieObservable>) {
         val callback = DefaultDiffCallback(items, list)
         val result = DiffUtil.calculateDiff(callback)
@@ -51,13 +60,17 @@ class SimilarMoviesListAdapter(
     class ItemSimilarMovieViewHolder(
         private val binding: ItemSimilarMovieBinding
     ) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), KoinComponent {
         fun bind(
             observable: SimilarMovieObservable,
             viewModel: MovieDetailsViewModel) {
             binding.baseObservable = observable
             binding.viewModel = viewModel
             binding.executePendingBindings()
+        }
+
+        fun cleanupImagesTask() {
+            get<Picasso>(PICASSO_NAME).cancelRequest(binding.itemSimilarMoviePoster)
         }
     }
 }

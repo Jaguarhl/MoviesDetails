@@ -51,6 +51,12 @@ class MainActivity : AppCompatActivity() {
         propertyHandler.attach()
     }
 
+    override fun onDestroy() {
+        mainViewRecyclerList.adapter = null
+        propertyHandler.detach()
+        super.onDestroy()
+    }
+
     /** Section: Private Methods. */
 
     private fun observeLiveData() {

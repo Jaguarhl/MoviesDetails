@@ -28,7 +28,7 @@ object NetworkModule {
     private const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
     private const val API_MOVIES = "network.api_movies"
     private const val API_SETTINGS = "network.api_settings"
-    private const val PICASSO_NAME = "network.picasso"
+    const val PICASSO_NAME = "network.picasso"
     private const val PICASSO_CLIENT_NAME = "network.picasso_client"
     private const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
     private const val PICASSO_REQUEST_TRANSFORMER_NAME = "network.picasso_request_transformer"
