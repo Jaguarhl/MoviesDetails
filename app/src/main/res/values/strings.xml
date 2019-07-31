@@ -14,21 +14,23 @@
 
     <!-- Section: Movie Details Activity. -->
 
-    <string name="item_movie_details_title">Movie details</string>
-    <string name="item_movie_release_date_label">Release date:</string>
-    <string name="item_movie_title_original_label">Original title:</string>
-    <string name="item_movie_budged_label">Budget:</string>
-    <string name="item_movie_revenue_label">Revenue:</string>
-    <string name="item_movie_cast_credits_label">Top Billed Cast:</string>
-    <string name="item_movie_similar_label">Similar movies (%1$d):</string>
-    <string name="item_movie_details_videos_label">Videos (%1$d):</string>
-    <string name="item_movie_popularity_label">Popularity:</string>
-    <string name="item_movie_details_genres_label">Genres:</string>
-    <string name="item_movie_details_tags_label">Keywords:</string>
-    <string name="item_movie_rating_label">Rating:</string>
-    <string name="item_movie_popularity_count">%1$s bil.</string>
-    <string name="item_movie_finance" translatable="false">$ %1$s</string>
-    <string name="item_movie_no_data">No data available</string>
+    <string name="activity_movie_details_title">Movie details</string>
+    <string name="activity_movie_details_release_date_label">Release date:</string>
+    <string name="activity_movie_details_title_original_label">Original title:</string>
+    <string name="activity_movie_details_budged_label">Budget:</string>
+    <string name="activity_movie_details_revenue_label">Revenue:</string>
+    <string name="activity_movie_details_cast_credits_label">Top Billed Cast:</string>
+    <string name="activity_movie_details_similar_label">Similar movies (%1$d):</string>
+    <string name="activity_movie_details_videos_label">Videos (%1$d):</string>
+    <string name="activity_movie_details_popularity_label">Popularity:</string>
+    <string name="activity_movie_details_genres_label">Genres:</string>
+    <string name="activity_movie_details_tags_label">Keywords:</string>
+    <string name="activity_movie_details_rating_label">Rating:</string>
+    <string name="activity_movie_details_popularity_count">%1$s bil.</string>
+    <string name="activity_movie_details_finance" translatable="false">$ %1$s</string>
+    <string name="activity_movie_details_no_data">No data available</string>
+    <string name="activity_movie_details_share_title">"%1$s\":</string>
+    <string name="activity_movie_details_application_chooser_title">Share movie info</string>
 
     <!-- Section: Date. -->
 

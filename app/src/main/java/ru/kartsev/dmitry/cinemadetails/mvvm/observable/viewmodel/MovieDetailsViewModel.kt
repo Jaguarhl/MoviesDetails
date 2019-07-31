@@ -210,7 +210,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Initialization. */
 
     fun initializeWithMovieId(id: Int) {
-        with (settingsRepository) {
+        with(settingsRepository) {
             movieBackdropSize = backdropSizes[1]
             movieSimilarMovieBackdropSize = backdropSizes[0]
             moviePosterSize = posterSizes[0]
@@ -224,6 +224,35 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     fun movieSimilarItemClicked(movieId: Int) {
         movieIdToShow = movieId
         action = ACTION_OPEN_MOVIE
+    }
+
+    fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
+        var result = StringBuilder(title)
+        if (movieReleaseDate.isNotEmpty()) result.append(
+            "\n\n$releaseDateLabel $movieReleaseDate"
+        )
+
+        movieGenresLiveData.value?.let { list ->
+            result.append(
+                "\n\n$genresLabel ${list.toList().joinToString(
+                    ", "
+                ) { it.name }}"
+            )
+        }
+
+        if (movieDescription.isNotEmpty()) result.append(
+            "\n\n$movieDescription"
+        )
+
+        movieVideosLiveData.value?.let { list ->
+            result.append(
+                "\n\n${list.toList().joinToString(
+                    "\n"
+                ) { "https://youtu.be/${it.key}" }}"
+            )
+        }
+
+        return result.toString()
     }
 
     /** Section: Private Methods. */

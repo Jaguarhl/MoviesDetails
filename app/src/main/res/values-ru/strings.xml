@@ -10,21 +10,22 @@
 
     <!-- Section: Movie Details Activity. -->
 
-    <string name="item_movie_details_title">Подробнее о ленте</string>
-    <string name="item_movie_release_date_label">Премьера:</string>
-    <string name="item_movie_title_original_label">Оригинальное название:</string>
-    <string name="item_movie_budged_label">Бюджет:</string>
-    <string name="item_movie_revenue_label">Сборы:</string>
-    <string name="item_movie_popularity_label">Зрители:</string>
-    <string name="item_movie_details_genres_label">Жанры:</string>
-    <string name="item_movie_details_tags_label">Тэги:</string>
-    <string name="item_movie_cast_credits_label">В главных ролях:</string>
-    <string name="item_movie_details_videos_label">Видео (%1$d):</string>
-    <string name="item_movie_rating_label">Рейтинг:</string>
-    <string name="item_movie_similar_label">Похожие фильмы (%1$d):</string>
-    <string name="item_movie_popularity_count">%1$s млн</string>
-    <string name="item_movie_no_data">Нет данных</string>
-
+    <string name="activity_movie_details_title">Подробнее о ленте</string>
+    <string name="activity_movie_details_release_date_label">Премьера:</string>
+    <string name="activity_movie_details_title_original_label">Оригинальное название:</string>
+    <string name="activity_movie_details_budged_label">Бюджет:</string>
+    <string name="activity_movie_details_revenue_label">Сборы:</string>
+    <string name="activity_movie_details_popularity_label">Зрители:</string>
+    <string name="activity_movie_details_genres_label">Жанры:</string>
+    <string name="activity_movie_details_tags_label">Тэги:</string>
+    <string name="activity_movie_details_cast_credits_label">В главных ролях:</string>
+    <string name="activity_movie_details_videos_label">Видео (%1$d):</string>
+    <string name="activity_movie_details_rating_label">Рейтинг:</string>
+    <string name="activity_movie_details_similar_label">Похожие фильмы (%1$d):</string>
+    <string name="activity_movie_details_popularity_count">%1$s млн</string>
+    <string name="activity_movie_details_no_data">Нет данных</string>
+    <string name="activity_movie_details_share_title">\«%1$s\»:</string>
+    <string name="activity_movie_details_application_chooser_title">Поделиться информацией о фильме</string>
 
     <!-- Section: Date. -->
 

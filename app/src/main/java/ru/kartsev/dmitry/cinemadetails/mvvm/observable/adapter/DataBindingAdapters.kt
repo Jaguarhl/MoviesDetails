@@ -1,18 +1,14 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.adapter
 
 import android.graphics.drawable.Drawable
-import android.util.Patterns
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 import org.koin.java.standalone.KoinJavaComponent.get
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
-import java.io.File
 import java.lang.StringBuilder
 
 /** Section: Adapters. */
@@ -83,23 +79,23 @@ fun formatOverallInfo(
 fun formatFinance(view: TextView, sum: Long) = with(view) {
     val result = String.format("%,d", sum)
     text = if (sum > 0) {
-        resources.getString(R.string.item_movie_finance, result)
+        resources.getString(R.string.activity_movie_details_finance, result)
     } else {
-        resources.getString(R.string.item_movie_no_data)
+        resources.getString(R.string.activity_movie_details_no_data)
     }
 }
 
 @BindingAdapter("bind:similar_movies_label")
 fun labelSimilarMovies(view: TextView, count: Int?) = with(view) {
     count?.let {
-        text = resources.getString(R.string.item_movie_similar_label, it)
+        text = resources.getString(R.string.activity_movie_details_similar_label, it)
     }
 }
 
 @BindingAdapter("bind:movie_videos_label")
 fun labelMovieVideos(view: TextView, count: Int?) = with(view) {
     count?.let {
-        text = resources.getString(R.string.item_movie_details_videos_label, it)
+        text = resources.getString(R.string.activity_movie_details_videos_label, it)
     }
 }
 

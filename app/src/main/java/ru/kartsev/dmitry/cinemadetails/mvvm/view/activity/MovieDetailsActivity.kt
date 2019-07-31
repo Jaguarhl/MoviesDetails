@@ -26,7 +26,6 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObs
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.SimilarMoviesListAdapter
-import android.util.DisplayMetrics
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
 
@@ -123,6 +122,11 @@ class MovieDetailsActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_item_send -> {
+                shareMovie()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -168,6 +172,31 @@ class MovieDetailsActivity : AppCompatActivity() {
         })
     }
 
+    private fun shareMovie() {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            val stringToShare = viewModel.getMovieInfoToShare(
+                resources.getString(
+                    R.string.activity_movie_details_share_title,
+                    viewModel.movieTitle
+                ), resources.getString(R.string.activity_movie_details_release_date_label)
+                , resources.getString(
+                    R.string.activity_movie_details_genres_label
+                )
+            )
+            putExtra(Intent.EXTRA_TEXT, stringToShare)
+            type = "text/plain"
+        }
+
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                resources.getText(R.string.activity_movie_details_application_chooser_title)
+            )
+        )
+    }
+
+    /** Section: Chips Workaround. */
+
     private fun addKeywordsChips(list: List<KeywordObservable>?) {
         with(activityDetailsMovieKeywordsListGroup) {
             removeAllViews()
@@ -209,7 +238,9 @@ class MovieDetailsActivity : AppCompatActivity() {
                 BR.action -> when (viewModel.action) {
                     ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
 
-                    ACTION_COLLAPSE_TOOLBAR -> { actionBar?.hide() }
+                    ACTION_COLLAPSE_TOOLBAR -> {
+                        actionBar?.hide()
+                    }
 
                     else -> return@with
                 }
