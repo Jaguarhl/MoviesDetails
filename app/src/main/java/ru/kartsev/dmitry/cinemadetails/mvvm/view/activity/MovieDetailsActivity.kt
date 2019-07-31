@@ -239,7 +239,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                     ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
 
                     ACTION_COLLAPSE_TOOLBAR -> {
-                        actionBar?.hide()
+                        supportActionBar?.hide()
                     }
 
                     else -> return@with

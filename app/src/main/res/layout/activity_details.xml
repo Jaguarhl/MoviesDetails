@@ -115,6 +115,7 @@
                     android:elevation="2dp"
                     android:outlineProvider="bounds"
                     app:image_placeholder="@{@drawable/ic_image}"
+                    app:image_error="@{@drawable/poster_placeholder}"
                     app:image_uri="@{viewModel.moviePosterPath}"
                     app:image_size="@{viewModel.moviePosterSize}"
                     app:layout_constraintEnd_toStartOf="@id/activityDetailsMovieTitle"

@@ -28,7 +28,6 @@
             android:layout_height="@dimen/activity_details_movie_poster_size"
             android:layout_marginTop="@dimen/primary_vertical_margin"
             android:layout_marginStart="@dimen/primary_horizontal_margin"
-            app:viewVisibility="@{baseObservable.isPosterVisible}"
             app:image_uri="@{baseObservable.posterPath}"
             app:image_placeholder="@{@drawable/ic_image}"
             app:image_size="@{viewModel.moviePosterSize}"
