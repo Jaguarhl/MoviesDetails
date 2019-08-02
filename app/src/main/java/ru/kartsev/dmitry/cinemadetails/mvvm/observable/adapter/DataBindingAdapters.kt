@@ -1,6 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.adapter
 
+import android.graphics.Typeface.ITALIC
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,7 +17,7 @@ import java.lang.StringBuilder
 
 /** Section: Adapters. */
 @BindingAdapter(
-    value = ["bind:image_uri", "bind:image_placeholder", "bind:image_error", "bind:image_center_inside", "bind:image_size"],
+    value = ["app:image_uri", "app:image_placeholder", "app:image_error", "app:image_center_inside", "app:image_size"],
     requireAll = false
 )
 fun adapterImage(
@@ -46,7 +50,7 @@ fun adapterImage(
 }
 
 @BindingAdapter(
-    value = ["bind:overall_info", "bind:overall_release_date", "bind:overall_runtime"],
+    value = ["app:overall_info", "app:overall_release_date", "app:overall_runtime"],
     requireAll = true
 )
 fun formatOverallInfo(
@@ -75,7 +79,7 @@ fun formatOverallInfo(
     text = string
 }
 
-@BindingAdapter("bind:finance")
+@BindingAdapter("app:finance")
 fun formatFinance(view: TextView, sum: Long) = with(view) {
     val result = String.format("%,d", sum)
     text = if (sum > 0) {
@@ -85,21 +89,37 @@ fun formatFinance(view: TextView, sum: Long) = with(view) {
     }
 }
 
-@BindingAdapter("bind:similar_movies_label")
+@BindingAdapter("app:original_title")
+fun movieOriginalTitle(view: TextView, title: String) = with (view) {
+    val label = context.getString(R.string.activity_movie_details_title_original_label)
+    // FIXME: Replace spaces by something more appropriate and tunable
+    val finalText = "$label   $title"
+    val spannableString = SpannableString(finalText).apply {
+        setSpan(
+            StyleSpan(ITALIC),
+            label.length,
+            length,
+            Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+        )
+    }
+    text = spannableString
+}
+
+@BindingAdapter("app:similar_movies_label")
 fun labelSimilarMovies(view: TextView, count: Int?) = with(view) {
     count?.let {
         text = resources.getString(R.string.activity_movie_details_similar_label, it)
     }
 }
 
-@BindingAdapter("bind:movie_videos_label")
+@BindingAdapter("app:movie_videos_label")
 fun labelMovieVideos(view: TextView, count: Int?) = with(view) {
     count?.let {
         text = resources.getString(R.string.activity_movie_details_videos_label, it)
     }
 }
 
-@BindingAdapter("bind:release_date_world")
+@BindingAdapter("app:release_date_world")
 fun viewReleaseDates(view: TextView, date: String) = with(view) {
     val util = get(Util::class.java)
     text = context.getString(
@@ -110,7 +130,7 @@ fun viewReleaseDates(view: TextView, date: String) = with(view) {
     )
 }
 
-@BindingAdapter("bind:viewVisibility")
+@BindingAdapter("app:viewVisibility")
 fun viewVisibility(view: View, isVisible: Boolean) {
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }

@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -239,7 +241,18 @@ class MovieDetailsActivity : AppCompatActivity() {
                     ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
 
                     ACTION_COLLAPSE_TOOLBAR -> {
-                        supportActionBar?.hide()
+                        ViewCompat.setNestedScrollingEnabled(detailsScrollView, false)
+                        app_bar_layout?.apply {
+                            setExpanded(false, false)
+                            (layoutParams as CoordinatorLayout.LayoutParams).behavior?.also {
+                                (it as AppBarLayout.Behavior).setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+                                    override fun canDrag(p0: AppBarLayout): Boolean {
+                                        return false
+                                    }
+                                })
+                            }
+                        }
+                        viewModel.movieToolbarCollapsed = false
                     }
 
                     else -> return@with

@@ -155,27 +155,16 @@
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieTitleOriginalLabel"
+                    android:id="@+id/activityDetailsMovieTitleOriginal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/primary_horizontal_margin"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
-                    android:text="@string/activity_movie_details_title_original_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieBottomView" />
-
-                <TextView
-                    android:id="@+id/activityDetailsMovieTitleOriginal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/secondary_horizontal_margin"
-                    android:text="@{viewModel.movieTitleOriginal}"
-                    android:textSize="@dimen/text_tertiary"
-                    android:textStyle="italic"
+                    app:original_title="@{viewModel.movieTitleOriginal}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieTitleOriginalLabel"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieBottomView"
                     tools:text="Movie title original" />
 
                 <TextView
@@ -184,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_rating_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleOriginal" />
 
                 <TextView
@@ -216,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_budged_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRating" />
 
                 <TextView
@@ -238,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_revenue_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieBudget" />
 
                 <TextView
@@ -260,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_release_date_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRevenue" />
 
                 <TextView
@@ -282,7 +271,7 @@
                     android:text="@string/activity_movie_details_genres_label"
                     android:textSize="@dimen/text_tertiary"
                     android:layout_marginTop="@dimen/tertiary_vertical_margin"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieReleaseDate" />
 
                 <com.google.android.material.chip.ChipGroup
@@ -296,7 +285,7 @@
                     app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
                     app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresLabel" />
 
                 <TextView
@@ -306,7 +295,7 @@
                     android:text="@string/activity_movie_details_tags_label"
                     android:textSize="@dimen/text_tertiary"
                     android:layout_marginTop="@dimen/tertiary_vertical_margin"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresListGroup"
                     bind:viewVisibility="@{viewModel.movieKeywordsEnabled}"/>
 
@@ -321,7 +310,7 @@
                     app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
                     app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginalLabel"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTagsLabel"
                     bind:viewVisibility="@{viewModel.movieKeywordsEnabled}" />
 
