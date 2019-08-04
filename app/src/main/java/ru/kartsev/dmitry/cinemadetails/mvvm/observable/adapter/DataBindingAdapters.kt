@@ -119,6 +119,13 @@ fun labelMovieVideos(view: TextView, count: Int?) = with(view) {
     }
 }
 
+@BindingAdapter("app:movie_images_label")
+fun labelMovieImages(view: TextView, count: Int?) = with(view) {
+    count?.let {
+        text = resources.getString(R.string.activity_movie_details_images_label, it)
+    }
+}
+
 @BindingAdapter("app:release_date_world")
 fun viewReleaseDates(view: TextView, date: String) = with(view) {
     val util = get(Util::class.java)

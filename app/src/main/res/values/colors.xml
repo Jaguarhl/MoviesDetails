@@ -3,7 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryLight">#C0C0C0</color>
     <color name="colorPrimaryDark">#282424</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#242424</color>
     <color name="loadingForeground">#FFFFFFFF</color>
     <color name="colorMovieTitleView">#DCDCDC</color>
     <color name="colorFontMain">#2F4F4F</color>

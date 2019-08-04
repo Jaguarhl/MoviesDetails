@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+
+    <data class="ItemMovieImageBinding">
+
+        <import type="android.view.View" />
+
+        <variable
+            name="baseObservable"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.ImageObservable" />
+
+        <variable
+            name="viewModel"
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/secondary_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/itemMovieImagePoster"
+            android:layout_width="@dimen/item_similar_movie_width"
+            android:layout_height="@dimen/item_similar_movie_height"
+            android:layout_marginTop="@dimen/tertiary_vertical_margin"
+            app:image_uri="@{baseObservable.imagePath}"
+            app:image_size="@{viewModel.movieSimilarMovieBackdropSize}"
+            app:image_placeholder="@{@drawable/ic_image}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic"/>
+
+        <View
+            android:id="@+id/viewitemMovieImageRating"
+            android:background="@drawable/background_movie_image_rating"
+            android:alpha="0.7"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintTop_toTopOf="@id/itemMovieImageRating"
+            app:layout_constraintStart_toStartOf="@id/itemMovieImageRatingTitle"
+            app:layout_constraintEnd_toEndOf="@id/itemMovieImagePoster"
+            app:layout_constraintBottom_toBottomOf="@id/itemMovieImagePoster" />
+
+        <TextView
+            android:id="@+id/itemMovieImageRatingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_tertiary"
+            android:textColor="@color/colorPrimaryLight"
+            android:text="@string/item_movie_image_rating_title"
+            android:paddingStart="@dimen/tertiary_horizontal_margin"
+            android:paddingEnd="0dp"
+            android:layout_marginEnd="@dimen/tertiary_horizontal_margin"
+            android:layout_marginBottom="@dimen/tertiary_horizontal_margin"
+            app:layout_constraintEnd_toStartOf="@id/itemMovieImageRating"
+            app:layout_constraintBottom_toBottomOf="@id/itemMovieImagePoster"
+            tools:text="Рейтинг:"/>
+
+        <TextView
+            android:id="@+id/itemMovieImageRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{baseObservable.voteAverage}"
+            android:textSize="@dimen/text_tertiary"
+            android:textColor="@color/colorPrimaryLight"
+            android:paddingStart="@dimen/tertiary_horizontal_margin"
+            android:paddingEnd="0dp"
+            android:layout_marginEnd="@dimen/tertiary_horizontal_margin"
+            android:layout_marginBottom="@dimen/tertiary_horizontal_margin"
+            app:layout_constraintEnd_toStartOf="@id/itemMovieImageRatingStar"
+            app:layout_constraintBottom_toBottomOf="@id/itemMovieImagePoster"
+            tools:text="8.5"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemMovieImageRatingStar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="@color/colorPrimaryLight"
+            android:layout_marginEnd="@dimen/tertiary_horizontal_margin"
+            android:layout_marginBottom="@dimen/tertiary_horizontal_margin"
+            app:srcCompat="@drawable/ic_star_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/itemMovieImagePoster"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

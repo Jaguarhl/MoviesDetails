@@ -5,6 +5,7 @@
 
     <string name="movie_list_loading_state">Loading…</string>
     <string name="menu_search_title">Search</string>
+    <string name="menu_favourite_title">To favourite</string>
     <string name="menu_send_title">Send</string>
 
     <!-- Section: Style Fonts. -->
@@ -22,6 +23,7 @@
     <string name="activity_movie_details_cast_credits_label">Top Billed Cast:</string>
     <string name="activity_movie_details_similar_label">Similar movies (%1$d):</string>
     <string name="activity_movie_details_videos_label">Videos (%1$d):</string>
+    <string name="activity_movie_details_images_label">Images (%1$d):</string>
     <string name="activity_movie_details_popularity_label">Popularity:</string>
     <string name="activity_movie_details_genres_label">Genres:</string>
     <string name="activity_movie_details_tags_label">Keywords:</string>
@@ -32,6 +34,8 @@
     <string name="activity_movie_details_share_title">"%1$s\":</string>
     <string name="activity_movie_details_application_chooser_title">Share movie info</string>
 
+    <string name="item_movie_image_rating_title">Rating:</string>
+
     <!-- Section: Date. -->
 
     <string name="date_release_year">%1$s yeah</string>
@@ -39,7 +43,7 @@
     <string name="date_runtime_minutes">%1$d min.</string>
     <string name="date_release_world">%1$s world premiere</string>
 
-    <!-- Certifications. -->
+    <!-- Section: Certifications. -->
 
     <string name="certification_premiere">Premiere</string>
     <string name="certification_theatrical_limited">Theatrical (limited)</string>
@@ -47,4 +51,11 @@
     <string name="certification_digital">Digital</string>
     <string name="certification_physical">Physical</string>
     <string name="certification_tv">TV</string>
+    
+    <!-- Section: Tabs Titles. -->
+    
+    <string name="activity_main_tab_now_playing_title">Now playing</string>
+    <string name="activity_main_tab_coming_soon">Coming soon</string>
+    <string name="activity_main_tab_watchlist">Watchlist</string>
+
 </resources>

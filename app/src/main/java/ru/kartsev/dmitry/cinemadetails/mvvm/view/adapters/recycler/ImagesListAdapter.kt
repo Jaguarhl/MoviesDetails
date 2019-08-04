@@ -1,4 +1,4 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,37 +10,44 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
-import ru.kartsev.dmitry.cinemadetails.databinding.ItemCastBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
+import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieImageBinding
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.ImageObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DefaultDiffCallback
 
-class CreditsCastListAdapter(
+class ImagesListAdapter(
     private val viewModel: MovieDetailsViewModel
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items: MutableList<CastObservable> = mutableListOf()
+    private val items: MutableList<ImageObservable> = mutableListOf()
 
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate(
-            inflater, R.layout.item_credits,
+            inflater, R.layout.item_movie_image,
             parent, false
-        ) as ItemCastBinding
+        ) as ItemMovieImageBinding
 
-        return ItemCastViewHolder(binding)
+        return ItemMovieImageViewHolder(
+            binding
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val observable = items[position]
 
-        with(holder as ItemCastViewHolder) {
+        with(holder as ItemMovieImageViewHolder) {
             bind(observable, viewModel)
         }
     }
 
-    fun updateItems(list: List<CastObservable>) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ItemMovieImageViewHolder).cleanupImagesTask()
+        super.onViewRecycled(holder)
+    }
+
+    fun updateItems(list: List<ImageObservable>) {
         val callback = DefaultDiffCallback(items, list)
         val result = DiffUtil.calculateDiff(callback)
 
@@ -52,26 +59,20 @@ class CreditsCastListAdapter(
         result.dispatchUpdatesTo(this)
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ItemCastViewHolder).cleanupImagesTask()
-        super.onViewRecycled(holder)
-    }
-
-    class ItemCastViewHolder(
-        private val binding: ItemCastBinding
+    class ItemMovieImageViewHolder(
+        private val binding: ItemMovieImageBinding
     ) :
         RecyclerView.ViewHolder(binding.root), KoinComponent {
         fun bind(
-            observable: CastObservable,
-            viewModel: MovieDetailsViewModel
-        ) {
+            observable: ImageObservable,
+            viewModel: MovieDetailsViewModel) {
             binding.baseObservable = observable
             binding.viewModel = viewModel
             binding.executePendingBindings()
         }
 
         fun cleanupImagesTask() {
-            get<Picasso>(PICASSO_NAME).cancelRequest(binding.itemCreditsPersonPhoto)
+            get<Picasso>(PICASSO_NAME).cancelRequest(binding.itemMovieImagePoster)
         }
     }
 }

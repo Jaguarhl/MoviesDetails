@@ -24,6 +24,7 @@
     <dimen name="activity_details_poster_height">96dp</dimen>
     <dimen name="activity_details_backdrop_height">256dp</dimen>
     <dimen name="activity_details_movie_title_margin">-16dp</dimen>
+    <dimen name="activity_details_movie_rating_icon_size">16dp</dimen>
     <dimen name="item_video_width">320dp</dimen>
     <dimen name="item_video_height">180dp</dimen>
     <dimen name="item_cast_image_width">80dp</dimen>
@@ -31,5 +32,16 @@
     <dimen name="item_cast_elevation">3dp</dimen>
     <dimen name="item_similar_movie_width">240dp</dimen>
     <dimen name="item_similar_movie_height">135dp</dimen>
-    <dimen name="activity_details_movie_rating_icon_size">16dp</dimen>
+    <dimen name="item_movie_image_width">240dp</dimen>
+    <dimen name="item_movie_image_height">135dp</dimen>
+
+    <!-- Tabs -->
+    <dimen name="tabs_height">48dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
+    <dimen name="tabs_underline_height">2dp</dimen>
+    <dimen name="tab_corner">2dp</dimen>
+    <dimen name="tab_padding">6dp</dimen>
+    <dimen name="tabs_ab_offset">1dp</dimen> <!-- do not know why, but only this value gives needed 17dp margin from action bar -->
+    <dimen name="tabs_bottom_margin">8dp</dimen>
+    <dimen name="item_movie_image_rating_corners_radius">2dp</dimen>
 </resources>

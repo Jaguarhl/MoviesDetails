@@ -1,45 +1,25 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.runBlocking
-import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
-import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
 
-class MainViewModel : ObservableViewModel(), KoinComponent {
+class WatchlistViewModel : MovieListBaseViewModel() {
     /** Section: Injections. */
 
     private val movieDataSourceFactory: MovieDataSourceFactory by inject()
     private val settingsRepository: TmdbSettingsRepository by inject()
 
-    /** Section: Bindable Properties. */
-
-    var action: Int? = null
-        @Bindable get() = field
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.action)
-        }
-
-    var loading: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.loading)
-        }
-
     /** Section: Simple Properties. */
 
-    var moviePosterSize: String? = null
-    var popularMovies: LiveData<PagedList<MovieObservable>>
+    var comingSoonMovies: LiveData<PagedList<MovieObservable>>
 
     var movieIdToOpenDetails: Int? = null
 
@@ -53,12 +33,12 @@ class MainViewModel : ObservableViewModel(), KoinComponent {
             setEnablePlaceholders(false)
         }.build()
 
-        popularMovies = initializedPagedListBuilder(config).build()
+        comingSoonMovies = initializedPagedListBuilder(config).build()
     }
 
     /** Section: Common Methods. */
 
-    fun movieItemClicked(id: Int) {
+    override fun movieItemClicked(id: Int) {
         if (id == 0) return
 
         movieIdToOpenDetails = id

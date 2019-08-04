@@ -20,12 +20,14 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.Backdrop
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.ImageObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
@@ -95,6 +97,20 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
         set(value) {
             field = if (field == value) return else value
             notifyPropertyChanged(BR.movieCreditsCastEnabled)
+        }
+
+    var movieImagesEnabled: Boolean = false
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieImagesEnabled)
+        }
+
+    var movieImagesCount: Int = 0
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.movieImagesCount)
         }
 
     var movieToolbarCollapsed: Boolean = false
@@ -204,6 +220,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     val movieCreditsCastLiveData: MutableLiveData<List<CastObservable>> = MutableLiveData()
     val movieSimilarMoviesLiveData: MutableLiveData<List<SimilarMovieObservable>> = MutableLiveData()
     val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
+    val movieImagesLiveData: MutableLiveData<List<ImageObservable>> = MutableLiveData()
 
     var movieIdToShow: Int? = null
 
@@ -274,6 +291,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
                 gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
                 gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }
                 gettingVideosJob.await()?.let { getMovieVideos(it) }
+                gettingImagesJob.await()?.backdrops?.let { getMovieImages(it) }
             }
 //        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
@@ -329,6 +347,16 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
                 "${it.note}:"
             } else ""} ${util.formatTime(it.release_date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd")}"
         }
+
+    private fun getMovieImages(list: List<Backdrop>) {
+        movieImagesEnabled = list.isNotEmpty()
+        movieImagesCount = list.size
+        movieImagesLiveData.postValue(
+            list.map {
+                ImageObservable(it.file_path, it.vote_average.toString())
+            }
+        )
+    }
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
         movieSimilarMoviesEnabled = list.isNotEmpty()

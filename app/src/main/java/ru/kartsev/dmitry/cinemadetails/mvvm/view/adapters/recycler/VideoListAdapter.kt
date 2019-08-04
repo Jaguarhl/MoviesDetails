@@ -1,4 +1,4 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -25,7 +25,9 @@ class VideoListAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.item_video, parent, false) as YouTubePlayerView
         lifecycle.addObserver(youTubePlayerView)
 
-        return ItemVideoViewHolder(youTubePlayerView)
+        return ItemVideoViewHolder(
+            youTubePlayerView
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_details.*
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.VideoListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.VideoListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 import androidx.recyclerview.widget.LinearSnapHelper
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
@@ -26,16 +26,18 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.CreditsCastListAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.SimilarMoviesListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.SimilarMoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.ImagesListAdapter
 
 class MovieDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: MovieDetailsViewModel
     lateinit var castAdapter: CreditsCastListAdapter
     lateinit var videosAdapter: VideoListAdapter
     lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
+    lateinit var movieImagesListAdapter: ImagesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             adapter = castAdapter
         }
 
-        similarMoviesListAdapter = SimilarMoviesListAdapter(viewModel)
+        similarMoviesListAdapter =
+            SimilarMoviesListAdapter(viewModel)
 
         activityDetailsMovieSimilarListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -101,12 +104,22 @@ class MovieDetailsActivity : AppCompatActivity() {
             adapter = videosAdapter
             LinearSnapHelper().attachToRecyclerView(this)
         }
+
+        movieImagesListAdapter = ImagesListAdapter(viewModel)
+
+        activityDetailsMovieImagesListRecycler.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = movieImagesListAdapter
+            LinearSnapHelper().attachToRecyclerView(this)
+        }
     }
 
     override fun onDestroy() {
         activityDetailsMovieCastListRecycler.adapter = null
         activityDetailsMovieSimilarListRecycler.adapter = null
         activityDetailsMovieVideosListRecycler.adapter = null
+        activityDetailsMovieImagesListRecycler.adapter = null
         propertyHandler.detach()
         super.onDestroy()
     }
@@ -171,6 +184,10 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         viewModel.movieSimilarMoviesLiveData.observe(this, Observer {
             similarMoviesListAdapter.updateItems(it)
+        })
+
+        viewModel.movieImagesLiveData.observe(this, Observer {
+            movieImagesListAdapter.updateItems(it)
         })
     }
 

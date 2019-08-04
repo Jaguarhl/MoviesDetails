@@ -6,6 +6,7 @@
 
     <!-- Section: Movie Common. -->
     <string name="menu_search_title">Поиск</string>
+    <string name="menu_favourite_title">В избранное</string>
     <string name="menu_send_title">Отправить</string>
 
     <!-- Section: Movie Details Activity. -->
@@ -20,12 +21,15 @@
     <string name="activity_movie_details_tags_label">Тэги:</string>
     <string name="activity_movie_details_cast_credits_label">В главных ролях:</string>
     <string name="activity_movie_details_videos_label">Видео (%1$d):</string>
+    <string name="activity_movie_details_images_label">Изображения (%1$d):</string>
     <string name="activity_movie_details_rating_label">Рейтинг:</string>
     <string name="activity_movie_details_similar_label">Похожие фильмы (%1$d):</string>
     <string name="activity_movie_details_popularity_count">%1$s млн</string>
     <string name="activity_movie_details_no_data">Нет данных</string>
     <string name="activity_movie_details_share_title">\«%1$s\»:</string>
     <string name="activity_movie_details_application_chooser_title">Поделиться информацией о фильме</string>
+
+    <string name="item_movie_image_rating_title">Рейтинг:</string>
 
     <!-- Section: Date. -->
 
@@ -42,5 +46,11 @@
     <string name="certification_digital">Цифровые носители</string>
     <string name="certification_physical">Physical</string>
     <string name="certification_tv">ТВ</string>
+
+    <!-- Section: Tabs Titles. -->
+
+    <string name="activity_main_tab_now_playing_title">Сейчас в прокате</string>
+    <string name="activity_main_tab_coming_soon">Скоро на экранах</string>
+    <string name="activity_main_tab_watchlist">Избранное</string>
 
 </resources>

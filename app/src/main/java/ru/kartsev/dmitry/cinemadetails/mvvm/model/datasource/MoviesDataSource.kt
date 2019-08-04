@@ -36,9 +36,9 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 val response = movieRepository.getNowPlayingMovie(INITIAL_PAGE, configurationRepository.currentLanguage)
                 val list = convertToObservable(response?.results)
                 val count = response?.total_pages ?: 0
-                Timber.d( "Data fetched. Initial position: ${params.requestedStartPosition}, total pages count: $count, data loaded: $list"
+                Timber.d(
+                    "Data fetched. Initial position: ${params.requestedStartPosition}, total pages count: $count, data loaded: $list"
                 )
-//                callback.onResult(list ?: listOf(), params.requestedStartPosition, count)
                 callback.onResult(list ?: listOf(), params.requestedStartPosition)
             } catch (exception: Exception) {
                 Timber.w(exception)
@@ -50,7 +50,8 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
         GlobalScope.launch {
             try {
 
-                val response = movieRepository.getNowPlayingMovie(params.startPosition, configurationRepository.currentLanguage)
+                val response =
+                    movieRepository.getNowPlayingMovie(params.startPosition, configurationRepository.currentLanguage)
                 val list = convertToObservable(response?.results)
                 callback.onResult(list ?: listOf())
             } catch (exception: Exception) {

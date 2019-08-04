@@ -7,6 +7,11 @@
         android:title="@string/menu_search_title"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/menu_item_add_to_favourite"
+        android:icon="@drawable/ic_favourite_border_white"
+        android:title="@string/menu_favourite_title"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/menu_item_send"
         android:icon="@drawable/ic_send_white"
         android:title="@string/menu_send_title"

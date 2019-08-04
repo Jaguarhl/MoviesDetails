@@ -2,84 +2,67 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
-import ru.kartsev.dmitry.cinemadetails.BR
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_main.tabLayout
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.activity_main.viewPager
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.databinding.ActivityMainBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MainViewModel.Companion.ACTION_OPEN_DETAILS
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.MoviesListAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.pager.MainViewPagerAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments.WatchlistFragment
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments.NowPlayingFragment
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.ZoomOutPageTransformer
+
+
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: MainViewModel
-    private lateinit var moviesAdapter: MoviesListAdapter
+    /** Private Properties. */
+
+    private lateinit var viewpagerAdapter: MainViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
-            this,
-            R.layout.activity_main
-        )
+        setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        
-        with (binding) {
-            lifecycleOwner = this@MainActivity
-            viewModel = this@MainActivity.viewModel
-        }
-
-        if (savedInstanceState == null) {
-//            viewModel.initializeByDefault()
-        }
-
-        observeLiveData()
-
-        moviesAdapter = MoviesListAdapter(viewModel)
-        mainViewRecyclerList.apply {
-            val llm = LinearLayoutManager(context)
-            layoutManager = llm
-            setHasFixedSize(true)
-            adapter = moviesAdapter
-        }
-
-        propertyHandler.attach()
+        initTabs()
     }
 
-    override fun onDestroy() {
-        mainViewRecyclerList.adapter = null
-        propertyHandler.detach()
-        super.onDestroy()
-    }
-
-    /** Section: Private Methods. */
-
-    private fun observeLiveData() {
-        viewModel.popularMovies.observe(this, Observer {
-            moviesAdapter.submitList(it)
-        })
-    }
-
-    /** Section: Property Handler. */
-
-    private val propertyHandler = PropertyHandler(this)
-
-    class PropertyHandler(
-        reference: MainActivity
-    ) : DefaultPropertyHandler<MainActivity>(reference) {
-        override fun onPropertyChanged(reference: MainActivity, propertyId: Int) = with(reference) {
-            when (propertyId) {
-                BR.action -> when (viewModel.action) {
-                    ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(viewModel.movieIdToOpenDetails!!, this)
-                }
+    private fun initTabs() {
+        tabLayout?.apply {
+            viewpagerAdapter = MainViewPagerAdapter(supportFragmentManager).apply {
+                addFragment(NowPlayingFragment(), getString(R.string.activity_main_tab_now_playing_title))
+                addFragment(WatchlistFragment(), getString(R.string.activity_main_tab_watchlist))
             }
+
+            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    viewPager.currentItem = tab?.position ?: 0
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                }
+            })
         }
 
-        override fun observableOrNull(reference: MainActivity) = reference.viewModel
+        viewPager?.apply {
+            adapter = viewpagerAdapter
+            currentItem = 0
+            setPageTransformer(true, ZoomOutPageTransformer())
+        }
+
+        tabLayout.setupWithViewPager(viewPager)
+    }
+
+    override fun onBackPressed() {
+        if (viewPager == null) return
+
+        if (viewPager.currentItem == 0) {
+            super.onBackPressed()
+        } else {
+            viewPager.currentItem = viewPager.currentItem - 1
+        }
     }
 }

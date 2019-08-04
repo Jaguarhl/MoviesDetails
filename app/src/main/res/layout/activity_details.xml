@@ -359,7 +359,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
-                    android:text="@string/activity_movie_details_similar_label"
                     android:textSize="@dimen/text_secondary"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
@@ -380,15 +379,38 @@
                     tools:listitem="@layout/item_similar_movie" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieVideosLabel"
+                    android:id="@+id/activityDetailsMovieImagesLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
-                    android:text="@string/activity_movie_details_videos_label"
                     android:textSize="@dimen/text_secondary"
                     app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
                     app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarListRecycler"
+                    bind:movie_images_label="@{viewModel.movieImagesCount}"
+                    bind:viewVisibility="@{viewModel.movieImagesEnabled}"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activityDetailsMovieImagesListRecycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_horizontal_margin"
+                    android:layout_marginBottom="@dimen/primary_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieImagesLabel"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_movie_image" />
+
+                <TextView
+                    android:id="@+id/activityDetailsMovieVideosLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_vertical_margin"
+                    android:textSize="@dimen/text_secondary"
+                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieImagesListRecycler"
                     bind:movie_videos_label="@{viewModel.movieVideosCount}"
                     bind:viewVisibility="@{viewModel.movieVideoEnabled}"/>
 
