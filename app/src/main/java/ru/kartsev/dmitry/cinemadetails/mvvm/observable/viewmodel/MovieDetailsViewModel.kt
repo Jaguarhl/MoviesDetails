@@ -346,7 +346,7 @@ class MovieDetailsViewModel : BaseViewModel() {
         movieImagesCount = list.size
         movieImagesLiveData.postValue(
             list.map {
-                ImageObservable(it.file_path, it.vote_average.toString())
+                ImageObservable(it.file_path, util.formatDouble(it.vote_average))
             }
         )
     }

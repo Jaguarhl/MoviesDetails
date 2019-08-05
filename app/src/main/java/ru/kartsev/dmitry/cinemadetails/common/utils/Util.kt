@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.common.utils
 
 import timber.log.Timber
 import java.lang.Exception
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,6 +39,11 @@ class Util {
         }
 
         return result
+    }
+
+    fun formatDouble(value: Double): String {
+        val decimalFormat = DecimalFormat("#.##")
+        return decimalFormat.format(value)
     }
 
     fun isExpired(time: Long, periodInHours: Int): Boolean {
