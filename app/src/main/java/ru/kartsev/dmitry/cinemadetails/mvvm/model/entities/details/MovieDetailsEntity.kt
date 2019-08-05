@@ -63,11 +63,11 @@ data class MovieDetailsEntity(
             language: String?
         ): MovieDetailsData = with(entity) {
             MovieDetailsData(
-                false, language, adult, backdrop_path, budget, genres?.map { it.id!! } ?: listOf(),
+                false, language, adult, backdrop_path, budget, genres?.map { it.id!! }.orEmpty(),
                 homepage, id, imdb_id, original_language, original_title,
                 overview, popularity, poster_path, production_companies!!.map { it.id!! },
                 production_countries!!.map { it.name!! }, release_date, revenue, runtime,
-                spoken_languages?.map { it.iso_639_1!! } ?: listOf(), status, tagline, title,
+                spoken_languages?.map { it.iso_639_1!! }.orEmpty(), status, tagline, title,
                 video, vote_average, vote_count
             )
         }
@@ -82,7 +82,7 @@ data class MovieDetailsEntity(
                 genresList.filter { genres!!.contains(it.id) }.map { MovieGenre(it.id, it.name) },
                 homepage, id, imdb_id, original_language, original_title, overview, popularity,
                 poster_path, listOf(),
-                production_countries?.map { ProductionCountry("", it) } ?: listOf(),
+                production_countries?.map { ProductionCountry("", it) }.orEmpty(),
                 release_date, revenue, runtime,
                 languagesList.filter { spoken_languages!!.contains(it.isoCode) }.map { Language(it.isoCode, it.name) },
                 status, tagline, title, video, vote_average, vote_count

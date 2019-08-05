@@ -36,9 +36,9 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
 
         if (data != null && util.isExpired(data.timeStamp, lifeTime).not()) {
             imagesBaseUrl = data.baseUrl
-            backdropSizes.addAll(data.backdropSizes ?: listOf())
-            posterSizes.addAll(data.posterSizes ?: listOf())
-            profileSizes.addAll(data.profileSizes ?: listOf())
+            backdropSizes.addAll(data.backdropSizes.orEmpty())
+            posterSizes.addAll(data.posterSizes.orEmpty())
+            profileSizes.addAll(data.profileSizes.orEmpty())
         } else {
             val settings = safeApiCall(
                 call = { settingsApi.getConfigurationAsync().await() },
@@ -67,7 +67,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
             }
         }
 
-        languagesList.addAll(getLanguagesList() ?: listOf())
+        languagesList.addAll(getLanguagesList().orEmpty())
         currentLanguage = if (languagesList.any { it.isoCode.equals(util.getLocale(), true) }) { util.getLocale() } else languagesList[0].isoCode
         loadGenresList()
         Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")

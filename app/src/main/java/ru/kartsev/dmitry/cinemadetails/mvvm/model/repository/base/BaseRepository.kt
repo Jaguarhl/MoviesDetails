@@ -1,9 +1,8 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import org.koin.standalone.KoinComponent
 import retrofit2.Response
+import timber.log.Timber
 import java.io.IOException
 
 open class BaseRepository : KoinComponent {
@@ -15,7 +14,7 @@ open class BaseRepository : KoinComponent {
             is Result.Success ->
                 data = result.data
             is Result.Error -> {
-                Log.d("1.DataRepository", "$errorMessage & Exception - ${result.exception}")
+                Timber.d("1.DataRepository: $errorMessage & Exception - ${result.exception}")
             }
         }
 
