@@ -10,11 +10,13 @@
     <com.google.android.material.tabs.TabLayout
         style="@style/AppTabLayout"
         android:id="@+id/tabLayout"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:layout_marginTop="@dimen/tabs_ab_offset"
         app:tabBackground="@drawable/tab_background"
+        app:tabGravity="fill"
         app:tabMode="fixed"/>
 
     <androidx.viewpager.widget.ViewPager

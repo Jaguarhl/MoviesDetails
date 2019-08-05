@@ -23,6 +23,18 @@
         </activity>
 
         <activity android:name=".mvvm.view.activity.MovieDetailsActivity" />
+
+        <activity android:name=".mvvm.view.activity.MovieImageActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="ru.kartsev.dmitry.cinemadetails.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

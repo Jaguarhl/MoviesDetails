@@ -30,14 +30,19 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastLi
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.SimilarMoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_IMAGE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.ImagesListAdapter
 
 class MovieDetailsActivity : AppCompatActivity() {
+    /** Section: Private Properties. */
+
     lateinit var viewModel: MovieDetailsViewModel
-    lateinit var castAdapter: CreditsCastListAdapter
-    lateinit var videosAdapter: VideoListAdapter
-    lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
-    lateinit var movieImagesListAdapter: ImagesListAdapter
+    private lateinit var castAdapter: CreditsCastListAdapter
+    private lateinit var videosAdapter: VideoListAdapter
+    private lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
+    private lateinit var movieImagesListAdapter: ImagesListAdapter
+
+    /** Section: Base Methods. */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +81,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         initListeners()
         observeLiveData()
     }
+
+    /** Section: Private Methods. */
 
     private fun initRecyclerViews() {
         castAdapter = CreditsCastListAdapter(viewModel)
@@ -125,7 +132,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar_default, menu)
+        menuInflater.inflate(R.menu.menu_toolbar_details, menu)
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -271,6 +278,8 @@ class MovieDetailsActivity : AppCompatActivity() {
                         }
                         viewModel.movieToolbarCollapsed = false
                     }
+
+                    ACTION_OPEN_IMAGE -> MovieImageActivity.openActivityByDefault(this, viewModel.movieImagePathToOpen!!)
 
                     else -> return@with
                 }

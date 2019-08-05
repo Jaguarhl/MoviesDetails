@@ -31,10 +31,11 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.ImageObser
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.BaseViewModel
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
-class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
+class MovieDetailsViewModel : BaseViewModel() {
     /** Section: Injections. */
 
     private val movieRepository: MovieRepository by inject()
@@ -42,20 +43,6 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     private val util: Util by inject()
 
     /** Section: Bindable Properties. */
-
-    var action: Int? = null
-        @Bindable get() = field
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.action)
-        }
-
-    var loading: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.loading)
-        }
 
     var movieVideoEnabled: Boolean = false
         @Bindable get() = field
@@ -223,6 +210,7 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     val movieImagesLiveData: MutableLiveData<List<ImageObservable>> = MutableLiveData()
 
     var movieIdToShow: Int? = null
+    var movieImagePathToOpen: String? = null
 
     /** Section: Initialization. */
 
@@ -241,6 +229,11 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     fun movieSimilarItemClicked(movieId: Int) {
         movieIdToShow = movieId
         action = ACTION_OPEN_MOVIE
+    }
+
+    fun movieImageClicked(path: String) {
+        movieImagePathToOpen = path
+        action = ACTION_OPEN_IMAGE
     }
 
     fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
@@ -411,5 +404,6 @@ class MovieDetailsViewModel : ObservableViewModel(), KoinComponent {
     companion object {
         const val ACTION_OPEN_MOVIE = 0
         const val ACTION_COLLAPSE_TOOLBAR = 1
+        const val ACTION_OPEN_IMAGE = 2
     }
 }

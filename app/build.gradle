@@ -10,8 +10,8 @@ android {
         applicationId "ru.kartsev.dmitry.cinemadetails.test"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "0.2.05"
+        versionCode 10
+        versionName "0.2.06"
         testApplicationId "ru.kartsev.dmitry.cinemadetails"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true

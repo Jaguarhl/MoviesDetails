@@ -15,7 +15,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.ZoomOutPageTransformer
 
 
 class MainActivity : AppCompatActivity() {
-    /** Private Properties. */
+    /** Section: Private Properties. */
 
     private lateinit var viewpagerAdapter: MainViewPagerAdapter
 

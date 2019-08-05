@@ -52,5 +52,6 @@
     <string name="activity_main_tab_now_playing_title">Сейчас в прокате</string>
     <string name="activity_main_tab_coming_soon">Скоро на экранах</string>
     <string name="activity_main_tab_watchlist">Избранное</string>
+    <string name="menu_save_image_title">Save image</string>
 
 </resources>
