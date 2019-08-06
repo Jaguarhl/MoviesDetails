@@ -4,5 +4,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DiffItemObserva
 
 data class ImageObservable(
     val imagePath: String,
-    val voteAverage: String
+    val voteAverage: String,
+    val width: String,
+    val height: String
 ) : DiffItemObservable

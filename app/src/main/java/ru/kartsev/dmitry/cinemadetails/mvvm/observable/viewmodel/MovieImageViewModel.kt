@@ -22,6 +22,6 @@ class MovieImageViewModel : BaseViewModel() {
 
     fun initializeByDefault(imagePath: String) {
         movieImagePath = imagePath
-        movieImageSize = settingsRepository.backdropSizes[2]
+        movieImageSize = settingsRepository.backdropSizes.last()
     }
 }

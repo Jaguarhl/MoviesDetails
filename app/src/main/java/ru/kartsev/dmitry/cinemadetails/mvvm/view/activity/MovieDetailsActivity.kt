@@ -279,7 +279,11 @@ class MovieDetailsActivity : AppCompatActivity() {
                         viewModel.movieToolbarCollapsed = false
                     }
 
-                    ACTION_OPEN_IMAGE -> MovieImageActivity.openActivityByDefault(this, viewModel.movieImagePathToOpen!!)
+                    ACTION_OPEN_IMAGE -> MovieImageActivity.openActivityByDefault(
+                        this,
+                        viewModel.movieImagePathToOpen!!,
+                        viewModel.movieImageDimensionsToOpen!!
+                    )
 
                     else -> return@with
                 }

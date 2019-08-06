@@ -211,6 +211,7 @@ class MovieDetailsViewModel : BaseViewModel() {
 
     var movieIdToShow: Int? = null
     var movieImagePathToOpen: String? = null
+    var movieImageDimensionsToOpen: String? = null
 
     /** Section: Initialization. */
 
@@ -231,8 +232,9 @@ class MovieDetailsViewModel : BaseViewModel() {
         action = ACTION_OPEN_MOVIE
     }
 
-    fun movieImageClicked(path: String) {
-        movieImagePathToOpen = path
+    fun movieImageClicked(imageObservable: ImageObservable) {
+        movieImagePathToOpen = imageObservable.imagePath
+        movieImageDimensionsToOpen = "${imageObservable.width} x ${imageObservable.height}"
         action = ACTION_OPEN_IMAGE
     }
 
@@ -346,7 +348,7 @@ class MovieDetailsViewModel : BaseViewModel() {
         movieImagesCount = list.size
         movieImagesLiveData.postValue(
             list.map {
-                ImageObservable(it.file_path, util.formatDouble(it.vote_average))
+                ImageObservable(it.file_path, util.formatDouble(it.vote_average), it.width.toString(), it.height.toString())
             }
         )
     }

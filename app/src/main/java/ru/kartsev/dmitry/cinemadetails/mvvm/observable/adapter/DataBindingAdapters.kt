@@ -9,15 +9,18 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.github.chrisbanes.photoview.PhotoViewAttacher
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import org.koin.java.standalone.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import java.lang.Exception
 import java.lang.StringBuilder
 
 /** Section: Adapters. */
 @BindingAdapter(
-    value = ["app:image_uri", "app:image_placeholder", "app:image_error", "app:image_center_inside", "app:image_size"],
+    value = ["app:image_uri", "app:image_placeholder", "app:image_error", "app:image_center_inside", "app:image_size", "app:image_zoom"],
     requireAll = false
 )
 fun adapterImage(
@@ -26,7 +29,8 @@ fun adapterImage(
     defaultPlaceholder: Drawable? = null,
     errorPlaceholder: Drawable? = null,
     isCenterInside: Boolean = false,
-    imageSize: String? = null
+    imageSize: String? = null,
+    imageZoomable: Boolean = false
 ) {
 //    if (uri.isNullOrEmpty()) return
 
@@ -45,7 +49,17 @@ fun adapterImage(
             placeholder(it)
         } ?: noPlaceholder()
 
-        into(view)
+        if (imageZoomable) {
+            val viewAttacher = PhotoViewAttacher(view)
+            into(view, object : Callback {
+                override fun onSuccess() {
+                    viewAttacher.update()
+                }
+
+                override fun onError(e: Exception?) {
+                }
+            })
+        } else into(view)
     }
 }
 

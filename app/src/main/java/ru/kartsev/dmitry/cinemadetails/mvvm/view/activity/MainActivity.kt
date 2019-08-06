@@ -12,8 +12,6 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments.WatchlistFragment
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments.NowPlayingFragment
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.ZoomOutPageTransformer
 
-
-
 class MainActivity : AppCompatActivity() {
     /** Section: Private Properties. */
 

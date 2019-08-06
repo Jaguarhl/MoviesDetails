@@ -112,6 +112,9 @@ dependencies {
     // GravitySnapHelper
     implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
 
+    // PhotoView
+    implementation "com.github.chrisbanes:PhotoView:$photoViewVersion"
+
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"

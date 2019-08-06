@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.activity_view_image.*
 import kotlinx.android.synthetic.main.app_bar_default.*
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityViewImageBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieImageViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
+import timber.log.Timber
 import java.io.File
 
 class MovieImageActivity : AppCompatActivity() {
@@ -40,14 +42,15 @@ class MovieImageActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
-            setDisplayShowTitleEnabled(false)
+            setDisplayShowTitleEnabled(true)
         }
 
         if (savedInstanceState == null) {
             intent?.apply {
-                if (!hasExtra(IMAGE_PATH))  throw IllegalStateException()
+                if (!hasExtra(IMAGE_PATH) && !hasExtra(IMAGE_DIMENSIONS))  throw IllegalStateException()
 
                 val imagePath = getStringExtra(IMAGE_PATH)
+                supportActionBar?.title = getStringExtra(IMAGE_DIMENSIONS)
                 viewModel.initializeByDefault(imagePath)
             }
         }
@@ -116,10 +119,12 @@ class MovieImageActivity : AppCompatActivity() {
 
     companion object {
         private const val IMAGE_PATH = "IMAGE_PATH"
+        private const val IMAGE_DIMENSIONS = "IMAGE_DIMENSIONS"
 
-        fun openActivityByDefault(context: Context, imagePath: String) {
+        fun openActivityByDefault(context: Context, imagePath: String, imageDimensions: String) {
             val intent = Intent(context, MovieImageActivity::class.java).apply {
                 putExtra(IMAGE_PATH, imagePath)
+                putExtra(IMAGE_DIMENSIONS, imageDimensions)
             }
 
             context.startActivity(intent)
