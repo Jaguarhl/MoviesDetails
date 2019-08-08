@@ -12,8 +12,10 @@ import androidx.databinding.BindingAdapter
 import com.github.chrisbanes.photoview.PhotoViewAttacher
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import java.lang.Exception
 import java.lang.StringBuilder
@@ -34,7 +36,7 @@ fun adapterImage(
 ) {
 //    if (uri.isNullOrEmpty()) return
 
-    val picasso = get(Picasso::class.java)
+    val picasso = get(Picasso::class.java, named(PICASSO_NAME))
     val creator = picasso.load("${imageSize.toString()}${uri.toString()}")
 
     with(creator) {

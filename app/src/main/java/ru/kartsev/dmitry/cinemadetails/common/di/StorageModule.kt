@@ -46,23 +46,23 @@ object StorageModule {
         }
 
         single(named(CONFIGURATION_STORAGE_DAO)) {
-            get<MovieDatabase>().configurationDao()
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).configurationDao()
         }
 
         single(named(LANGUAGES_STORAGE_DAO)) {
-            get<MovieDatabase>().languagesDao()
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).languagesDao()
         }
 
         single(named(MOVIE_DETAILS_STORAGE_DAO)) {
-            get<MovieDatabase>().movieDetailsDao()
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).movieDetailsDao()
         }
 
         single(named(MOVIE_GENRES_STORAGE_DAO)) {
-            get<MovieDatabase>().genresDao()
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).genresDao()
         }
 
         single(named(MOVIE_VIDEOS_STORAGE_DAO)) {
-            get<MovieDatabase>().movieVideosDao()
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).movieVideosDao()
         }
     }
 }

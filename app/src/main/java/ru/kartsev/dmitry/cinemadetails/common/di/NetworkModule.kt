@@ -77,8 +77,8 @@ object NetworkModule {
 
         single<Picasso>(named(PICASSO_NAME)) {
             Picasso.Builder(get())
-                .downloader(OkHttp3Downloader(get<OkHttpClient>(named(PICASSO_CLIENT_NAME))))
-                .requestTransformer(get(named(PICASSO_REQUEST_TRANSFORMER_NAME)))
+                .downloader(OkHttp3Downloader(get<OkHttpClient>(OkHttpClient::class.java, named(PICASSO_CLIENT_NAME))))
+                .requestTransformer(get(Picasso.RequestTransformer::class.java, named(PICASSO_REQUEST_TRANSFORMER_NAME)))
                 .loggingEnabled(BuildConfig.DEBUG)
                 .build()
         }
@@ -86,7 +86,7 @@ object NetworkModule {
         single<OkHttpClient>(named(PICASSO_CLIENT_NAME)) {
             OkHttpClient.Builder()
                 .addInterceptor(get(named(PICASSO_INTERCEPTOR_NAME)))
-                .cache(get())
+                .cache(get(named(CACHE_NAME)))
                 .build()
         }
 
@@ -105,7 +105,9 @@ object NetworkModule {
         }
 
         single(named(PICASSO_REQUEST_TRANSFORMER_NAME)) {
-            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>().imagesBaseUrl}${request.uri}")).build() }
+            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>(named(
+                RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
+            )).imagesBaseUrl}${request.uri}")).build() }
         }
     }
 }
