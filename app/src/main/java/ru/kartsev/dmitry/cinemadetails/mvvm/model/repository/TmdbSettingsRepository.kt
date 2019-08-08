@@ -1,6 +1,15 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
-import org.koin.standalone.inject
+import org.koin.core.inject
+import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule
+import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule.UTIL_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.API_SETTINGS
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.CONFIGURATION_STORAGE_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.LANGUAGE_STORAGE_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_DETAILS_STORAGE_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
@@ -16,11 +25,11 @@ import timber.log.Timber
 class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     /** Section: Injections. */
 
-    private val util: Util by inject()
-    private val settingsApi: SettingsApi by inject()
-    private val configurationStorage: ConfigurationStorage by inject()
-    private val languageStorage: LanguageStorage by inject()
-    private val movieDetailsStorage: MovieDetailsStorage by inject()
+    private val util: Util by inject(/*named(UTIL_NAME)*/)
+    private val settingsApi: SettingsApi by inject(named(API_SETTINGS))
+    private val configurationStorage: ConfigurationStorage by inject(named(CONFIGURATION_STORAGE_NAME))
+    private val languageStorage: LanguageStorage by inject(named(LANGUAGE_STORAGE_NAME))
+    private val movieDetailsStorage: MovieDetailsStorage by inject(named(MOVIE_DETAILS_STORAGE_NAME))
 
     var imagesBaseUrl: String? = null
     var currentLanguage: String? = null

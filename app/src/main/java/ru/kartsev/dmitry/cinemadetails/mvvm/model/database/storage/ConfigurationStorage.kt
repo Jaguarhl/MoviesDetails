@@ -1,7 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.CONFIGURATION_STORAGE_DAO
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.ConfigurationDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import timber.log.Timber
@@ -9,7 +12,7 @@ import timber.log.Timber
 class ConfigurationStorage : KoinComponent {
     /** Section: Injections. */
 
-    private val configurationDao: ConfigurationDao by inject()
+    private val configurationDao: ConfigurationDao by inject(named(CONFIGURATION_STORAGE_DAO))
 
     /** Section: Public Methods. */
 

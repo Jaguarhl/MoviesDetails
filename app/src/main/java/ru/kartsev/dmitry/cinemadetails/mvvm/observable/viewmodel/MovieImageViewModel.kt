@@ -1,6 +1,6 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.BaseViewModel
 

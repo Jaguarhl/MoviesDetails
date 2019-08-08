@@ -1,7 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.database
 
 import androidx.room.TypeConverter
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
 
 object DatabaseConverters : KoinComponent {

@@ -12,7 +12,7 @@ import androidx.databinding.BindingAdapter
 import com.github.chrisbanes.photoview.PhotoViewAttacher
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import org.koin.java.standalone.KoinJavaComponent.get
+import org.koin.java.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import java.lang.Exception

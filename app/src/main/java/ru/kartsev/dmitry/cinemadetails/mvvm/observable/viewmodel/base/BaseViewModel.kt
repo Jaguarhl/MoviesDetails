@@ -1,7 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base
 
 import androidx.databinding.Bindable
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
 

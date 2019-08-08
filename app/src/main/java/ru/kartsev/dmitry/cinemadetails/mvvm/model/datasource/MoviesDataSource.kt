@@ -3,8 +3,11 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource
 import androidx.paging.PositionalDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
@@ -16,8 +19,8 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
 
     /** Section: Injections. */
 
-    private val movieRepository: MovieRepository by inject()
-    private val configurationRepository: TmdbSettingsRepository by inject()
+    private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
+    private val configurationRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
 
     /** Section: Constants. */
 

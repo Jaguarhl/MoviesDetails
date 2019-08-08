@@ -7,8 +7,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
@@ -51,7 +52,7 @@ class MoviesListAdapter(
         }
 
         fun cleanupImagesTask() {
-            get<Picasso>(PICASSO_NAME).cancelRequest(binding.itemMoviePoster)
+            get<Picasso>(named(PICASSO_NAME)).cancelRequest(binding.itemMoviePoster)
         }
     }
 }

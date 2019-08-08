@@ -3,7 +3,7 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.pager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 class MainViewPagerAdapter(fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager), KoinComponent {

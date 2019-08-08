@@ -1,8 +1,9 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
 import androidx.room.Room
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.module
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.MovieDatabase
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
@@ -24,7 +25,7 @@ object StorageModule {
     /** Section: Modules. */
 
     val it: Module = module {
-        single(MOVIE_DATABASE_NAME) {
+        single(named(MOVIE_DATABASE_NAME)) {
             Room.databaseBuilder(
                 get(), MovieDatabase::class.java,
                 StorageConfig.DATABASE_NAME
@@ -32,35 +33,35 @@ object StorageModule {
                 .build()
         }
 
-        single(CONFIGURATION_STORAGE_NAME) {
+        single(named(CONFIGURATION_STORAGE_NAME)) {
             ConfigurationStorage()
         }
 
-        single(LANGUAGE_STORAGE_NAME) {
+        single(named(LANGUAGE_STORAGE_NAME)) {
             LanguageStorage()
         }
 
-        single(MOVIE_DETAILS_STORAGE_NAME) {
+        single(named(MOVIE_DETAILS_STORAGE_NAME)) {
             MovieDetailsStorage()
         }
 
-        single(CONFIGURATION_STORAGE_DAO) {
+        single(named(CONFIGURATION_STORAGE_DAO)) {
             get<MovieDatabase>().configurationDao()
         }
 
-        single(LANGUAGES_STORAGE_DAO) {
+        single(named(LANGUAGES_STORAGE_DAO)) {
             get<MovieDatabase>().languagesDao()
         }
 
-        single(MOVIE_DETAILS_STORAGE_DAO) {
+        single(named(MOVIE_DETAILS_STORAGE_DAO)) {
             get<MovieDatabase>().movieDetailsDao()
         }
 
-        single(MOVIE_GENRES_STORAGE_DAO) {
+        single(named(MOVIE_GENRES_STORAGE_DAO)) {
             get<MovieDatabase>().genresDao()
         }
 
-        single(MOVIE_VIDEOS_STORAGE_DAO) {
+        single(named(MOVIE_VIDEOS_STORAGE_DAO)) {
             get<MovieDatabase>().movieVideosDao()
         }
     }

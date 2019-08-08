@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
@@ -272,31 +274,35 @@ class MovieDetailsViewModel : BaseViewModel() {
     private fun loadMovieData(id: Int) = try {
         scope.launch {
             loading = true
-            val gettingResultsJob = async { movieRepository.getMovieDetails(id, language) }
-            val gettingTranslationsJob = async { movieRepository.getMovieTranslations(id) }
-            val gettingVideosJob = async { movieRepository.getMovieVideos(id, language) }
-            val gettingKeywordsJob = async { movieRepository.getMovieKeywords(id) }
-            val gettingCreditsJob = async { movieRepository.getMovieCredits(id) }
-            val gettingImagesJob = async { movieRepository.getMovieImages(id, language) }
-            val gettingSimilarMoviesJob = async { movieRepository.getSimilarMovies(id, language = language) }
+            coroutineScope {
+                val gettingResultsJob = async { movieRepository.getMovieDetails(id, language) }
+                val gettingTranslationsJob = async { movieRepository.getMovieTranslations(id) }
+                withContext(Dispatchers.Main) { displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await()) }
+                val gettingVideosJob = async { movieRepository.getMovieVideos(id, language) }
+                val gettingKeywordsJob = async { movieRepository.getMovieKeywords(id) }
+                val gettingCreditsJob = async { movieRepository.getMovieCredits(id) }
+                val gettingImagesJob = async { movieRepository.getMovieImages(id, language) }
+                val gettingSimilarMoviesJob = async { movieRepository.getSimilarMovies(id, language = language) }
 
-            withContext(Dispatchers.Main) {
-                displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
-                gettingKeywordsJob.await()?.keywords?.let { getMovieKeywords(it) }
-                gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
-                gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }
-                gettingVideosJob.await()?.let { getMovieVideos(it) }
-                gettingImagesJob.await()?.backdrops?.let { getMovieImages(it) }
+
+                withContext(Dispatchers.Main) {
+                    displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
+                    gettingKeywordsJob.await()?.keywords?.let { getMovieKeywords(it) }
+                    gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
+                    gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }
+                    gettingVideosJob.await()?.let { getMovieVideos(it) }
+                    gettingImagesJob.await()?.backdrops?.let { getMovieImages(it) }
+                }
             }
 //        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
 //            Timber.d(
 //                "[$id]: ${translationDetails.toString()} \n $resultDetails \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
 //            )
-        }.invokeOnCompletion {
+        }/*.invokeOnCompletion {
             Timber.d("$movieTitle, backdropSize: $movieBackdropSize, similarMovieBackdropSize: $movieSimilarMovieBackdropSize")
 
-        }
+        }*/
     } catch (exception: Exception) {
         Timber.w(exception)
     }
