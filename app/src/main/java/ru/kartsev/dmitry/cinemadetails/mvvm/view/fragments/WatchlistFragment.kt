@@ -17,6 +17,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewMo
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewModel.Companion.ACTION_OPEN_DETAILS
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.activity.MovieDetailsActivity
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.MoviesListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.WatchlistAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 
 class WatchlistFragment : Fragment(), KoinComponent {
@@ -30,7 +31,7 @@ class WatchlistFragment : Fragment(), KoinComponent {
     /** Section: Private fields. */
 
     private lateinit var viewModel: WatchlistViewModel
-    private lateinit var moviesAdapter: MoviesListAdapter
+    private lateinit var watchlistAdapter: WatchlistAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,8 @@ class WatchlistFragment : Fragment(), KoinComponent {
 
         binding.viewModel = viewModel
 
+        viewModel.initializeByDefault()
+
         propertyHandler.attach()
         return binding.root
     }
@@ -52,23 +55,28 @@ class WatchlistFragment : Fragment(), KoinComponent {
         super.onActivityCreated(savedInstanceState)
 
         activity?.apply {
-            moviesAdapter = MoviesListAdapter(viewModel)
+            watchlistAdapter = WatchlistAdapter(viewModel)
             fragmentWatchlistRecyclerList.apply {
                 val llm = LinearLayoutManager(context)
                 layoutManager = llm
                 setHasFixedSize(true)
-                adapter = moviesAdapter
+                adapter = watchlistAdapter
             }
 
             observeLiveData()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadFavourites()
+    }
+
     /** Section: Private Methods. */
 
     private fun observeLiveData() {
-        viewModel.comingSoonMovies.observe(this, Observer {
-            moviesAdapter.submitList(it)
+        viewModel.watchlistMovies.observe(this, Observer {
+            watchlistAdapter.updateItems(it)
         })
     }
 

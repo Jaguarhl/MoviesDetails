@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -24,12 +25,14 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.snackbar.Snackbar
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.SimilarMoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_MARK_FAVOURITE
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_IMAGE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.ImagesListAdapter
 
@@ -133,6 +136,12 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_details, menu)
+        val item = menu?.findItem(R.id.menu_item_add_to_favourite)
+
+        item?.let {
+            val iconRes = if (!viewModel.movieAddedToFavourites) R.drawable.ic_favourite_border_white else R.drawable.ic_favourite_white
+            it.setIcon(iconRes)
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -146,6 +155,11 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             R.id.menu_item_send -> {
                 shareMovie()
+                true
+            }
+
+            R.id.menu_item_add_to_favourite -> {
+                viewModel.addMovieToFavourites()
                 true
             }
 
@@ -285,7 +299,14 @@ class MovieDetailsActivity : AppCompatActivity() {
                         viewModel.movieImageDimensionsToOpen!!
                     )
 
+                    ACTION_MARK_FAVOURITE -> invalidateOptionsMenu()
+
                     else -> return@with
+                }
+
+                BR.exception -> {
+                    val view = findViewById<View>(R.id.rootView)
+                    Snackbar.make(view, viewModel.exception!!, Snackbar.LENGTH_LONG).show()
                 }
 
                 else -> return@with

@@ -77,7 +77,8 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Private Methods. */
 
     private fun observeLiveData() {
-        viewModel.popularMovies.observe(this, Observer {
+        viewModel.nowPlayingMovies.observe(this, Observer {
+            viewModel.moviesListEmpty = it.isEmpty()
             moviesAdapter.submitList(it)
         })
     }

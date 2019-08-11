@@ -1,43 +1,77 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_DATASOURCE_FACTORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
+import kotlin.coroutines.CoroutineContext
 
 class WatchlistViewModel : MovieListBaseViewModel() {
     /** Section: Injections. */
 
-    private val movieDataSourceFactory: MovieDataSourceFactory by inject(named(MOVIES_DATASOURCE_FACTORY_NAME))
     private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
+    private val favouritesRepository: FavouritesRepository by inject(named(FAVOURITES_REPOSITORY_NAME))
+    private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
 
     /** Section: Simple Properties. */
 
-    var comingSoonMovies: LiveData<PagedList<MovieObservable>>
+    private val parentJob = Job()
+    private val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.Default
+    private val scope = CoroutineScope(coroutineContext)
+    private var language: String? = settingsRepository.currentLanguage
+
+    val watchlistMovies: MutableLiveData<List<MovieObservable>> = MutableLiveData()
 
     var movieIdToOpenDetails: Int? = null
 
     /** Section: Initialization. */
 
-    init {
+    fun initializeByDefault() {
         getTmdbSettings()
         moviePosterSize = settingsRepository.posterSizes[0]
-        val config = PagedList.Config.Builder().apply {
-            setPageSize(PAGE_SIZE)
-            setEnablePlaceholders(false)
-        }.build()
+        loadFavourites()
+    }
 
-        comingSoonMovies = initializedPagedListBuilder(config).build()
+    fun loadFavourites() {
+        scope.launch(coroutineExceptionHandler) {
+            loading = true
+            val moviesList: MutableList<MovieDetailsEntity> = mutableListOf()
+            val favourites = favouritesRepository.getFavouritesList()
+            favourites?.forEach {
+                movieRepository.getMovieDetails(it.itemId, language)?.let { moviesList.add(it) }
+            }
+            
+            watchlistMovies.postValue(moviesList.map {
+                MovieObservable(
+                    it.id!!,
+                    it.vote_average.toString(),
+                    it.title ?: it.original_title ?: "",
+                    it.overview ?: "",
+                    it.poster_path ?: "",
+                    it.backdrop_path ?: "",
+                    it.adult ?: false,
+                    it.release_date ?: ""
+                )
+            })
+
+            loading = false
+        }
     }
 
     /** Section: Common Methods. */
@@ -55,12 +89,6 @@ class WatchlistViewModel : MovieListBaseViewModel() {
         runBlocking {
             settingsRepository.getTmdbSettings()
         }
-    }
-
-    private fun initializedPagedListBuilder(config: PagedList.Config):
-        LivePagedListBuilder<Int, MovieObservable> {
-
-        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config)
     }
 
     companion object {

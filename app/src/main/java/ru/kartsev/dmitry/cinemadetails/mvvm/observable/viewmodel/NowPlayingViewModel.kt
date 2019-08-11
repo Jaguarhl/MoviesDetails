@@ -1,11 +1,13 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
+import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.runBlocking
 import org.koin.core.inject
 import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_DATASOURCE_FACTORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
@@ -15,14 +17,24 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsReposit
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
 
 class NowPlayingViewModel : MovieListBaseViewModel() {
+
     /** Section: Injections. */
 
     private val movieDataSourceFactory: MovieDataSourceFactory by inject(named(MOVIES_DATASOURCE_FACTORY_NAME))
     private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
 
+    /** Section: Bindable Properties. */
+
+    var moviesListEmpty: Boolean = true
+        @Bindable get() = field
+        set(value) {
+            field = if (field == value) return else value
+            notifyPropertyChanged(BR.moviesListEmpty)
+        }
+
     /** Section: Simple Properties. */
 
-    var popularMovies: LiveData<PagedList<MovieObservable>>
+    var nowPlayingMovies: LiveData<PagedList<MovieObservable>>
 
     var movieIdToOpenDetails: Int? = null
 
@@ -36,7 +48,7 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
             setEnablePlaceholders(false)
         }.build()
 
-        popularMovies = initializedPagedListBuilder(config).build()
+        nowPlayingMovies = initializedPagedListBuilder(config).build()
     }
 
     /** Section: Common Methods. */

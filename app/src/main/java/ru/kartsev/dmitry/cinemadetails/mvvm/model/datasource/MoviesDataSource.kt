@@ -45,6 +45,7 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 callback.onResult(list.orEmpty(), params.requestedStartPosition)
             } catch (exception: Exception) {
                 Timber.w(exception)
+                callback.onResult(emptyList(), params.requestedStartPosition)
             }
         }
     }

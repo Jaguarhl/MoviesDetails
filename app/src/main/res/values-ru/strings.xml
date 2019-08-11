@@ -54,4 +54,8 @@
     <string name="activity_main_tab_watchlist">Избранное</string>
     <string name="menu_save_image_title">Save image</string>
 
+    <!-- Section: Now Playing Fragment. -->
+
+    <string name="activity_now_playing_no_data">Данные для отображения отсутствуют.\nПроверьте подключение к сети на устройстве.</string>
+
 </resources>
