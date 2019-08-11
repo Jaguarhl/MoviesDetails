@@ -2,19 +2,24 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
-import ru.kartsev.dmitry.cinemadetails.common.helper.ObservableViewModel
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.favourites.FavouriteData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
@@ -23,6 +28,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslat
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.Backdrop
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.Keyword
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.CastObservable
@@ -38,8 +44,9 @@ import kotlin.coroutines.CoroutineContext
 class MovieDetailsViewModel : BaseViewModel() {
     /** Section: Injections. */
 
-    private val movieRepository: MovieRepository by inject()
-    private val settingsRepository: TmdbSettingsRepository by inject()
+    private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
+    private val favouritesRepository: FavouritesRepository by inject(named(FAVOURITES_REPOSITORY_NAME))
+    private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
     private val util: Util by inject()
 
     /** Section: Bindable Properties. */
@@ -209,13 +216,17 @@ class MovieDetailsViewModel : BaseViewModel() {
     val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
     val movieImagesLiveData: MutableLiveData<List<ImageObservable>> = MutableLiveData()
 
+    var movieId: Int? = null
     var movieIdToShow: Int? = null
+    var movieAddedToFavourites: Boolean = false
     var movieImagePathToOpen: String? = null
     var movieImageDimensionsToOpen: String? = null
 
     /** Section: Initialization. */
 
     fun initializeWithMovieId(id: Int) {
+        movieId = id
+
         with(settingsRepository) {
             movieBackdropSize = backdropSizes[1]
             movieSimilarMovieBackdropSize = backdropSizes[0]
@@ -223,6 +234,7 @@ class MovieDetailsViewModel : BaseViewModel() {
         }
 
         loadMovieData(id)
+        checkMovieInFavouritesList()
     }
 
     /** Section: Public Methods. */
@@ -236,6 +248,17 @@ class MovieDetailsViewModel : BaseViewModel() {
         movieImagePathToOpen = imageObservable.imagePath
         movieImageDimensionsToOpen = "${imageObservable.width} x ${imageObservable.height}"
         action = ACTION_OPEN_IMAGE
+    }
+
+    fun addMovieToFavourites() {
+        CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
+            movieId?.let {
+                if (movieAddedToFavourites) favouritesRepository.removeFavouriteFromList(it)
+                else favouritesRepository.addFavouriteToList(it)
+
+                checkMovieInFavouritesList()
+            }
+        }
     }
 
     fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
@@ -270,32 +293,38 @@ class MovieDetailsViewModel : BaseViewModel() {
     /** Section: Private Methods. */
 
     private fun loadMovieData(id: Int) = try {
-        scope.launch {
+        scope.launch(coroutineExceptionHandler) {
             loading = true
-            val gettingResultsJob = async { movieRepository.getMovieDetails(id, language) }
-            val gettingTranslationsJob = async { movieRepository.getMovieTranslations(id) }
-            val gettingVideosJob = async { movieRepository.getMovieVideos(id, language) }
-            val gettingKeywordsJob = async { movieRepository.getMovieKeywords(id) }
-            val gettingCreditsJob = async { movieRepository.getMovieCredits(id) }
-            val gettingImagesJob = async { movieRepository.getMovieImages(id, language) }
-            val gettingSimilarMoviesJob = async { movieRepository.getSimilarMovies(id, language = language) }
+            coroutineScope {
+                val gettingResultsJob = async { movieRepository.getMovieDetails(id, language) }
+                val gettingTranslationsJob = async { movieRepository.getMovieTranslations(id) }
+                withContext(Dispatchers.Main) {
+                    displayDetails(
+                        gettingResultsJob.await(),
+                        gettingTranslationsJob.await()
+                    )
+                }
+                val gettingVideosJob = async { movieRepository.getMovieVideos(id, language) }
+                val gettingKeywordsJob = async { movieRepository.getMovieKeywords(id) }
+                val gettingCreditsJob = async { movieRepository.getMovieCredits(id) }
+                val gettingImagesJob = async { movieRepository.getMovieImages(id, language) }
+                val gettingSimilarMoviesJob = async { movieRepository.getSimilarMovies(id, language = language) }
 
-            withContext(Dispatchers.Main) {
-                displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
-                gettingKeywordsJob.await()?.keywords?.let { getMovieKeywords(it) }
-                gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
-                gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }
-                gettingVideosJob.await()?.let { getMovieVideos(it) }
-                gettingImagesJob.await()?.backdrops?.let { getMovieImages(it) }
+
+                withContext(Dispatchers.Main) {
+                    displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
+                    gettingKeywordsJob.await()?.keywords?.let { getMovieKeywords(it) }
+                    gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
+                    gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }
+                    gettingVideosJob.await()?.let { getMovieVideos(it) }
+                    gettingImagesJob.await()?.backdrops?.let { getMovieImages(it) }
+                }
             }
 //        val resultReleaseDates = movieRepository.getMovieReleaseDates(id)
 
 //            Timber.d(
 //                "[$id]: ${translationDetails.toString()} \n $resultDetails \n ${movieGenresLiveData.value} \n $resultVideos ${movieVideosLiveData.value}"
 //            )
-        }.invokeOnCompletion {
-            Timber.d("$movieTitle, backdropSize: $movieBackdropSize, similarMovieBackdropSize: $movieSimilarMovieBackdropSize")
-
         }
     } catch (exception: Exception) {
         Timber.w(exception)
@@ -329,6 +358,17 @@ class MovieDetailsViewModel : BaseViewModel() {
         loading = false
     }
 
+    private fun checkMovieInFavouritesList() {
+        scope.launch(coroutineExceptionHandler) {
+            val favourite = favouritesRepository.getFavouriteById(movieId!!)
+
+            withContext(Dispatchers.Main) {
+                movieAddedToFavourites = favourite != null
+                action = ACTION_MARK_FAVOURITE
+            }
+        }
+    }
+
     private fun getMovieTitle(translatedTitle: String?, originalTitle: String?): String =
         if (!translatedTitle.isNullOrEmpty()) {
             translatedTitle
@@ -348,7 +388,12 @@ class MovieDetailsViewModel : BaseViewModel() {
         movieImagesCount = list.size
         movieImagesLiveData.postValue(
             list.map {
-                ImageObservable(it.file_path, util.formatDouble(it.vote_average), it.width.toString(), it.height.toString())
+                ImageObservable(
+                    it.file_path,
+                    util.formatDouble(it.vote_average),
+                    it.width.toString(),
+                    it.height.toString()
+                )
             }
         )
     }
@@ -407,5 +452,6 @@ class MovieDetailsViewModel : BaseViewModel() {
         const val ACTION_OPEN_MOVIE = 0
         const val ACTION_COLLAPSE_TOOLBAR = 1
         const val ACTION_OPEN_IMAGE = 2
+        const val ACTION_MARK_FAVOURITE = 3
     }
 }

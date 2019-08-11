@@ -1,7 +1,9 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.LANGUAGES_STORAGE_DAO
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
 import timber.log.Timber
@@ -9,7 +11,7 @@ import timber.log.Timber
 class LanguageStorage : KoinComponent {
     /** Section: Injections. */
 
-    private val languagesDao: LanguagesDao by inject()
+    private val languagesDao: LanguagesDao by inject(named(LANGUAGES_STORAGE_DAO))
 
     /** Section: Public Methods. */
 

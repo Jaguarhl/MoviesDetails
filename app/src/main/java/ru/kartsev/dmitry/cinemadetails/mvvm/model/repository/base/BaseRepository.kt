@@ -1,6 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base
 
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
+import retrofit2.HttpException
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
@@ -22,12 +23,17 @@ open class BaseRepository : KoinComponent {
     }
 
     private suspend fun <T: Any> safeApiResult(call: suspend ()-> Response<T>, errorMessage: String) : Result<T> {
-        val response = call.invoke()
-        if(response.isSuccessful) return Result.Success(
-            response.body()!!
-        )
+        try {
+            val response = call.invoke()
+            if (response.isSuccessful) return Result.Success(
+                response.body()!!
+            )
 
-        return Result.Error(IOException("Error Occurred during getting safe Api result, Custom ERROR - $errorMessage"))
+            return Result.Error(IOException("Error Occurred during getting safe Api result, Custom ERROR - $errorMessage"))
+        } catch (exception: HttpException) {
+            Timber.w(exception, "Exception on HTTP request.")
+            return Result.Error(exception)
+        }
     }
 }
 

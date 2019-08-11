@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
-import org.koin.java.standalone.KoinJavaComponent.get
+import org.koin.java.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData.Companion.TABLE_NAME
 

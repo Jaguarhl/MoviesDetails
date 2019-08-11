@@ -9,8 +9,9 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Request
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.module
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.kartsev.dmitry.cinemadetails.BuildConfig
@@ -22,23 +23,23 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 
 object NetworkModule {
-    private const val CACHE_NAME = "network.cache"
-    private const val HTTP_RETROFIT_NAME = "network.retrofit"
-    private const val HTTP_CLIENT_RETROFIT_NAME = "network.http_client_retrofit"
-    private const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
-    private const val API_MOVIES = "network.api_movies"
-    private const val API_SETTINGS = "network.api_settings"
+    const val CACHE_NAME = "network.cache"
+    const val HTTP_RETROFIT_NAME = "network.retrofit"
+    const val HTTP_CLIENT_RETROFIT_NAME = "network.http_client_retrofit"
+    const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
+    const val API_MOVIES = "network.api_movies"
+    const val API_SETTINGS = "network.api_settings"
     const val PICASSO_NAME = "network.picasso"
-    private const val PICASSO_CLIENT_NAME = "network.picasso_client"
-    private const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
-    private const val PICASSO_REQUEST_TRANSFORMER_NAME = "network.picasso_request_transformer"
+    const val PICASSO_CLIENT_NAME = "network.picasso_client"
+    const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
+    const val PICASSO_REQUEST_TRANSFORMER_NAME = "network.picasso_request_transformer"
 
     val it: Module = module {
-        single(CACHE_NAME) {
+        single(named(CACHE_NAME)) {
             Cache(get<Context>().cacheDir, CACHE_SIZE)
         }
 
-        single(HTTP_AUTH_INTERCEPTOR_NAME) {
+        single(named(HTTP_AUTH_INTERCEPTOR_NAME)) {
             Interceptor {
                 val newUrl = it.request().url().newBuilder().
                     addQueryParameter("api_key", TMDB_API_KEY).
@@ -52,44 +53,44 @@ object NetworkModule {
             }
         }
 
-        single<OkHttpClient>(HTTP_CLIENT_RETROFIT_NAME) {
+        single<OkHttpClient>(named(HTTP_CLIENT_RETROFIT_NAME)) {
             OkHttpClient.Builder()
-                .addInterceptor(get(HTTP_AUTH_INTERCEPTOR_NAME))
+                .addInterceptor(get(named(HTTP_AUTH_INTERCEPTOR_NAME)))
                 .build()
         }
 
-        single<Retrofit>(HTTP_RETROFIT_NAME) {
-            Retrofit.Builder().client(get(HTTP_CLIENT_RETROFIT_NAME))
+        single<Retrofit>(named(HTTP_RETROFIT_NAME)) {
+            Retrofit.Builder().client(get(named(HTTP_CLIENT_RETROFIT_NAME)))
                 .baseUrl(BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
         }
 
-        single(API_MOVIES) {
-            get<Retrofit>().create(MoviesApi::class.java)
+        single(named(API_MOVIES)) {
+            get<Retrofit>(named(HTTP_RETROFIT_NAME)).create(MoviesApi::class.java)
         }
 
-        single(API_SETTINGS) {
-            get<Retrofit>().create(SettingsApi::class.java)
+        single(named(API_SETTINGS)) {
+            get<Retrofit>(named(HTTP_RETROFIT_NAME)).create(SettingsApi::class.java)
         }
 
-        single<Picasso>(PICASSO_NAME) {
+        single<Picasso>(named(PICASSO_NAME)) {
             Picasso.Builder(get())
-                .downloader(OkHttp3Downloader(get<OkHttpClient>(PICASSO_CLIENT_NAME)))
-                .requestTransformer(get(PICASSO_REQUEST_TRANSFORMER_NAME))
+                .downloader(OkHttp3Downloader(get<OkHttpClient>(OkHttpClient::class.java, named(PICASSO_CLIENT_NAME))))
+                .requestTransformer(get(Picasso.RequestTransformer::class.java, named(PICASSO_REQUEST_TRANSFORMER_NAME)))
                 .loggingEnabled(BuildConfig.DEBUG)
                 .build()
         }
 
-        single<OkHttpClient>(PICASSO_CLIENT_NAME) {
+        single<OkHttpClient>(named(PICASSO_CLIENT_NAME)) {
             OkHttpClient.Builder()
-                .addInterceptor(get(PICASSO_INTERCEPTOR_NAME))
-                .cache(get())
+                .addInterceptor(get(named(PICASSO_INTERCEPTOR_NAME)))
+                .cache(get(named(CACHE_NAME)))
                 .build()
         }
 
-        single(PICASSO_INTERCEPTOR_NAME) {
+        single(named(PICASSO_INTERCEPTOR_NAME)) {
             Interceptor {
                 val newUrl = it.request().url().newBuilder().
                     addQueryParameter("api_key", TMDB_API_KEY).
@@ -103,8 +104,10 @@ object NetworkModule {
             }
         }
 
-        single(PICASSO_REQUEST_TRANSFORMER_NAME) {
-            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>().imagesBaseUrl}${request.uri}")).build() }
+        single(named(PICASSO_REQUEST_TRANSFORMER_NAME)) {
+            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>(named(
+                RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
+            )).imagesBaseUrl}${request.uri}")).build() }
         }
     }
 }

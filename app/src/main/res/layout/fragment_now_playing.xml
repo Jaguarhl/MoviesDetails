@@ -41,5 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/primary_horizontal_margin"
+            android:layout_marginEnd="@dimen/primary_horizontal_margin"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_primary_title"
+            android:text="@string/activity_now_playing_no_data"
+            app:viewVisibility="@{viewModel.moviesListEmpty}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
-import org.koin.standalone.inject
+import org.koin.core.inject
+import org.koin.core.qualifier.named
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.API_MOVIES
+import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_DETAILS_STORAGE_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.MovieCreditsEntity
@@ -20,9 +24,9 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 class MovieRepository : BaseRepository() {
     /** Section: Injections. */
 
-    private val moviesApi: MoviesApi by inject()
-    private val movieDetailsStorage: MovieDetailsStorage by inject()
-    private val settingsRepository: TmdbSettingsRepository by inject()
+    private val moviesApi: MoviesApi by inject(named(API_MOVIES))
+    private val movieDetailsStorage: MovieDetailsStorage by inject(named(MOVIE_DETAILS_STORAGE_NAME))
+    private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
 
     suspend fun getPopularMovies(page: Int, language: String? = null): PopularMoviesEntity? {
         return safeApiCall(

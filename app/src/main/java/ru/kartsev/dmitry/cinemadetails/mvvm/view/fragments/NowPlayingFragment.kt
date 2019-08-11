@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_now_playing.*
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentNowPlayingBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel
@@ -77,7 +77,8 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Private Methods. */
 
     private fun observeLiveData() {
-        viewModel.popularMovies.observe(this, Observer {
+        viewModel.nowPlayingMovies.observe(this, Observer {
+            viewModel.moviesListEmpty = it.isEmpty()
             moviesAdapter.submitList(it)
         })
     }
