@@ -9,7 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_now_playing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentNowPlayingBinding
@@ -23,6 +29,8 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Static functions. */
 
     companion object {
+        const val SWIPE_REFRESH_DELAY = 500L
+
         fun newInstance(): NowPlayingFragment = NowPlayingFragment()
     }
 
@@ -30,6 +38,7 @@ class NowPlayingFragment : Fragment(), KoinComponent {
 
     private lateinit var viewModel: NowPlayingViewModel
     private lateinit var moviesAdapter: MoviesListAdapter
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
@@ -40,6 +49,7 @@ class NowPlayingFragment : Fragment(), KoinComponent {
             container, false)
 
         viewModel = ViewModelProviders.of(this).get(NowPlayingViewModel::class.java)
+        viewModel.initializeByDefault()
 
         binding.viewModel = viewModel
 
@@ -52,7 +62,7 @@ class NowPlayingFragment : Fragment(), KoinComponent {
 
         activity?.apply {
             moviesAdapter = MoviesListAdapter(viewModel)
-            mainViewRecyclerList.apply {
+            nowPlayingFragmentRecyclerList.apply {
                 val llm = LinearLayoutManager(context)
                 layoutManager = llm
                 setHasFixedSize(true)
@@ -62,31 +72,41 @@ class NowPlayingFragment : Fragment(), KoinComponent {
             observeLiveData()
         }
 
-//        activity?.apply {
-//            setTitle(R.string.contact_list_toolbar_title)
-//        }
-//
-//        if (savedInstanceState == null) {
-//            viewModel.initializeDefault()
-//            viewModel.attemptLoadContactsRecommendations()
-//        } else {
-//            allContactsActiveAdapter.updateInitialized(listWithHeader())
-//        }
+
+        activity?.apply {
+            setTitle(R.string.activity_main_tab_now_playing_title)
+        }
+    }
+
+    override fun onDestroyView() {
+        nowPlayingFragmentRecyclerList.adapter = null
+        propertyHandler.detach()
+        super.onDestroyView()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefresh = view.findViewById(R.id.nowPlayingFragmentSwipeToRefreshLayout)
+        initListeners()
+        super.onViewCreated(view, savedInstanceState)
     }
 
     /** Section: Private Methods. */
 
     private fun observeLiveData() {
         viewModel.nowPlayingMovies.observe(this, Observer {
-            viewModel.moviesListEmpty = it.isEmpty()
             moviesAdapter.submitList(it)
         })
     }
 
-    override fun onDestroyView() {
-        mainViewRecyclerList.adapter = null
-        propertyHandler.detach()
-        super.onDestroyView()
+    private fun initListeners() {
+        swipeRefresh.setOnRefreshListener {
+            GlobalScope.launch(Dispatchers.Default) {
+                viewModel.refreshData()
+                delay(SWIPE_REFRESH_DELAY)
+                withContext(Dispatchers.Main) {
+                    swipeRefresh.isRefreshing = false
+                }
+            } }
     }
 
     /** Section: Property Handler. */

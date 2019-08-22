@@ -254,7 +254,10 @@ class MovieDetailsViewModel : BaseViewModel() {
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
             movieId?.let {
                 if (movieAddedToFavourites) favouritesRepository.removeFavouriteFromList(it)
-                else favouritesRepository.addFavouriteToList(it)
+                else {
+                    val timeStamp = System.currentTimeMillis()
+                    favouritesRepository.addFavouriteToList(it, timeStamp)
+                }
 
                 checkMovieInFavouritesList()
             }
@@ -304,6 +307,7 @@ class MovieDetailsViewModel : BaseViewModel() {
                         gettingTranslationsJob.await()
                     )
                 }
+
                 val gettingVideosJob = async { movieRepository.getMovieVideos(id, language) }
                 val gettingKeywordsJob = async { movieRepository.getMovieKeywords(id) }
                 val gettingCreditsJob = async { movieRepository.getMovieCredits(id) }
@@ -312,7 +316,6 @@ class MovieDetailsViewModel : BaseViewModel() {
 
 
                 withContext(Dispatchers.Main) {
-                    displayDetails(gettingResultsJob.await(), gettingTranslationsJob.await())
                     gettingKeywordsJob.await()?.keywords?.let { getMovieKeywords(it) }
                     gettingCreditsJob.await()?.cast?.let { getMovieCastCredits(it) }
                     gettingSimilarMoviesJob.await()?.results?.let { getSimilarMovies(it) }

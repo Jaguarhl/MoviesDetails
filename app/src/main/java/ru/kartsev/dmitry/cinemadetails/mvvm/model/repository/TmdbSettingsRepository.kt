@@ -85,7 +85,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
     suspend fun loadGenresList() {
         val data = movieDetailsStorage.loadGenresList()
 
-        if (data.isNullOrEmpty() || data[0].language.equals(util.getLocale(), true).not()) {
+        if (data.isNullOrEmpty() || !data[0].language.equals(util.getLocale(), true)) {
             val genres = safeApiCall(
                 call = { settingsApi.getMovieGenresAsync(currentLanguage).await() },
                 errorMessage = "Error Fetching Movie Genres For $currentLanguage Locale"
@@ -96,7 +96,10 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                 movieDetailsStorage.saveGenresList(list)
                 genresList.addAll(list)
             }
-        } else genresList.addAll(data)
+        } else genresList.apply {
+            clear()
+            addAll(data)
+        }
     }
 
     suspend fun getLanguagesList(): List<LanguageData>? {
@@ -121,7 +124,7 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                 languageStorage.saveLanguagesList(result!!)
             }
 
-            result ?: listOf<LanguageData>()
+            result ?: listOf()
         } else {
             data
         }

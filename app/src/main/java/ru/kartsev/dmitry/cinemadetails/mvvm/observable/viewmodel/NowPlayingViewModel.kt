@@ -4,6 +4,7 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.paging.PagedList.*
 import kotlinx.coroutines.runBlocking
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -25,7 +26,7 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     /** Section: Bindable Properties. */
 
-    var moviesListEmpty: Boolean = true
+    var moviesListEmpty: Boolean = false
         @Bindable get() = field
         set(value) {
             field = if (field == value) return else value
@@ -34,16 +35,16 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     /** Section: Simple Properties. */
 
-    var nowPlayingMovies: LiveData<PagedList<MovieObservable>>
+    lateinit var nowPlayingMovies: LiveData<PagedList<MovieObservable>>
 
     var movieIdToOpenDetails: Int? = null
 
     /** Section: Initialization. */
 
-    init {
+    fun initializeByDefault() {
         getTmdbSettings()
         moviePosterSize = settingsRepository.posterSizes[0]
-        val config = PagedList.Config.Builder().apply {
+        val config = Config.Builder().apply {
             setPageSize(PAGE_SIZE)
             setEnablePlaceholders(false)
         }.build()
@@ -60,6 +61,10 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
         action = ACTION_OPEN_DETAILS
     }
 
+    fun refreshData() {
+        initializeByDefault()
+    }
+
     /** Section: Private Methods. */
 
     private fun getTmdbSettings() {
@@ -68,10 +73,21 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
         }
     }
 
-    private fun initializedPagedListBuilder(config: PagedList.Config):
+    private fun initializedPagedListBuilder(config: Config):
         LivePagedListBuilder<Int, MovieObservable> {
 
-        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config)
+        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config).
+            setBoundaryCallback(object : BoundaryCallback<MovieObservable>() {
+            override fun onZeroItemsLoaded() {
+                super.onZeroItemsLoaded()
+                moviesListEmpty = true
+            }
+
+            override fun onItemAtFrontLoaded(itemAtFront: MovieObservable) {
+                super.onItemAtFrontLoaded(itemAtFront)
+                moviesListEmpty = false
+            }
+        })
     }
 
     companion object {

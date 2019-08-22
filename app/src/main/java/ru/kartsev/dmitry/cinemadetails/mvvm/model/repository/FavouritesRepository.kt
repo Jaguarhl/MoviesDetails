@@ -16,8 +16,8 @@ class FavouritesRepository : BaseRepository() {
 
     suspend fun getFavouritesList(): List<FavouriteData>? = favouritesStorage.getFavourites()
 
-    suspend fun addFavouriteToList(movieId: Int) {
-        val favourite = FavouriteData(type = FavouriteData.Type.ITEM_MOVIE, itemId = movieId)
+    suspend fun addFavouriteToList(movieId: Int, timeStamp: Long) {
+        val favourite = FavouriteData(type = FavouriteData.Type.ITEM_MOVIE, itemId = movieId, date = timeStamp)
         favouritesStorage.addFavourite(favourite)
     }
 

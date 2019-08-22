@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import org.koin.java.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData.Companion.GENRE_ID_FIELD
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData.Companion.GENRE_LANGUAGE_FIELD
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData.Companion.TABLE_NAME
 
-@Entity(tableName = TABLE_NAME)
+@Entity(tableName = TABLE_NAME, primaryKeys = [ GENRE_ID_FIELD, GENRE_LANGUAGE_FIELD ])
 data class GenreData(
-    @PrimaryKey
     @ColumnInfo(name = GENRE_ID_FIELD)
     @Json(name = "id")
     var id: Int,

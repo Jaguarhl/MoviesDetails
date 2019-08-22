@@ -30,4 +30,12 @@ interface MovieDetailsDao {
     @Query("DELETE FROM $TABLE_NAME;")
     suspend fun clear()
 
+    @Query(
+        """
+        SELECT * FROM $TABLE_NAME
+        WHERE $ID_FIELD IN (:movieIds);
+        """
+    )
+    suspend fun loadByList(movieIds: List<Int>): List<MovieDetailsData>?
+
 }

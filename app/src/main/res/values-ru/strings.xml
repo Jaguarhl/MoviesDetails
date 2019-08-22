@@ -8,6 +8,7 @@
     <string name="menu_search_title">Поиск</string>
     <string name="menu_favourite_title">В избранное</string>
     <string name="menu_send_title">Отправить</string>
+    <string name="menu_save_image_title">Сохранить изображение</string>
 
     <!-- Section: Movie Details Activity. -->
 
@@ -52,7 +53,6 @@
     <string name="activity_main_tab_now_playing_title">Сейчас в прокате</string>
     <string name="activity_main_tab_coming_soon">Скоро на экранах</string>
     <string name="activity_main_tab_watchlist">Избранное</string>
-    <string name="menu_save_image_title">Save image</string>
 
     <!-- Section: Now Playing Fragment. -->
 

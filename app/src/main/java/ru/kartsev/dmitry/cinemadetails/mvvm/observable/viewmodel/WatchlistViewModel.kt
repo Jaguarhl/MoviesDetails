@@ -52,23 +52,25 @@ class WatchlistViewModel : MovieListBaseViewModel() {
         scope.launch(coroutineExceptionHandler) {
             loading = true
             val moviesList: MutableList<MovieDetailsEntity> = mutableListOf()
-            val favourites = favouritesRepository.getFavouritesList()
-            favourites?.forEach {
-                movieRepository.getMovieDetails(it.itemId, language)?.let { moviesList.add(it) }
+            val favourites = favouritesRepository.getFavouritesList()?.map { it.itemId }
+            favourites?.let { ids ->
+                movieRepository.getMovieDetailsList(ids, language)?.let { moviesList.addAll(it) }
             }
-            
-            watchlistMovies.postValue(moviesList.map {
-                MovieObservable(
-                    it.id!!,
-                    it.vote_average.toString(),
-                    it.title ?: it.original_title ?: "",
-                    it.overview ?: "",
-                    it.poster_path ?: "",
-                    it.backdrop_path ?: "",
-                    it.adult ?: false,
-                    it.release_date ?: ""
-                )
-            })
+
+            watchlistMovies.postValue(
+                moviesList.map {
+                    MovieObservable(
+                        it.id!!,
+                        it.vote_average.toString(),
+                        it.title ?: it.original_title ?: "",
+                        it.overview ?: "",
+                        it.poster_path ?: "",
+                        it.backdrop_path ?: "",
+                        it.adult ?: false,
+                        it.release_date ?: ""
+                    )
+                }
+            )
 
             loading = false
         }

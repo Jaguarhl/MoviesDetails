@@ -61,6 +61,16 @@ class MovieDetailsStorage : KoinComponent {
         null
     }
 
+    suspend fun loadMovieDetailsByList(movieIds: List<Int>): List<MovieDetailsData>? = try {
+        Timber.d("Load movie details by ids list($movieIds): START.")
+        val result = movieDetailsDao.loadByList(movieIds)
+        Timber.d("Load movie details by ids list($movieIds): FINISH. ($result)")
+        result
+    } catch (exception: Exception) {
+        Timber.w(exception, "Load movie details by ids list($movieIds): FAILED.")
+        null
+    }
+
     suspend fun saveMovieDetails(data: MovieDetailsData) = try {
         Timber.d("Save movie details ($data): START.")
         movieDetailsDao.save(data)

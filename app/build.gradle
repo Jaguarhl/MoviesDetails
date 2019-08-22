@@ -7,12 +7,12 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "ru.kartsev.dmitry.cinemadetails.test"
+        applicationId "ru.kartsev.dmitry.cinemadetails"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 11
         versionName "0.2.08"
-        testApplicationId "ru.kartsev.dmitry.cinemadetails"
+        testApplicationId "ru.kartsev.dmitry.cinemadetails.test"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true

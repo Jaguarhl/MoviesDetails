@@ -53,10 +53,34 @@ class MovieRepository : BaseRepository() {
                 errorMessage = "Error Fetching Movie Details."
             )
 
-            response?.
-                let {movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it, language)) }
+            response?.let { movieDetailsStorage.saveMovieDetails(MovieDetailsEntity.getDetailsData(it, language)) }
         } else {
-            response = MovieDetailsEntity.getDetailsEntityFromData(data, settingsRepository.genresList, settingsRepository.languagesList)
+            response = MovieDetailsEntity.getDetailsEntityFromData(
+                data,
+                settingsRepository.genresList,
+                settingsRepository.languagesList
+            )
+        }
+
+        return response
+    }
+
+    suspend fun getMovieDetailsList(movieIds: List<Int>, language: String? = null): List<MovieDetailsEntity>? {
+        val data = movieDetailsStorage.loadMovieDetailsByList(movieIds)
+
+        val response: List<MovieDetailsEntity>? = data?.mapNotNull {
+            MovieDetailsEntity.getDetailsEntityFromData(
+                it,
+                settingsRepository.genresList,
+                settingsRepository.languagesList
+            )
+        }
+
+        if (data != null && data.size == movieIds.size) return response
+
+        val cachedMovieIds: List<Int> = data?.map { it.id!! } ?: listOf()
+        movieIds.filterNot { cachedMovieIds.contains(it) }.forEach {
+            response?.toMutableList()?.add(getMovieDetails(it, language)!!)
         }
 
         return response
@@ -89,7 +113,6 @@ class MovieRepository : BaseRepository() {
             )?.results?.map { MovieVideo.getMovieVideoData(movieId, it) }
 
             response?.let { movieDetailsStorage.saveMovieVideosList(it) }
-
         } else {
             response = data
         }

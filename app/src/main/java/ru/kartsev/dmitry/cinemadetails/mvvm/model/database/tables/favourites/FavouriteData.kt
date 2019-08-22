@@ -15,13 +15,18 @@ data class FavouriteData(
 
     @ColumnInfo(name = TYPE_FIELD)
     @TypeConverters(DatabaseConverters::class)
-    var type: Type
+    var type: Type,
+
+    @ColumnInfo(name = DATE_FIELD)
+    @TypeConverters(DatabaseConverters::class)
+    var date: Long
 ) {
     companion object {
         const val TABLE_NAME = "user_favourites"
 
         const val ID_FIELD = "id"
         const val TYPE_FIELD = "type"
+        const val DATE_FIELD = "date"
     }
 
     enum class Type(
