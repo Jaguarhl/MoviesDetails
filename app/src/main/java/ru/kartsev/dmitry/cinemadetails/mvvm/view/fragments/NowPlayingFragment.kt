@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentNowPlayingBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel.Companion.ACTION_OPEN_DETAILS
@@ -29,7 +30,7 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Static functions. */
 
     companion object {
-        const val SWIPE_REFRESH_DELAY = 500L
+        const val SWIPE_REFRESH_DELAY = 1000L
 
         fun newInstance(): NowPlayingFragment = NowPlayingFragment()
     }
@@ -40,13 +41,18 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     private lateinit var moviesAdapter: MoviesListAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreate(savedInstanceState)
 
         val binding = DataBindingUtil.inflate<FragmentNowPlayingBinding>(
             inflater,
             R.layout.fragment_now_playing,
-            container, false)
+            container, false
+        )
 
         viewModel = ViewModelProviders.of(this).get(NowPlayingViewModel::class.java)
         viewModel.initializeByDefault()
@@ -95,6 +101,7 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     private fun observeLiveData() {
         viewModel.nowPlayingMovies.observe(this, Observer {
             moviesAdapter.submitList(it)
+            swipeRefresh.isRefreshing = it.isNotEmpty()
         })
     }
 
@@ -102,11 +109,8 @@ class NowPlayingFragment : Fragment(), KoinComponent {
         swipeRefresh.setOnRefreshListener {
             GlobalScope.launch(Dispatchers.Default) {
                 viewModel.refreshData()
-                delay(SWIPE_REFRESH_DELAY)
-                withContext(Dispatchers.Main) {
-                    swipeRefresh.isRefreshing = false
-                }
-            } }
+            }
+        }
     }
 
     /** Section: Property Handler. */
@@ -116,14 +120,18 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     class PropertyHandler(
         reference: NowPlayingFragment
     ) : DefaultPropertyHandler<NowPlayingFragment>(reference) {
-        override fun onPropertyChanged(reference: NowPlayingFragment, propertyId: Int) = with(reference) {
-            val context = context ?: return
-            when (propertyId) {
-                ru.kartsev.dmitry.cinemadetails.BR.action -> when (viewModel.action) {
-                    ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(viewModel.movieIdToOpenDetails!!, context)
+        override fun onPropertyChanged(reference: NowPlayingFragment, propertyId: Int) =
+            with(reference) {
+                val context = context ?: return
+                when (propertyId) {
+                    BR.action -> when (viewModel.action) {
+                        ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(
+                            viewModel.movieIdToOpenDetails!!,
+                            context
+                        )
+                    }
                 }
             }
-        }
 
         override fun observableOrNull(reference: NowPlayingFragment) = reference.viewModel
     }

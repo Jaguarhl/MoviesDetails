@@ -72,6 +72,7 @@ class WatchlistViewModel : MovieListBaseViewModel() {
                 }
             )
 
+            moviesListEmpty = moviesList.isEmpty()
             loading = false
         }
     }

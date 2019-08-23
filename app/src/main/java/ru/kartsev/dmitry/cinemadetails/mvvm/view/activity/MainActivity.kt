@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     private fun initTabs() {
         tabLayout?.apply {
             viewpagerAdapter = MainViewPagerAdapter(supportFragmentManager).apply {
-                addFragment(NowPlayingFragment(), getString(R.string.activity_main_tab_now_playing_title))
-                addFragment(WatchlistFragment(), getString(R.string.activity_main_tab_watchlist))
+                addFragment(NowPlayingFragment.newInstance(), getString(R.string.activity_main_tab_now_playing_title))
+                addFragment(WatchlistFragment.newInstance(), getString(R.string.activity_main_tab_watchlist))
             }
 
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{

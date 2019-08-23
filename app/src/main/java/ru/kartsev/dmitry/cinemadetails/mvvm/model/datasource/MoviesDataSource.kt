@@ -42,10 +42,10 @@ class MoviesDataSource : PositionalDataSource<MovieObservable>(), KoinComponent 
                 Timber.d(
                     "Data fetched. Initial position: ${params.requestedStartPosition}, total pages count: $count, data loaded: $list"
                 )
-                callback.onResult(list.orEmpty(), params.requestedStartPosition)
+                callback.onResult(list.orEmpty(), params.requestedStartPosition, count)
             } catch (exception: Exception) {
                 Timber.w(exception)
-                callback.onResult(emptyList(), params.requestedStartPosition)
+                callback.onResult(emptyList(), params.requestedStartPosition, 0)
             }
         }
     }

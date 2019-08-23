@@ -1,6 +1,5 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -8,7 +7,6 @@ import androidx.paging.PagedList.*
 import kotlinx.coroutines.runBlocking
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_DATASOURCE_FACTORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
@@ -23,15 +21,6 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     private val movieDataSourceFactory: MovieDataSourceFactory by inject(named(MOVIES_DATASOURCE_FACTORY_NAME))
     private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
-
-    /** Section: Bindable Properties. */
-
-    var moviesListEmpty: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.moviesListEmpty)
-        }
 
     /** Section: Simple Properties. */
 
@@ -62,7 +51,7 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
     }
 
     fun refreshData() {
-        initializeByDefault()
+        movieDataSourceFactory.moviesLiveData?.value?.invalidate()
     }
 
     /** Section: Private Methods. */

@@ -19,7 +19,6 @@ object RepositoryModule {
     const val COROUTINES_CACHE_NAME = "repository.coroutines_cache"
     const val TMDB_SETTINGS_REPOSITORY_NAME = "repository.tmdb_settings"
     const val MOVIES_REPOSITORY_NAME = "repository.movies"
-    const val MOVIES_DATASOURCE_NAME = "repository.movies_datasource"
     const val MOVIES_DATASOURCE_FACTORY_NAME = "repository.movies_datasource_factory"
     const val FAVOURITES_REPOSITORY_NAME = "repository.favourites"
 
@@ -40,7 +39,7 @@ object RepositoryModule {
             FavouritesRepository()
         }
 
-        single(named(MOVIES_DATASOURCE_NAME)) {
+        factory {
             MoviesDataSource()
         }
 

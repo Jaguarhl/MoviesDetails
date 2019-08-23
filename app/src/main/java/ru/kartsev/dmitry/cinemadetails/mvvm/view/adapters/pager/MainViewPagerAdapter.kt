@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import org.koin.core.KoinComponent
 
 class MainViewPagerAdapter(fragmentManager: FragmentManager) :
-    FragmentStatePagerAdapter(fragmentManager), KoinComponent {
+    FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT), KoinComponent {
 
     /** Section: Private Properties. */
 

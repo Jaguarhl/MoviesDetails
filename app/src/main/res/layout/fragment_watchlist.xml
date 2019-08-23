@@ -41,5 +41,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:viewVisibility="@{viewModel.moviesListEmpty}">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/fragment_watchlist_no_data_image_size"
+                android:layout_height="@dimen/fragment_watchlist_no_data_image_size"
+                android:tint="@color/colorPrimaryLight"
+                android:layout_margin="@dimen/primary_horizontal_margin"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_folder_special_black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/primary_horizontal_margin"
+                android:layout_marginEnd="@dimen/primary_horizontal_margin"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_primary_title"
+                android:gravity="center"
+                android:text="No favourites added yet." />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
