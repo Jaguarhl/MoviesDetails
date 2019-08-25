@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
@@ -24,8 +25,16 @@ import kotlin.coroutines.CoroutineContext
 class WatchlistViewModel : MovieListBaseViewModel() {
     /** Section: Injections. */
 
-    private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
-    private val favouritesRepository: FavouritesRepository by inject(named(FAVOURITES_REPOSITORY_NAME))
+    private val settingsRepository: TmdbSettingsRepository by inject(
+        named(
+            TMDB_SETTINGS_REPOSITORY_NAME
+        )
+    )
+    private val favouritesRepository: FavouritesRepository by inject(
+        named(
+            FAVOURITES_REPOSITORY_NAME
+        )
+    )
     private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
 
     /** Section: Simple Properties. */
@@ -72,7 +81,7 @@ class WatchlistViewModel : MovieListBaseViewModel() {
                 }
             )
 
-            moviesListEmpty = moviesList.isEmpty()
+            moviesListEmpty.postValue(moviesList.isEmpty())
             loading = false
         }
     }
