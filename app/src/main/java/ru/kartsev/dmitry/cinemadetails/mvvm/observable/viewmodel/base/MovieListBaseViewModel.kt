@@ -1,18 +1,19 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base
 
-import androidx.databinding.Bindable
-import ru.kartsev.dmitry.cinemadetails.BR
+import androidx.lifecycle.MutableLiveData
 
 abstract class MovieListBaseViewModel : BaseViewModel() {
 
     /** Section: Bindable Properties. */
 
-    var moviesListEmpty: Boolean = true
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.moviesListEmpty)
-        }
+    val moviesListEmpty = MutableLiveData<Boolean>().apply { value = false }
+
+//    var moviesListEmpty: Boolean = true
+//        @Bindable get() = field
+//        set(value) {
+//            field = if (field == value) return else value
+//            notifyPropertyChanged(BR.moviesListEmpty)
+//        }
 
     /** Section: Simple Properties. */
 

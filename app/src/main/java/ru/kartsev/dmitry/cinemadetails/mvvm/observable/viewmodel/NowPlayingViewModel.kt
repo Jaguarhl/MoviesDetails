@@ -69,12 +69,12 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
             setBoundaryCallback(object : BoundaryCallback<MovieObservable>() {
             override fun onZeroItemsLoaded() {
                 super.onZeroItemsLoaded()
-                moviesListEmpty = true
+                moviesListEmpty.postValue(true)
             }
 
             override fun onItemAtFrontLoaded(itemAtFront: MovieObservable) {
                 super.onItemAtFrontLoaded(itemAtFront)
-                moviesListEmpty = false
+                moviesListEmpty.postValue(false)
             }
         })
     }

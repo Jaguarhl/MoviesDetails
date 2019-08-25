@@ -60,6 +60,6 @@
 
     <!-- Section: Watchlist Fragment. -->
 
-    <string name="fragment_watchlist_no_favourites">Фильмы, добавленные для последующего просмотра, отсутствуют.</string>
+    <string name="fragment_watchlist_no_favourites">Нет фильмов, отложенных для последующего просмотра.</string>
 
 </resources>

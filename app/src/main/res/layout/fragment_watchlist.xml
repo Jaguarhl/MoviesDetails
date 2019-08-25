@@ -42,6 +42,7 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/fragmentWatchlistEmptyHolder"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -49,8 +50,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:viewVisibility="@{viewModel.moviesListEmpty}">
+            app:layout_constraintBottom_toBottomOf="parent" >
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/fragment_watchlist_no_data_image_size"

@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_watchlist.*
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
+import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentWatchlistBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewModel.Companion.ACTION_OPEN_DETAILS
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.activity.MovieDetailsActivity
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.MoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.WatchlistAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 
@@ -32,27 +32,31 @@ class WatchlistFragment : Fragment(), KoinComponent {
 
     private lateinit var viewModel: WatchlistViewModel
     private lateinit var watchlistAdapter: WatchlistAdapter
+    private lateinit var viewBinding: FragmentWatchlistBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.inflate<FragmentWatchlistBinding>(
+        viewBinding = DataBindingUtil.inflate<FragmentWatchlistBinding>(
             inflater,
             R.layout.fragment_watchlist,
             container, false)
 
         viewModel = ViewModelProviders.of(this).get(WatchlistViewModel::class.java)
 
-        binding.viewModel = viewModel
-
         viewModel.initializeByDefault()
 
         propertyHandler.attach()
-        return binding.root
+        return viewBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewBinding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = viewModel
+        }
 
         activity?.apply {
             watchlistAdapter = WatchlistAdapter(viewModel)
@@ -78,6 +82,10 @@ class WatchlistFragment : Fragment(), KoinComponent {
         viewModel.watchlistMovies.observe(this, Observer {
             watchlistAdapter.updateItems(it)
         })
+
+        viewModel.moviesListEmpty.observe(this, Observer {
+            fragmentWatchlistEmptyHolder.visibility = if (it) View.VISIBLE else View.GONE
+        })
     }
 
     override fun onDestroyView() {
@@ -96,7 +104,7 @@ class WatchlistFragment : Fragment(), KoinComponent {
         override fun onPropertyChanged(reference: WatchlistFragment, propertyId: Int) = with(reference) {
             val context = context ?: return
             when (propertyId) {
-                ru.kartsev.dmitry.cinemadetails.BR.action -> when (viewModel.action) {
+                BR.action -> when (viewModel.action) {
                     ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(viewModel.movieIdToOpenDetails!!, context)
                 }
             }

@@ -1,6 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base
 
 import androidx.databinding.Bindable
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.BR
