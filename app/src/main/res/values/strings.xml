@@ -7,6 +7,7 @@
     <string name="menu_search_title">Search</string>
     <string name="menu_favourite_title">To favourite</string>
     <string name="menu_send_title">Send</string>
+    <string name="menu_save_image_title">Save image</string>
 
     <!-- Section: Style Fonts. -->
 
@@ -57,10 +58,13 @@
     <string name="activity_main_tab_now_playing_title">Now playing</string>
     <string name="activity_main_tab_coming_soon">Coming soon</string>
     <string name="activity_main_tab_watchlist">Watchlist</string>
-    <string name="menu_save_image_title">Save image</string>
 
     <!-- Section: Now Playing Fragment. -->
 
-    <string name="activity_now_playing_no_data">No data available to display.\nPlease check Internet connection.</string>
+    <string name="fragment_now_playing_no_data">No data available to display.\nPlease check Internet connection.</string>
+
+    <!-- Section: Watchlist Fragment. -->
+
+    <string name="fragment_watchlist_no_favourites">No items added to favourites.</string>
 
 </resources>
