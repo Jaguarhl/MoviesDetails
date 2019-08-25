@@ -56,6 +56,10 @@
 
     <!-- Section: Now Playing Fragment. -->
 
-    <string name="activity_now_playing_no_data">Данные для отображения отсутствуют.\nПроверьте подключение к сети на устройстве.</string>
+    <string name="fragment_now_playing_no_data">Данные для отображения отсутствуют.\nПроверьте подключение к сети на устройстве.</string>
+
+    <!-- Section: Watchlist Fragment. -->
+
+    <string name="fragment_watchlist_no_favourites">Нет фильмов, отложенных для последующего просмотра.</string>
 
 </resources>

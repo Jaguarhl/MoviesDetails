@@ -56,7 +56,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="@dimen/text_primary_title"
-            android:text="@string/activity_now_playing_no_data"
+            android:text="@string/fragment_now_playing_no_data"
             app:viewVisibility="@{viewModel.moviesListEmpty}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
