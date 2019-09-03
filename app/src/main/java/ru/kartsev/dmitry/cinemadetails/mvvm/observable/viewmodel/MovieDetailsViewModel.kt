@@ -265,7 +265,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
-        var result = StringBuilder(title)
+        val result = StringBuilder(title)
         if (movieReleaseDate.isNotEmpty()) result.append(
             "\n\n$releaseDateLabel $movieReleaseDate"
         )

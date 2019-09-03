@@ -60,10 +60,11 @@ data class MovieDetailsEntity(
     companion object {
         fun getDetailsData(
             entity: MovieDetailsEntity,
-            language: String?
+            language: String?,
+            timeStamp: Long
         ): MovieDetailsData = with(entity) {
             MovieDetailsData(
-                false, language, adult, backdrop_path, budget, genres?.map { it.id!! }.orEmpty(),
+                timeStamp, language, adult, backdrop_path, budget, genres?.map { it.id!! }.orEmpty(),
                 homepage, id, imdb_id, original_language, original_title,
                 overview, popularity, poster_path, production_companies!!.map { it.id!! },
                 production_countries!!.map { it.name!! }, release_date, revenue, runtime,

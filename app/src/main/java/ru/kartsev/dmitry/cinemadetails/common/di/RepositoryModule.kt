@@ -9,6 +9,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.MAX_CACHE_SIZE_MB
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.SETTINGS_REPOSITORY_LIFETIME_H
+import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule.UTIL_NAME
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.API_SETTINGS
+import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.MOSHI_NAME
+import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
@@ -16,7 +20,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 
 object RepositoryModule {
-    const val COROUTINES_CACHE_NAME = "repository.coroutines_cache"
+    private const val COROUTINES_CACHE_NAME = "repository.coroutines_cache"
     const val TMDB_SETTINGS_REPOSITORY_NAME = "repository.tmdb_settings"
     const val MOVIES_REPOSITORY_NAME = "repository.movies"
     const val MOVIES_DATASOURCE_FACTORY_NAME = "repository.movies_datasource_factory"
@@ -28,11 +32,24 @@ object RepositoryModule {
         }
 
         single(named(TMDB_SETTINGS_REPOSITORY_NAME)) {
-            TmdbSettingsRepository(SETTINGS_REPOSITORY_LIFETIME_H)
+            TmdbSettingsRepository(
+                SETTINGS_REPOSITORY_LIFETIME_H,
+                get(),
+                get(named(API_SETTINGS)),
+                get(named(StorageModule.CONFIGURATION_STORAGE_NAME)),
+                get(named(StorageModule.LANGUAGE_STORAGE_NAME)),
+                get(named(StorageModule.MOVIE_DETAILS_STORAGE_NAME))
+            )
         }
 
         single(named(MOVIES_REPOSITORY_NAME)) {
-            MovieRepository()
+            MovieRepository(
+                get(named(NetworkModule.API_MOVIES)),
+                get(named(StorageModule.MOVIE_DETAILS_STORAGE_NAME)),
+                get(named(StorageModule.CACHE_STORAGE_NAME)),
+                get(named(TMDB_SETTINGS_REPOSITORY_NAME)),
+                get(named(MOSHI_NAME)),
+                get())
         }
 
         single(named(FAVOURITES_REPOSITORY_NAME)) {

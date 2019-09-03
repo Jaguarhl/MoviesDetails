@@ -6,6 +6,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.MovieDatabase
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.CacheStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.FavouritesStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
@@ -18,12 +19,14 @@ object StorageModule {
     const val LANGUAGE_STORAGE_NAME = "storage.language_storage"
     const val MOVIE_DETAILS_STORAGE_NAME = "storage.movie_details_storage"
     const val FAVOURITES_STORAGE_NAME = "storage.favourites_storage"
+    const val CACHE_STORAGE_NAME = "storage.cache_storage"
     const val CONFIGURATION_STORAGE_DAO = "storage.configuration_dao"
     const val LANGUAGES_STORAGE_DAO = "storage.languages_dao"
     const val MOVIE_DETAILS_STORAGE_DAO = "storage.movie_details_dao"
     const val MOVIE_GENRES_STORAGE_DAO = "storage.movie_genres_dao"
     const val MOVIE_VIDEOS_STORAGE_DAO = "storage.movie_videos_dao"
     const val FAVOURITES_STORAGE_DAO = "storage.favourites_dao"
+    private const val CACHE_STORAGE_DAO = "storage.cache_dao"
 
     /** Section: Modules. */
 
@@ -52,6 +55,10 @@ object StorageModule {
             FavouritesStorage()
         }
 
+        single(named(CACHE_STORAGE_NAME)) {
+            CacheStorage(get(named(CACHE_STORAGE_DAO)))
+        }
+
         single(named(CONFIGURATION_STORAGE_DAO)) {
             get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).configurationDao()
         }
@@ -74,6 +81,10 @@ object StorageModule {
 
         single(named(FAVOURITES_STORAGE_DAO)) {
             get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).favouritesDao()
+        }
+
+        single(named(CACHE_STORAGE_DAO)) {
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).cacheDao()
         }
     }
 }
