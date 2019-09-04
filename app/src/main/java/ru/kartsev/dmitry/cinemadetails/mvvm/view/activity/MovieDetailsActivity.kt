@@ -153,6 +153,12 @@ class MovieDetailsActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_item_search -> {
+                // FIXME: Replace by search activity opening.
+                viewModel.exceptionLiveData.postValue(getString(R.string.warning_coming_soon))
+                true
+            }
+
             R.id.menu_item_send -> {
                 shareMovie()
                 true

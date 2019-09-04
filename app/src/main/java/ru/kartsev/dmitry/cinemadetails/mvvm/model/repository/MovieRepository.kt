@@ -42,7 +42,7 @@ class MovieRepository(
 
     suspend fun getNowPlayingMovie(
         page: Int,
-        language: String? = null,
+        language: String? = util.getLocale(),
         lifeTime: Int = 1
     ): NowPlayingMoviesEntity? {
         val requestId = "nowPlayingMovies_${page}_$language"

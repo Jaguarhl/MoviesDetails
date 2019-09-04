@@ -62,6 +62,7 @@
 
     <!-- Section: Warnings. -->
 
+    <string name="warning_coming_soon">Будет добавлено в скором времени.</string>
     <string name="warning_no_data_available">В данный момент эти данные не доступны.\nПожалуйста проверьте подключение устройства к сети Интернет.</string>
 
     <!-- Section: Common Strings. -->

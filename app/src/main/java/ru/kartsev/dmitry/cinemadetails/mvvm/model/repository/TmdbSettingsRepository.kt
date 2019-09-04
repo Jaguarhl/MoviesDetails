@@ -77,7 +77,7 @@ class TmdbSettingsRepository(
             util.getLocale()
         } else languagesList[0].isoCode
         loadGenresList()
-        Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
+//        Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
     }
 
     suspend fun loadGenresList() {

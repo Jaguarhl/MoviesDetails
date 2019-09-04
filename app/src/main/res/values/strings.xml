@@ -67,6 +67,7 @@
 
     <!-- Section: Warnings. -->
 
+    <string name="warning_coming_soon">Coming soon.</string>
     <string name="warning_no_data_available">No data available.\nPlease check your device\'s Internet connection.</string>
 
     <!-- Section: Common Strings. -->
