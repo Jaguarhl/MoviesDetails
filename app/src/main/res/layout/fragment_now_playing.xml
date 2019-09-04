@@ -15,6 +15,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -49,6 +50,7 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
+            android:id="@+id/nowPlayingFragmentNoData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/primary_horizontal_margin"
@@ -56,7 +58,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="@dimen/text_primary_title"
-            android:text="@string/fragment_now_playing_no_data"
+            android:text="@string/warning_no_data_available"
             app:viewVisibility="@{viewModel.moviesListEmpty}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

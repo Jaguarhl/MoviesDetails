@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -19,8 +20,16 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     /** Section: Injections. */
 
-    private val movieDataSourceFactory: MovieDataSourceFactory by inject(named(MOVIES_DATASOURCE_FACTORY_NAME))
-    private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
+    private val movieDataSourceFactory: MovieDataSourceFactory by inject(
+        named(
+            MOVIES_DATASOURCE_FACTORY_NAME
+        )
+    )
+    private val settingsRepository: TmdbSettingsRepository by inject(
+        named(
+            TMDB_SETTINGS_REPOSITORY_NAME
+        )
+    )
 
     /** Section: Simple Properties. */
 
@@ -31,14 +40,18 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
     /** Section: Initialization. */
 
     fun initializeByDefault() {
-        getTmdbSettings()
-        moviePosterSize = settingsRepository.posterSizes[0]
+
         val config = Config.Builder().apply {
             setPageSize(PAGE_SIZE)
             setEnablePlaceholders(false)
         }.build()
 
         nowPlayingMovies = initializedPagedListBuilder(config).build()
+
+        scope.launch(coroutineExceptionHandler) {
+            getTmdbSettings()
+            moviePosterSize = settingsRepository.posterSizes[0]
+        }
     }
 
     /** Section: Common Methods. */
@@ -65,8 +78,10 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
     private fun initializedPagedListBuilder(config: Config):
         LivePagedListBuilder<Int, MovieObservable> {
 
-        return LivePagedListBuilder<Int, MovieObservable>(movieDataSourceFactory, config).
-            setBoundaryCallback(object : BoundaryCallback<MovieObservable>() {
+        return LivePagedListBuilder<Int, MovieObservable>(
+            movieDataSourceFactory,
+            config
+        ).setBoundaryCallback(object : BoundaryCallback<MovieObservable>() {
             override fun onZeroItemsLoaded() {
                 super.onZeroItemsLoaded()
                 moviesListEmpty.postValue(true)
@@ -77,6 +92,11 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
                 moviesListEmpty.postValue(false)
             }
         })
+    }
+
+    override fun onError(throwable: Throwable) {
+        super.onError(throwable)
+        moviesListEmpty.postValue(true)
     }
 
     companion object {

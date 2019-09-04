@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_now_playing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,8 +31,6 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Static functions. */
 
     companion object {
-        const val SWIPE_REFRESH_DELAY = 1000L
-
         fun newInstance(): NowPlayingFragment = NowPlayingFragment()
     }
 
@@ -102,6 +101,14 @@ class NowPlayingFragment : Fragment(), KoinComponent {
         viewModel.nowPlayingMovies.observe(this, Observer {
             moviesAdapter.submitList(it)
             swipeRefresh.isRefreshing = it.isNotEmpty()
+        })
+
+        viewModel.exceptionLiveData.observe(this, Observer {
+            Snackbar.make(rootView, it, Snackbar.LENGTH_LONG).show()
+        })
+
+        viewModel.moviesListEmpty.observe(this, Observer {
+            nowPlayingFragmentNoData.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 

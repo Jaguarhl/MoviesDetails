@@ -58,7 +58,6 @@ object NetworkModule {
         single<OkHttpClient>(named(HTTP_CLIENT_RETROFIT_NAME)) {
             OkHttpClient.Builder()
                 .addInterceptor(get(named(HTTP_AUTH_INTERCEPTOR_NAME)))
-                .cache(get(named(CACHE_NAME)))
                 .build()
         }
 

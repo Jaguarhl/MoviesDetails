@@ -210,6 +210,18 @@ class MovieDetailsActivity : AppCompatActivity() {
         viewModel.movieImagesLiveData.observe(this, Observer {
             movieImagesListAdapter.updateItems(it)
         })
+
+        viewModel.movieNoDataAvailable.observe(this, Observer {
+            activityDetailsMovieNoData.visibility = if (it) View.VISIBLE else View.GONE
+            activityDetailsMovieNoDataBackButton.setOnClickListener {
+                onBackPressed()
+            }
+        })
+
+        viewModel.exceptionLiveData.observe(this, Observer {
+            val view = findViewById<View>(R.id.rootView)
+            Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+        })
     }
 
     private fun shareMovie() {
@@ -302,11 +314,6 @@ class MovieDetailsActivity : AppCompatActivity() {
                     ACTION_MARK_FAVOURITE -> invalidateOptionsMenu()
 
                     else -> return@with
-                }
-
-                BR.exception -> {
-                    val view = findViewById<View>(R.id.rootView)
-                    Snackbar.make(view, viewModel.exception!!, Snackbar.LENGTH_LONG).show()
                 }
 
                 else -> return@with

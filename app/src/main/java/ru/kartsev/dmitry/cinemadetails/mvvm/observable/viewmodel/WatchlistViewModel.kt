@@ -1,26 +1,19 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
-import kotlin.coroutines.CoroutineContext
 
 class WatchlistViewModel : MovieListBaseViewModel() {
     /** Section: Injections. */
@@ -39,10 +32,6 @@ class WatchlistViewModel : MovieListBaseViewModel() {
 
     /** Section: Simple Properties. */
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private val scope = CoroutineScope(coroutineContext)
     private var language: String? = settingsRepository.currentLanguage
 
     val watchlistMovies: MutableLiveData<List<MovieObservable>> = MutableLiveData()

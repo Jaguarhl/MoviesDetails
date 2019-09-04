@@ -21,6 +21,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types.newParameterizedType
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.cache.CachedData
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class MovieRepository(

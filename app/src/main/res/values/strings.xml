@@ -61,10 +61,16 @@
 
     <!-- Section: Now Playing Fragment. -->
 
-    <string name="fragment_now_playing_no_data">No data available to display.\nPlease check Internet connection.</string>
-
     <!-- Section: Watchlist Fragment. -->
 
     <string name="fragment_watchlist_no_favourites">No items added to favourites.</string>
+
+    <!-- Section: Warnings. -->
+
+    <string name="warning_no_data_available">No data available.\nPlease check your device\'s Internet connection.</string>
+
+    <!-- Section: Common Strings. -->
+
+    <string name="common_back_label">Back</string>
 
 </resources>
