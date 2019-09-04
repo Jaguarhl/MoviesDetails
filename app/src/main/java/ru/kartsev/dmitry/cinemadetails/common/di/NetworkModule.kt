@@ -19,9 +19,11 @@ import ru.kartsev.dmitry.cinemadetails.BuildConfig
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.TMDB_API_KEY
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.BASE_URL
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.CACHE_SIZE
+import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.CONNECTION_TIMEOUT
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
+import java.util.concurrent.TimeUnit
 
 object NetworkModule {
     private const val CACHE_NAME = "network.cache"
@@ -58,6 +60,7 @@ object NetworkModule {
         single<OkHttpClient>(named(HTTP_CLIENT_RETROFIT_NAME)) {
             OkHttpClient.Builder()
                 .addInterceptor(get(named(HTTP_AUTH_INTERCEPTOR_NAME)))
+                .callTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                 .build()
         }
 

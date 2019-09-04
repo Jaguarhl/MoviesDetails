@@ -41,6 +41,7 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     fun initializeByDefault() {
 
+        loading = true
         val config = Config.Builder().apply {
             setPageSize(PAGE_SIZE)
             setEnablePlaceholders(false)
@@ -84,11 +85,13 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
         ).setBoundaryCallback(object : BoundaryCallback<MovieObservable>() {
             override fun onZeroItemsLoaded() {
                 super.onZeroItemsLoaded()
+                loading = false
                 moviesListEmpty.postValue(true)
             }
 
             override fun onItemAtFrontLoaded(itemAtFront: MovieObservable) {
                 super.onItemAtFrontLoaded(itemAtFront)
+                loading = false
                 moviesListEmpty.postValue(false)
             }
         })

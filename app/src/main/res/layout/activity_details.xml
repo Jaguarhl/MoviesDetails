@@ -467,11 +467,12 @@
                 android:layout_marginEnd="@dimen/primary_horizontal_margin"/>
 
             <androidx.appcompat.widget.AppCompatImageView
+                style="@style/Widget.AppCompat.ActionButton"
                 android:id="@+id/activityDetailsMovieNoDataBackButton"
                 android:layout_width="@dimen/activity_movie_details_no_data_back_button_size"
                 android:layout_height="@dimen/activity_movie_details_no_data_back_button_size"
                 android:layout_marginTop="@dimen/primary_vertical_margin"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:tint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_back_white" />
 

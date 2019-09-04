@@ -2,6 +2,7 @@ package ru.kartsev.dmitry.cinemadetails.common.config
 
 object NetworkConfig {
     const val CACHE_SIZE = 30L * 1024 * 1024
+    const val CONNECTION_TIMEOUT: Long = 30
 
     const val BASE_URL = "https://api.themoviedb.org/3/"
     const val POPULAR_MOVIE = "movie/popular"
