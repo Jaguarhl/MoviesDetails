@@ -1,15 +1,5 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
-import org.koin.core.inject
-import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule
-import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule.UTIL_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.API_SETTINGS
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.CONFIGURATION_STORAGE_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.LANGUAGE_STORAGE_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_DETAILS_STORAGE_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
@@ -22,14 +12,14 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import timber.log.Timber
 
-class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
-    /** Section: Injections. */
-
-    private val util: Util by inject(/*named(UTIL_NAME)*/)
-    private val settingsApi: SettingsApi by inject(named(API_SETTINGS))
-    private val configurationStorage: ConfigurationStorage by inject(named(CONFIGURATION_STORAGE_NAME))
-    private val languageStorage: LanguageStorage by inject(named(LANGUAGE_STORAGE_NAME))
-    private val movieDetailsStorage: MovieDetailsStorage by inject(named(MOVIE_DETAILS_STORAGE_NAME))
+class TmdbSettingsRepository(
+    private val lifeTime: Int,
+    private val util: Util,
+    private val settingsApi: SettingsApi,
+    private val configurationStorage: ConfigurationStorage,
+    private val languageStorage: LanguageStorage,
+    private val movieDetailsStorage: MovieDetailsStorage
+) : BaseRepository() {
 
     var imagesBaseUrl: String? = null
     var currentLanguage: String? = null
@@ -61,8 +51,14 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                 configurationStorage.saveConfiguration(
                     ConfigurationData(
                         System.currentTimeMillis(),
-                        images.base_url, images.secure_base_url, change_keys, images.backdrop_sizes, images.logo_sizes,
-                        images.poster_sizes, images.profile_sizes, images.still_sizes
+                        images.base_url,
+                        images.secure_base_url,
+                        change_keys,
+                        images.backdrop_sizes,
+                        images.logo_sizes,
+                        images.poster_sizes,
+                        images.profile_sizes,
+                        images.still_sizes
                     )
                 )
 
@@ -77,7 +73,9 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
         }
 
         languagesList.addAll(getLanguagesList().orEmpty())
-        currentLanguage = if (languagesList.any { it.isoCode.equals(util.getLocale(), true) }) { util.getLocale() } else languagesList[0].isoCode
+        currentLanguage = if (languagesList.any { it.isoCode.equals(util.getLocale(), true) }) {
+            util.getLocale()
+        } else languagesList[0].isoCode
         loadGenresList()
         Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
     }
@@ -119,7 +117,8 @@ class TmdbSettingsRepository(private val lifeTime: Int) : BaseRepository() {
                         englishName = it.english_name,
                         isoCode = it.iso_639_1,
                         name = it.name
-                    )}
+                    )
+                }
 
                 languageStorage.saveLanguagesList(result!!)
             }

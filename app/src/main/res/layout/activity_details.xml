@@ -445,6 +445,44 @@
 
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/activityDetailsMovieNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:elevation="5dp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_primary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@string/warning_no_data_available"
+                android:layout_marginStart="@dimen/primary_horizontal_margin"
+                android:layout_marginEnd="@dimen/primary_horizontal_margin"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/activityDetailsMovieNoDataBackButton"
+                android:layout_width="@dimen/activity_movie_details_no_data_back_button_size"
+                android:layout_height="@dimen/activity_movie_details_no_data_back_button_size"
+                android:layout_marginTop="@dimen/primary_vertical_margin"
+                android:scaleType="fitXY"
+                android:tint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_arrow_back_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_tertiary"
+                android:text="@string/common_back_label"/>
+
+        </LinearLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

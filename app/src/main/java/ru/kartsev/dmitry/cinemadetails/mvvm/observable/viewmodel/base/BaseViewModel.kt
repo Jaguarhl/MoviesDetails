@@ -26,22 +26,17 @@ abstract class BaseViewModel : ObservableViewModel(), KoinComponent {
             notifyPropertyChanged(BR.loading)
         }
 
-    var exception: String? = null
-        @Bindable get() = field
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.exception)
-        }
-
     /** Section: Simple Properties. */
+
+    val exceptionLiveData: MutableLiveData<String> = MutableLiveData()
 
     protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         onError(exception)
     }
 
-    protected fun onError(throwable: Throwable) {
+    open fun onError(throwable: Throwable) {
         loading = false
         Timber.e(throwable)
-        exception = throwable.message
+        exceptionLiveData.postValue(throwable.message)
     }
 }

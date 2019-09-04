@@ -3,6 +3,7 @@ package ru.kartsev.dmitry.cinemadetails.common.di
 import android.content.Context
 import android.net.Uri
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.squareup.moshi.Moshi
 import okhttp3.Cache
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
@@ -23,16 +24,17 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.SettingsApi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 
 object NetworkModule {
-    const val CACHE_NAME = "network.cache"
-    const val HTTP_RETROFIT_NAME = "network.retrofit"
-    const val HTTP_CLIENT_RETROFIT_NAME = "network.http_client_retrofit"
-    const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
+    private const val CACHE_NAME = "network.cache"
+    const val MOSHI_NAME = "network.moshi"
+    private const val HTTP_RETROFIT_NAME = "network.retrofit"
+    private const val HTTP_CLIENT_RETROFIT_NAME = "network.http_client_retrofit"
+    private const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
     const val API_MOVIES = "network.api_movies"
     const val API_SETTINGS = "network.api_settings"
     const val PICASSO_NAME = "network.picasso"
-    const val PICASSO_CLIENT_NAME = "network.picasso_client"
-    const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
-    const val PICASSO_REQUEST_TRANSFORMER_NAME = "network.picasso_request_transformer"
+    private const val PICASSO_CLIENT_NAME = "network.picasso_client"
+    private const val PICASSO_INTERCEPTOR_NAME = "network.picasso_client_interceptor"
+    private const val PICASSO_REQUEST_TRANSFORMER_NAME = "network.picasso_request_transformer"
 
     val it: Module = module {
         single(named(CACHE_NAME)) {
@@ -108,6 +110,10 @@ object NetworkModule {
             Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>(named(
                 RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
             )).imagesBaseUrl}${request.uri}")).build() }
+        }
+
+        single(named(MOSHI_NAME)) {
+            Moshi.Builder().build()
         }
     }
 }

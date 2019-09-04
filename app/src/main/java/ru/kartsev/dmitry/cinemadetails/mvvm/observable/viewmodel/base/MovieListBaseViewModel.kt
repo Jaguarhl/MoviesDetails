@@ -1,6 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
 abstract class MovieListBaseViewModel : BaseViewModel() {
 
@@ -8,14 +12,11 @@ abstract class MovieListBaseViewModel : BaseViewModel() {
 
     val moviesListEmpty = MutableLiveData<Boolean>().apply { value = false }
 
-//    var moviesListEmpty: Boolean = true
-//        @Bindable get() = field
-//        set(value) {
-//            field = if (field == value) return else value
-//            notifyPropertyChanged(BR.moviesListEmpty)
-//        }
-
     /** Section: Simple Properties. */
+    private val parentJob = Job()
+    private val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.Default
+    protected val scope = CoroutineScope(coroutineContext)
 
     var moviePosterSize: String? = null
 

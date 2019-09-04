@@ -2,7 +2,6 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,7 +18,6 @@ import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSIT
 import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.favourites.FavouriteData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.dates.Result
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
@@ -215,6 +213,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     val movieSimilarMoviesLiveData: MutableLiveData<List<SimilarMovieObservable>> = MutableLiveData()
     val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
     val movieImagesLiveData: MutableLiveData<List<ImageObservable>> = MutableLiveData()
+    val movieNoDataAvailable: MutableLiveData<Boolean> = MutableLiveData()
 
     var movieId: Int? = null
     var movieIdToShow: Int? = null
@@ -265,7 +264,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
-        var result = StringBuilder(title)
+        val result = StringBuilder(title)
         if (movieReleaseDate.isNotEmpty()) result.append(
             "\n\n$releaseDateLabel $movieReleaseDate"
         )
@@ -334,6 +333,11 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     private fun displayDetails(resultDetails: MovieDetailsEntity?, translationDetails: MovieTranslationsEntity?) {
+        if (resultDetails == null) {
+            movieNoDataAvailable.postValue(true)
+            return
+        }
+
         val translated = translationDetails?.translations?.firstOrNull {
             it.iso_639_1.equals(
                 language,
@@ -342,21 +346,22 @@ class MovieDetailsViewModel : BaseViewModel() {
         }
             ?.data
 
-        movieTitle = getMovieTitle(translated?.title, resultDetails?.title)
-        movieTitleOriginal = resultDetails?.original_title ?: ""
-        movieDescription = translated?.overview ?: resultDetails?.overview ?: ""
-        moviePosterPath = resultDetails?.poster_path ?: ""
-        movieBackdropPath = resultDetails?.backdrop_path ?: ""
-        movieOverallInfo = "${resultDetails?.production_countries?.map { it.name }?.joinToString(" / ")}"
-        movieReleaseDate = resultDetails?.release_date ?: ""
-        movieRuntime = resultDetails?.runtime ?: 0
-        moviePopularity = resultDetails?.popularity ?: 0.0
-        movieBudget = resultDetails?.budget ?: 0
-        movieRevenue = resultDetails?.revenue ?: 0
-        movieRating = resultDetails?.vote_average.toString()
-        resultDetails?.genres?.let { getMovieGenres(it) }
+        movieTitle = getMovieTitle(translated?.title, resultDetails.title)
+        movieTitleOriginal = resultDetails.original_title ?: ""
+        movieDescription = translated?.overview ?: resultDetails.overview ?: ""
+        moviePosterPath = resultDetails.poster_path ?: ""
+        movieBackdropPath = resultDetails.backdrop_path ?: ""
+        movieOverallInfo = "${resultDetails.production_countries?.map { it.name }?.joinToString(" / ")}"
+        movieReleaseDate = resultDetails.release_date ?: ""
+        movieRuntime = resultDetails.runtime ?: 0
+        moviePopularity = resultDetails.popularity ?: 0.0
+        movieBudget = resultDetails.budget ?: 0
+        movieRevenue = resultDetails.revenue ?: 0
+        movieRating = resultDetails.vote_average.toString()
+        resultDetails.genres?.let { getMovieGenres(it) }
 
         if (movieBackdropPath.isEmpty()) action = ACTION_COLLAPSE_TOOLBAR
+        movieNoDataAvailable.postValue(false)
 
         loading = false
     }
@@ -449,6 +454,11 @@ class MovieDetailsViewModel : BaseViewModel() {
                 KeywordObservable(it.name, it.id)
             }
         )
+    }
+
+    override fun onError(throwable: Throwable) {
+        super.onError(throwable)
+        movieNoDataAvailable.postValue(true)
     }
 
     companion object {

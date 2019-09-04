@@ -3,19 +3,12 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.squareup.moshi.Json
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.DatabaseConverters
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData.Companion.TABLE_NAME
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.Language
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieGenre
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.ProductionCompany
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.ProductionCountry
 
 @Entity(tableName = TABLE_NAME)
 data class MovieDetailsData(
-    @ColumnInfo(name = DATA_IS_EXPIRED)
-    var isExpired: Boolean = false,
+    @ColumnInfo(name = TIMESTAMP)
+    var timeStamp: Long,
 
     @ColumnInfo(name = LANGUAGE)
     var language: String? = null,
@@ -99,7 +92,7 @@ data class MovieDetailsData(
     companion object {
         const val TABLE_NAME = "movie_details"
 
-        const val DATA_IS_EXPIRED = "is_expired"
+        const val TIMESTAMP = "timeStamp"
         const val LANGUAGE = "language"
         const val ADULT_FIELD = "adult"
         const val BACKDROP_PATH_FIELD = "backdrop_path"

@@ -45,4 +45,5 @@
     <dimen name="tabs_bottom_margin">8dp</dimen>
     <dimen name="item_movie_image_rating_corners_radius">2dp</dimen>
     <dimen name="fragment_watchlist_no_data_image_size">224dp</dimen>
+    <dimen name="activity_movie_details_no_data_back_button_size">48dp</dimen>
 </resources>
