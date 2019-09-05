@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
     private const val CACHE_NAME = "network.cache"
-    const val MOSHI_NAME = "network.moshi"
     private const val HTTP_RETROFIT_NAME = "network.retrofit"
     private const val HTTP_CLIENT_RETROFIT_NAME = "network.http_client_retrofit"
     private const val HTTP_AUTH_INTERCEPTOR_NAME = "network.http_client_interceptor_retrofit"
@@ -72,11 +71,11 @@ object NetworkModule {
                 .build()
         }
 
-        single(named(API_MOVIES)) {
+        single {
             get<Retrofit>(named(HTTP_RETROFIT_NAME)).create(MoviesApi::class.java)
         }
 
-        single(named(API_SETTINGS)) {
+        single {
             get<Retrofit>(named(HTTP_RETROFIT_NAME)).create(SettingsApi::class.java)
         }
 
@@ -110,12 +109,10 @@ object NetworkModule {
         }
 
         single(named(PICASSO_REQUEST_TRANSFORMER_NAME)) {
-            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>(named(
-                RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
-            )).imagesBaseUrl}${request.uri}")).build() }
+            Picasso.RequestTransformer { request -> Request.Builder(Uri.parse("${get<TmdbSettingsRepository>().imagesBaseUrl}${request.uri}")).build() }
         }
 
-        single(named(MOSHI_NAME)) {
+        single {
             Moshi.Builder().build()
         }
     }

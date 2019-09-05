@@ -1,18 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
-import com.epam.coroutinecache.api.CacheParams
-import com.epam.coroutinecache.api.CoroutinesCache
-import com.epam.coroutinecache.mappers.MoshiMapper
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.MAX_CACHE_SIZE_MB
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.SETTINGS_REPOSITORY_LIFETIME_H
-import ru.kartsev.dmitry.cinemadetails.common.di.ContextModule.UTIL_NAME
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.API_SETTINGS
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.MOSHI_NAME
-import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.MoviesDataSource
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
@@ -20,47 +12,34 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 
 object RepositoryModule {
-    private const val COROUTINES_CACHE_NAME = "repository.coroutines_cache"
-    const val TMDB_SETTINGS_REPOSITORY_NAME = "repository.tmdb_settings"
-    const val MOVIES_REPOSITORY_NAME = "repository.movies"
-    const val MOVIES_DATASOURCE_FACTORY_NAME = "repository.movies_datasource_factory"
-    const val FAVOURITES_REPOSITORY_NAME = "repository.favourites"
+    val it: Module = module {
 
-    val it : Module = module {
-        single(named(COROUTINES_CACHE_NAME)) {
-            CoroutinesCache(CacheParams(MAX_CACHE_SIZE_MB, MoshiMapper(), androidContext().cacheDir ))
-        }
-
-        single(named(TMDB_SETTINGS_REPOSITORY_NAME)) {
+        single {
             TmdbSettingsRepository(
-                SETTINGS_REPOSITORY_LIFETIME_H,
-                get(),
-                get(named(API_SETTINGS)),
-                get(named(StorageModule.CONFIGURATION_STORAGE_NAME)),
-                get(named(StorageModule.LANGUAGE_STORAGE_NAME)),
-                get(named(StorageModule.MOVIE_DETAILS_STORAGE_NAME))
+                SETTINGS_REPOSITORY_LIFETIME_H, get(), get(), get(), get(), get()
             )
         }
 
-        single(named(MOVIES_REPOSITORY_NAME)) {
+        single {
             MovieRepository(
-                get(named(NetworkModule.API_MOVIES)),
-                get(named(StorageModule.MOVIE_DETAILS_STORAGE_NAME)),
-                get(named(StorageModule.CACHE_STORAGE_NAME)),
-                get(named(TMDB_SETTINGS_REPOSITORY_NAME)),
-                get(named(MOSHI_NAME)),
-                get())
+                get(),
+                get(),
+                get(),
+                get(),
+                get(),
+                get()
+            )
         }
 
-        single(named(FAVOURITES_REPOSITORY_NAME)) {
-            FavouritesRepository()
+        single {
+            FavouritesRepository(get())
         }
 
         factory {
-            MoviesDataSource()
+            MoviesDataSource(get(), get())
         }
 
-        single(named(MOVIES_DATASOURCE_FACTORY_NAME)) {
+        single {
             MovieDataSourceFactory()
         }
     }

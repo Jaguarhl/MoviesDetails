@@ -3,11 +3,9 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
@@ -18,17 +16,9 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListB
 class WatchlistViewModel : MovieListBaseViewModel() {
     /** Section: Injections. */
 
-    private val settingsRepository: TmdbSettingsRepository by inject(
-        named(
-            TMDB_SETTINGS_REPOSITORY_NAME
-        )
-    )
-    private val favouritesRepository: FavouritesRepository by inject(
-        named(
-            FAVOURITES_REPOSITORY_NAME
-        )
-    )
-    private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
+    private val settingsRepository: TmdbSettingsRepository = get()
+    private val favouritesRepository: FavouritesRepository = get()
+    private val movieRepository: MovieRepository = get()
 
     /** Section: Simple Properties. */
 

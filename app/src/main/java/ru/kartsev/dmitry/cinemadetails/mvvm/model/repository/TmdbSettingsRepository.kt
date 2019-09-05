@@ -22,7 +22,7 @@ class TmdbSettingsRepository(
 ) : BaseRepository() {
 
     var imagesBaseUrl: String? = null
-    var currentLanguage: String? = null
+    var currentLanguage: String? = util.getLocale()
     val languagesList = mutableListOf<LanguageData>()
     val backdropSizes = mutableListOf<String>()
     val posterSizes = mutableListOf<String>()
@@ -33,7 +33,7 @@ class TmdbSettingsRepository(
         // TODO: Implement exceptions handler and message to user.
         val data = configurationStorage.loadConfiguration()
 
-        if (data != null && util.isExpired(data.timeStamp, lifeTime).not()) {
+        if (data != null && util.isExpired(data.timeStamp, lifeTime)) {
             imagesBaseUrl = data.baseUrl
             backdropSizes.addAll(data.backdropSizes.orEmpty())
             posterSizes.addAll(data.posterSizes.orEmpty())
@@ -76,8 +76,9 @@ class TmdbSettingsRepository(
         currentLanguage = if (languagesList.any { it.isoCode.equals(util.getLocale(), true) }) {
             util.getLocale()
         } else languagesList[0].isoCode
+
         loadGenresList()
-//        Timber.d("$languagesList,\ncurrent language: $currentLanguage, \ngenres list: $genresList")
+        Timber.d("$languagesList!!,\ncurrent language: $currentLanguage!!, \ngenres list: $genresList!!")
     }
 
     suspend fun loadGenresList() {

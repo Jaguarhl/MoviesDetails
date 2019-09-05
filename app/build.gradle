@@ -123,9 +123,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 
-    // Coroutines cache
-    implementation "com.epam.coroutinecache:coroutinecache:$coroutinesCacheVersion"
-
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
 

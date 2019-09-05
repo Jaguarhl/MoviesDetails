@@ -4,15 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.common.config.NetworkConfig.PAGE_SIZE
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_DATASOURCE_FACTORY_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.datasource.factory.MovieDataSourceFactory
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
@@ -22,16 +18,8 @@ class NowPlayingViewModel : MovieListBaseViewModel() {
 
     /** Section: Injections. */
 
-    private val movieDataSourceFactory: MovieDataSourceFactory by inject(
-        named(
-            MOVIES_DATASOURCE_FACTORY_NAME
-        )
-    )
-    private val settingsRepository: TmdbSettingsRepository by inject(
-        named(
-            TMDB_SETTINGS_REPOSITORY_NAME
-        )
-    )
+    private val movieDataSourceFactory: MovieDataSourceFactory by inject()
+    private val settingsRepository: TmdbSettingsRepository by inject()
 
     /** Section: Simple Properties. */
 

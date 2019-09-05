@@ -9,13 +9,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.get
 import org.koin.core.inject
-import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.FAVOURITES_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.MOVIES_REPOSITORY_NAME
-import ru.kartsev.dmitry.cinemadetails.common.di.RepositoryModule.TMDB_SETTINGS_REPOSITORY_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.credits.Cast
@@ -42,10 +39,10 @@ import kotlin.coroutines.CoroutineContext
 class MovieDetailsViewModel : BaseViewModel() {
     /** Section: Injections. */
 
-    private val movieRepository: MovieRepository by inject(named(MOVIES_REPOSITORY_NAME))
-    private val favouritesRepository: FavouritesRepository by inject(named(FAVOURITES_REPOSITORY_NAME))
-    private val settingsRepository: TmdbSettingsRepository by inject(named(TMDB_SETTINGS_REPOSITORY_NAME))
-    private val util: Util by inject()
+    private val movieRepository: MovieRepository = get()
+    private val favouritesRepository: FavouritesRepository = get()
+    private val settingsRepository: TmdbSettingsRepository = get()
+    private val util: Util = get()
 
     /** Section: Bindable Properties. */
 

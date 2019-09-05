@@ -1,27 +1,19 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 
 import org.koin.core.KoinComponent
-import org.koin.core.inject
-import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_DETAILS_STORAGE_DAO
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_GENRES_STORAGE_DAO
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.MOVIE_VIDEOS_STORAGE_DAO
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.GenresDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieVideosDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.GenreData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieDetailsData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import timber.log.Timber
 
-class MovieDetailsStorage : KoinComponent {
-    /** Section: Injections. */
-
-    private val genresDao: GenresDao by inject(named(MOVIE_GENRES_STORAGE_DAO))
-    private val movieDetailsDao: MovieDetailsDao by inject(named(MOVIE_DETAILS_STORAGE_DAO))
-    private val movieVideosDao: MovieVideosDao by inject(named(MOVIE_VIDEOS_STORAGE_DAO))
+class MovieDetailsStorage(
+    private val genresDao: GenresDao,
+    private val movieDetailsDao: MovieDetailsDao,
+    private val movieVideosDao: MovieVideosDao
+) : KoinComponent {
 
     /** Section: Public Methods. */
 

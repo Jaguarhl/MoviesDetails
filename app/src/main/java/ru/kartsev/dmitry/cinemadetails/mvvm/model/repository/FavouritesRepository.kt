@@ -1,16 +1,10 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
-import org.koin.core.inject
-import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.FAVOURITES_STORAGE_NAME
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.FavouritesStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.favourites.FavouriteData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 
-class FavouritesRepository : BaseRepository() {
-
-    /** Section: Injections. */
-    private val favouritesStorage: FavouritesStorage by inject(named(FAVOURITES_STORAGE_NAME))
+class FavouritesRepository(private val favouritesStorage: FavouritesStorage) : BaseRepository() {
 
     /** Section: Private Methods. */
 

@@ -3,16 +3,11 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.StorageModule.FAVOURITES_STORAGE_DAO
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.FavouritesDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.favourites.FavouriteData
 import timber.log.Timber
 
-class FavouritesStorage : KoinComponent {
-
-    /** Section: Injections. */
-
-    private val favouritesDao: FavouritesDao by inject(named(FAVOURITES_STORAGE_DAO))
+class FavouritesStorage(private val favouritesDao: FavouritesDao) : KoinComponent {
 
     /** Section: Public Methods. */
 

@@ -12,7 +12,6 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslat
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.MovieImagesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.PopularMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
@@ -21,7 +20,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types.newParameterizedType
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.cache.CachedData
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class MovieRepository(
@@ -32,17 +30,9 @@ class MovieRepository(
     private val moshi: Moshi,
     private val util: Util
 ) : BaseRepository() {
-
-    suspend fun getPopularMovies(page: Int, language: String? = null): PopularMoviesEntity? {
-        return safeApiCall(
-            call = { moviesApi.getPopularMovieAsync(language, page).await() },
-            errorMessage = "Error Fetching Popular Movies."
-        )
-    }
-
     suspend fun getNowPlayingMovie(
         page: Int,
-        language: String? = util.getLocale(),
+        language: String?,
         lifeTime: Int = 1
     ): NowPlayingMoviesEntity? {
         val requestId = "nowPlayingMovies_${page}_$language"

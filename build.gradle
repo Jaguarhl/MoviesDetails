@@ -18,7 +18,6 @@ buildscript {
         okhttp3_version = '3.12.0'
         okhttp3_interceptor_version = '3.11.0'
         kotlinCoroutineVersion = '1.1.1'
-        coroutinesCacheVersion = '0.9.5'
         picassoVersion = '2.71828'
         youtubePlayerVersion = '10.0.3'
         photoViewVersion = '2.3.0'
