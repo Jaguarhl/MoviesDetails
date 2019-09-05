@@ -33,7 +33,7 @@ class MovieRepository(
     suspend fun getNowPlayingMovie(
         page: Int,
         language: String?,
-        lifeTime: Int = 1
+        lifeTimeHours: Int = 1
     ): NowPlayingMoviesEntity? {
         val requestId = "nowPlayingMovies_${page}_$language"
 
@@ -41,7 +41,7 @@ class MovieRepository(
             moshi.adapter(newParameterizedType(NowPlayingMoviesEntity::class.java))
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(
@@ -63,12 +63,12 @@ class MovieRepository(
         }
     }
 
-    suspend fun getMovieDetails(movieId: Int, language: String? = null, lifeTime: Int = 6): MovieDetailsEntity? {
+    suspend fun getMovieDetails(movieId: Int, language: String? = null, lifeTimeHours: Int = 6): MovieDetailsEntity? {
         val currentLanguage = settingsRepository.currentLanguage
         val data = movieDetailsStorage.loadMovieDetailsById(movieId)
         val response: MovieDetailsEntity?
 
-        if (data == null || util.isExpired(data.timeStamp, lifeTime) || data.language.equals(currentLanguage, true).not()) {
+        if (data == null || util.isExpired(data.timeStamp, lifeTimeHours) || data.language.equals(currentLanguage, true).not()) {
             response = safeApiCall(
                 call = { moviesApi.getMovieByIdAsync(movieId, language).await() },
                 errorMessage = "Error Fetching Movie Details."
@@ -130,7 +130,7 @@ class MovieRepository(
 
     suspend fun getMovieTranslations(
         movieId: Int,
-        lifeTime: Int = TimeUnit.DAYS.toHours(7).toInt()
+        lifeTimeHours: Int = TimeUnit.DAYS.toHours(7).toInt()
     ): MovieTranslationsEntity? {
         val requestId = "movieTranslations_$movieId"
 
@@ -138,7 +138,7 @@ class MovieRepository(
             moshi.adapter(newParameterizedType(MovieTranslationsEntity::class.java))
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(
@@ -180,7 +180,7 @@ class MovieRepository(
         return response
     }
 
-    suspend fun getMovieKeywords(movieId: Int, lifeTime: Int = 24): MovieKeywordsEntity? {
+    suspend fun getMovieKeywords(movieId: Int, lifeTimeHours: Int = 24): MovieKeywordsEntity? {
         val requestId = "movieKeywords_$movieId"
 
         val adapter: JsonAdapter<MovieKeywordsEntity> =
@@ -188,7 +188,7 @@ class MovieRepository(
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
 
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(
@@ -210,7 +210,7 @@ class MovieRepository(
         }
     }
 
-    suspend fun getMovieCredits(movieId: Int, lifeTime: Int = TimeUnit.DAYS.toHours(31).toInt()): MovieCreditsEntity? {
+    suspend fun getMovieCredits(movieId: Int, lifeTimeHours: Int = TimeUnit.DAYS.toHours(31).toInt()): MovieCreditsEntity? {
         val requestId = "movieCredits_$movieId"
 
         val adapter: JsonAdapter<MovieCreditsEntity> =
@@ -218,7 +218,7 @@ class MovieRepository(
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
 
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(
@@ -244,7 +244,7 @@ class MovieRepository(
         movieId: Int,
         page: Int? = null,
         language: String? = null,
-        lifeTime: Int = 7
+        lifeTimeHours: Int = 7
     ): SimilarMoviesEntity? {
         val requestId = "movieSimilar_${movieId}_${page}_$language"
 
@@ -253,7 +253,7 @@ class MovieRepository(
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
 
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(
@@ -288,7 +288,7 @@ class MovieRepository(
         movieId: Int,
         language: String? = null,
         includeLanguages: String? = null,
-        lifeTime: Int = 12
+        lifeTimeHours: Int = 12
     ): MovieImagesEntity? {
         val requestId = "movieImages_${movieId}_${language}_$includeLanguages"
 
@@ -297,7 +297,7 @@ class MovieRepository(
 
         val cachedResponse = cacheStorage.getCachedResponse(requestId)
 
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTime)) {
+        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
             adapter.fromJson(cachedResponse.response!!)
         } else {
             val response = safeApiCall(

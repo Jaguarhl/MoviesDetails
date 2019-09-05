@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_watchlist.*
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.BR
@@ -42,7 +42,7 @@ class WatchlistFragment : Fragment(), KoinComponent {
             R.layout.fragment_watchlist,
             container, false)
 
-        viewModel = ViewModelProviders.of(this).get(WatchlistViewModel::class.java)
+        viewModel = getViewModel()
 
         viewModel.initializeByDefault()
 

@@ -4,13 +4,10 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.core.get
-import org.koin.core.inject
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
@@ -34,16 +31,13 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMov
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.BaseViewModel
 import timber.log.Timber
-import kotlin.coroutines.CoroutineContext
 
-class MovieDetailsViewModel : BaseViewModel() {
-    /** Section: Injections. */
-
-    private val movieRepository: MovieRepository = get()
-    private val favouritesRepository: FavouritesRepository = get()
-    private val settingsRepository: TmdbSettingsRepository = get()
-    private val util: Util = get()
-
+class MovieDetailsViewModel(
+    private val movieRepository: MovieRepository,
+    private val favouritesRepository: FavouritesRepository,
+    private val settingsRepository: TmdbSettingsRepository,
+    private val util: Util
+) : BaseViewModel() {
     /** Section: Bindable Properties. */
 
     var movieVideoEnabled: Boolean = false
@@ -195,10 +189,6 @@ class MovieDetailsViewModel : BaseViewModel() {
 
     /** Section: Simple Properties. */
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private val scope = CoroutineScope(coroutineContext)
     private var language: String? = settingsRepository.currentLanguage
 
     var movieBackdropSize: String? = null

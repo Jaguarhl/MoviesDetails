@@ -13,7 +13,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import timber.log.Timber
 
 class TmdbSettingsRepository(
-    private val lifeTime: Int,
+    private val lifeTimeHours: Int,
     private val util: Util,
     private val settingsApi: SettingsApi,
     private val configurationStorage: ConfigurationStorage,
@@ -33,7 +33,7 @@ class TmdbSettingsRepository(
         // TODO: Implement exceptions handler and message to user.
         val data = configurationStorage.loadConfiguration()
 
-        if (data != null && util.isExpired(data.timeStamp, lifeTime)) {
+        if (data != null && util.isExpired(data.timeStamp, lifeTimeHours)) {
             imagesBaseUrl = data.baseUrl
             backdropSizes.addAll(data.backdropSizes.orEmpty())
             posterSizes.addAll(data.posterSizes.orEmpty())

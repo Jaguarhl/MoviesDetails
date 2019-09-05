@@ -12,7 +12,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_details.*
@@ -26,6 +25,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObser
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastListAdapter
@@ -39,7 +39,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.ImagesListAda
 class MovieDetailsActivity : AppCompatActivity() {
     /** Section: Private Properties. */
 
-    lateinit var viewModel: MovieDetailsViewModel
+    private lateinit var viewModel: MovieDetailsViewModel
     private lateinit var castAdapter: CreditsCastListAdapter
     private lateinit var videosAdapter: VideoListAdapter
     private lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
@@ -55,7 +55,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             R.layout.activity_details
         )
 
-        viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
+        viewModel = getViewModel()
 
         with(binding) {
             lifecycleOwner = this@MovieDetailsActivity

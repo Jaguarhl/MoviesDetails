@@ -8,15 +8,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.activity_view_image.*
 import kotlinx.android.synthetic.main.app_bar_default.*
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ActivityViewImageBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieImageViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
-import timber.log.Timber
 import java.io.File
 
 class MovieImageActivity : AppCompatActivity() {
@@ -34,8 +32,7 @@ class MovieImageActivity : AppCompatActivity() {
             R.layout.activity_view_image
         )
 
-        viewModel = ViewModelProviders.of(this).get(MovieImageViewModel::class.java)
-
+        viewModel = getViewModel()
         binding.viewModel = viewModel
 
         setSupportActionBar(toolbarNoElevation)

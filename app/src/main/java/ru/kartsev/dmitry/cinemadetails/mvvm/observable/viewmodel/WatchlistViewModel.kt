@@ -3,9 +3,6 @@ package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.core.get
-import org.koin.core.inject
-import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.FavouritesRepository
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.MovieRepository
@@ -13,13 +10,11 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsReposit
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
 
-class WatchlistViewModel : MovieListBaseViewModel() {
-    /** Section: Injections. */
-
-    private val settingsRepository: TmdbSettingsRepository = get()
-    private val favouritesRepository: FavouritesRepository = get()
-    private val movieRepository: MovieRepository = get()
-
+class WatchlistViewModel(
+    private val settingsRepository: TmdbSettingsRepository,
+    private val favouritesRepository: FavouritesRepository,
+    private val movieRepository: MovieRepository
+) : MovieListBaseViewModel() {
     /** Section: Simple Properties. */
 
     private var language: String? = settingsRepository.currentLanguage

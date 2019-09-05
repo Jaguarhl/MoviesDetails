@@ -9,6 +9,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.MovieDatabase
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.CacheStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.FavouritesStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.HistoryStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
 
@@ -48,6 +49,10 @@ object StorageModule {
         }
 
         single {
+            HistoryStorage(get())
+        }
+
+        single {
             get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).configurationDao()
         }
 
@@ -73,6 +78,10 @@ object StorageModule {
 
         single {
             get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).cacheDao()
+        }
+
+        single {
+            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).historyDao()
         }
     }
 }
