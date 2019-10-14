@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+    tools:context=".mvvm.presentation.details.MovieDetailsFragment">
 
     <data class="ItemGenreBinding">
 
@@ -14,7 +14,7 @@
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.details.MovieDetailsViewModel" />
     </data>
 
     <com.google.android.material.chip.Chip

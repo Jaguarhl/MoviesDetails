@@ -12,6 +12,7 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.HistoryDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieVideosDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.cache.CachedData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.ConfigurationData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.configuration.LanguageData
@@ -23,8 +24,9 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.history.Histor
 
 @Database(
     entities = [
-        ConfigurationData::class, LanguageData::class, MovieDetailsData::class, GenreData::class,
-        MovieVideoData::class, FavouriteData::class, CachedData::class, HistoryEventData::class
+        ConfigurationData::class, LanguageData::class, MovieData::class, MovieDetailsData::class,
+        GenreData::class, MovieVideoData::class, FavouriteData::class, CachedData::class,
+        HistoryEventData::class
     ],
     version = StorageConfig.DATABASE_VERSION,
     exportSchema = false

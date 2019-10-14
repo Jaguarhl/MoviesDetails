@@ -1,14 +1,13 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
-import org.koin.core.module.Module
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import javax.inject.Singleton
 
-object ContextModule {
-    /** Section: Modules. */
-
-    val it: Module = module {
-        single { Util() }
-    }
+@Module
+class ContextModule {
+    @Provides
+    @Singleton
+    fun provideUtil() = Util()
 }

@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+    tools:context=".mvvm.presentation.details.MovieDetailsFragment">
 
     <data class="ItemCastBinding">
 
@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.details.MovieDetailsViewModel" />
     </data>
 
     <androidx.cardview.widget.CardView

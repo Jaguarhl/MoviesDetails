@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".mvvm.view.activity.MainActivity">
+    tools:context=".mvvm.presentation.MainActivity">
 
     <data class="FragmentNowPlayingBinding">
 
         <import type="android.view.View" />
 
+        <import type="androidx.lifecycle.LiveDataKt" />
+
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.tabs.NowPlayingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

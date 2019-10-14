@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainNav"
+    app:startDestination="@id/fragmentStart">
+
+    <fragment
+        android:id="@+id/fragmentStart"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.tabs.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/nowPlayingFragment"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.tabs.NowPlayingFragment"
+        android:label="NowPlayingFragment"
+        tools:layout="@layout/fragment_now_playing">
+        <action
+            android:id="@+id/showMovieDetails"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.presentation.details.MovieDetailsFragment"
+        android:label="MovieDetailsFragment"
+        tools:layout="@layout/fragment_movie_details">
+        
+    </fragment>
+</navigation>

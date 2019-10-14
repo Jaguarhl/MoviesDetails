@@ -1,5 +1,6 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.model.repository
 
+import androidx.paging.DataSource
 import com.squareup.moshi.Moshi
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.CacheStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
@@ -11,7 +12,6 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieDetailsE
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.details.MovieTranslationsEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.images.MovieImagesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.keywords.MovieKeywordsEntity
-import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.now_playing.NowPlayingMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.similar.SimilarMoviesEntity
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.videos.MovieVideo
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.network.api.MoviesApi
@@ -19,12 +19,16 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.base.BaseRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types.newParameterizedType
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieListStorage
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.MovieData
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.cache.CachedData
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.entities.popular.MovieEntity
 import java.util.concurrent.TimeUnit
 
 class MovieRepository(
     private val moviesApi: MoviesApi,
     private val movieDetailsStorage: MovieDetailsStorage,
+    private val movieListStorage: MovieListStorage,
     private val cacheStorage: CacheStorage,
     private val settingsRepository: TmdbSettingsRepository,
     private val moshi: Moshi,
@@ -32,35 +36,18 @@ class MovieRepository(
 ) : BaseRepository() {
     suspend fun getNowPlayingMovie(
         page: Int,
-        language: String?,
-        lifeTimeHours: Int = 1
-    ): NowPlayingMoviesEntity? {
-        val requestId = "nowPlayingMovies_${page}_$language"
-
-        val adapter: JsonAdapter<NowPlayingMoviesEntity> =
-            moshi.adapter(newParameterizedType(NowPlayingMoviesEntity::class.java))
-
-        val cachedResponse = cacheStorage.getCachedResponse(requestId)
-        return if (cachedResponse != null && !util.isExpired(cachedResponse.timeStamp!!, lifeTimeHours)) {
-            adapter.fromJson(cachedResponse.response!!)
-        } else {
-            val response = safeApiCall(
+        language: String?
+    ): DataSource.Factory<Int, MovieData> {
+        val response = safeApiCall(
                 call = { moviesApi.getNowPlayingMovieAsync(language, page).await() },
                 errorMessage = "Error Fetching Now Playing Movies."
             )
 
-            if (response == null && cachedResponse != null) adapter.fromJson(cachedResponse.response!!)
-
-            cacheStorage.addToCache(
-                CachedData(
-                    requestId,
-                    System.currentTimeMillis(),
-                    adapter.toJson(response)
-                )
-            )
-
-            response
+        response?.apply {
+            movieListStorage.saveList(results)
         }
+
+        return movieListStorage.getMovieList()
     }
 
     suspend fun getMovieDetails(movieId: Int, language: String? = null, lifeTimeHours: Int = 6): MovieDetailsEntity? {

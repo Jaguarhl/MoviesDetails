@@ -15,16 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".mvvm.view.activity.MainActivity">
+        <activity android:name=".mvvm.presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".mvvm.view.activity.MovieDetailsActivity" />
+        <activity android:name=".mvvm.presentation.details.MovieDetailsFragment" />
 
-        <activity android:name=".mvvm.view.activity.MovieImageActivity" />
+        <activity android:name=".mvvm.presentation.activity.MovieImageActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

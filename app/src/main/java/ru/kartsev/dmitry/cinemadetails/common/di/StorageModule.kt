@@ -1,87 +1,94 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
+import android.app.Application
 import androidx.room.Room
-import org.koin.core.module.Module
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.MovieDatabase
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.CacheDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.ConfigurationDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.FavouritesDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.GenresDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.HistoryDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.LanguagesDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieDetailsDao
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.dao.MovieVideosDao
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.CacheStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.ConfigurationStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.FavouritesStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.HistoryStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.LanguageStorage
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.storage.MovieDetailsStorage
+import javax.inject.Singleton
 
-object StorageModule {
-    /** Section: Constants. */
-    private const val MOVIE_DATABASE_NAME = "storage.movie_database"
+@Module
+class StorageModule {
+    @Provides
+    @Singleton
+    fun provideMovieDatabase(application: Application) = Room.databaseBuilder(
+        application, MovieDatabase::class.java,
+        StorageConfig.DATABASE_NAME
+    ).fallbackToDestructiveMigration()
+        .build()
 
-    /** Section: Modules. */
+    @Provides
+    @Singleton
+    fun provideConfigurationStorage(dao: ConfigurationDao) = ConfigurationStorage(dao)
 
-    val it: Module = module {
-        single(named(MOVIE_DATABASE_NAME)) {
-            Room.databaseBuilder(
-                get(), MovieDatabase::class.java,
-                StorageConfig.DATABASE_NAME
-            ).fallbackToDestructiveMigration()
-                .build()
-        }
+    @Provides
+    @Singleton
+    fun provideLanguageStorage(dao: LanguagesDao) = LanguageStorage(dao)
 
-        single {
-            ConfigurationStorage(get())
-        }
+    @Provides
+    @Singleton
+    fun provideMovieDetailsStorage(
+        genresDao: GenresDao,
+        movieDetailsDao: MovieDetailsDao,
+        movieVideosDao: MovieVideosDao
+    ) = MovieDetailsStorage(genresDao, movieDetailsDao, movieVideosDao)
 
-        single {
-            LanguageStorage(get())
-        }
+    @Provides
+    @Singleton
+    fun provideFavouritesStorage(dao: FavouritesDao) = FavouritesStorage(dao)
 
-        single {
-            MovieDetailsStorage(get(), get(), get())
-        }
+    @Provides
+    @Singleton
+    fun provideCacheStorage(dao: CacheDao) = CacheStorage(dao)
 
-        single {
-            FavouritesStorage(get())
-        }
+    @Provides
+    @Singleton
+    fun provideHistoryStorage(dao: HistoryDao) = HistoryStorage(dao)
 
-        single {
-            CacheStorage(get())
-        }
+    @Provides
+    @Singleton
+    fun provideConfigyrationDao(database: MovieDatabase) = database.configurationDao()
 
-        single {
-            HistoryStorage(get())
-        }
+    @Provides
+    @Singleton
+    fun provideLanguageDao(database: MovieDatabase) = database.languagesDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).configurationDao()
-        }
+    @Provides
+    @Singleton
+    fun provideMovieDetailsDao(database: MovieDatabase) = database.movieDetailsDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).languagesDao()
-        }
+    @Provides
+    @Singleton
+    fun provideGenresDao(database: MovieDatabase) = database.genresDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).movieDetailsDao()
-        }
+    @Provides
+    @Singleton
+    fun provideMovieVideosDao(database: MovieDatabase) = database.movieVideosDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).genresDao()
-        }
+    @Provides
+    @Singleton
+    fun provideFavouritesDao(database: MovieDatabase) = database.favouritesDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).movieVideosDao()
-        }
+    @Provides
+    @Singleton
+    fun provideCacheDao(database: MovieDatabase) = database.cacheDao()
 
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).favouritesDao()
-        }
-
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).cacheDao()
-        }
-
-        single {
-            get<MovieDatabase>(named(MOVIE_DATABASE_NAME)).historyDao()
-        }
-    }
+    @Provides
+    @Singleton
+    fun provideHistoryDao(database: MovieDatabase) = database.historyDao()
 }
