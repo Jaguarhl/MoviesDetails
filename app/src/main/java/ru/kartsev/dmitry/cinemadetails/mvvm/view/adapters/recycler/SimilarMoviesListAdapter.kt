@@ -13,7 +13,7 @@ import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemSimilarMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.details.MovieDetailsViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DefaultDiffCallback
 
 class SimilarMoviesListAdapter(
@@ -66,7 +66,8 @@ class SimilarMoviesListAdapter(
         RecyclerView.ViewHolder(binding.root), KoinComponent {
         fun bind(
             observable: SimilarMovieObservable,
-            viewModel: MovieDetailsViewModel) {
+            viewModel: MovieDetailsViewModel
+        ) {
             binding.baseObservable = observable
             binding.viewModel = viewModel
             binding.executePendingBindings()

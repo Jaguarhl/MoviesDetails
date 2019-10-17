@@ -3,19 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+    tools:context=".mvvm.view.activity.MainActivity">
 
-    <data class="ActivityDetailsBinding">
+    <data class="FragmentMovieDetailsBinding">
 
         <import type="android.view.View" />
 
+        <import type="androidx.lifecycle.LiveData" />
+
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.view.details.MovieDetailsViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/activityRoot"
+        android:id="@+id/fragmentRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -36,7 +38,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/activityDetailsMovieBackdrop"
+                    android:id="@+id/fragmentDetailsMovieBackdrop"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/activity_details_backdrop_height"
                     android:background="@color/colorWhite"
@@ -85,29 +87,29 @@
                 android:layout_height="wrap_content">
 
                 <View
-                    android:id="@+id/activityDetailsMovieTitleView"
+                    android:id="@+id/fragmentDetailsMovieTitleView"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/activity_details_movie_title_height"
                     android:background="@color/colorMovieTitleView"
                     android:elevation="2dp"
                     android:outlineProvider="bounds"
-                    app:layout_constraintBottom_toBottomOf="@id/activityDetailsMoviePoster"
+                    app:layout_constraintBottom_toBottomOf="@id/fragmentDetailsMoviePoster"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMoviePoster" />
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMoviePoster" />
 
                 <View
-                    android:id="@+id/activityDetailsMovieBottomView"
+                    android:id="@+id/fragmentDetailsMovieBottomView"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@color/colorWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleView" />
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieTitleView" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/activityDetailsMoviePoster"
+                    android:id="@+id/fragmentDetailsMoviePoster"
                     android:layout_width="@dimen/activity_details_poster_width"
                     android:layout_height="@dimen/activity_details_poster_height"
                     android:layout_marginStart="@dimen/primary_horizontal_margin"
@@ -118,13 +120,13 @@
                     app:image_error="@{@drawable/poster_placeholder}"
                     app:image_uri="@{viewModel.moviePosterPath}"
                     app:image_size="@{viewModel.moviePosterSize}"
-                    app:layout_constraintEnd_toStartOf="@id/activityDetailsMovieTitle"
+                    app:layout_constraintEnd_toStartOf="@id/fragmentDetailsMovieTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieTitle"
+                    android:id="@+id/fragmentDetailsMovieTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/secondary_horizontal_margin"
@@ -133,29 +135,29 @@
                     android:text="@{viewModel.movieTitle}"
                     android:textSize="@dimen/text_primary"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieTitleView"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMoviePoster"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieTitleView"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieTitleView"
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMoviePoster"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieTitleView"
                     tools:text="Movie title" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieOverallInfo"
+                    android:id="@+id/fragmentDetailsMovieOverallInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:elevation="2dp"
                     android:textSize="@dimen/text_tertiary"
                     android:textStyle="italic"
-                    app:layout_constraintBottom_toBottomOf="@id/activityDetailsMovieTitleView"
+                    app:layout_constraintBottom_toBottomOf="@id/fragmentDetailsMovieTitleView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitle"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitle"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitle"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieTitle"
                     bind:overall_info="@{viewModel.movieOverallInfo}"
                     bind:overall_release_date="@{viewModel.movieReleaseDate}"
                     bind:overall_runtime="@{viewModel.movieRuntime}"
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieTitleOriginal"
+                    android:id="@+id/fragmentDetailsMovieTitleOriginal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/primary_horizontal_margin"
@@ -164,28 +166,28 @@
                     app:original_title="@{viewModel.movieTitleOriginal}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieBottomView"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieBottomView"
                     tools:text="Movie title original" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieRatingLabel"
+                    android:id="@+id/fragmentDetailsMovieRatingLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_rating_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTitleOriginal" />
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieTitleOriginal" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieRating"
+                    android:id="@+id/fragmentDetailsMovieRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/secondary_horizontal_margin"
                     android:text="@{viewModel.movieRating}"
                     android:textSize="@dimen/text_tertiary"
                     android:textStyle="italic"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieRatingLabel"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRatingLabel"
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMovieRatingLabel"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieRatingLabel"
                     tools:text="8.5" />
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -195,21 +197,21 @@
                     android:tint="@color/colorFontMain"
                     android:layout_marginStart="@dimen/tertiary_horizontal_margin"
                     app:srcCompat="@drawable/ic_star_black"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRating"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieRating"
-                    app:layout_constraintBottom_toBottomOf="@id/activityDetailsMovieRating"/>
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieRating"
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMovieRating"
+                    app:layout_constraintBottom_toBottomOf="@id/fragmentDetailsMovieRating"/>
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieBudgetLabel"
+                    android:id="@+id/fragmentDetailsMovieBudgetLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_budged_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRating" />
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieRating" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieBudget"
+                    android:id="@+id/fragmentDetailsMovieBudget"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_tertiary"
@@ -217,21 +219,21 @@
                     android:layout_marginStart="@dimen/secondary_horizontal_margin"
                     bind:finance="@{viewModel.movieBudget}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieBudgetLabel"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieBudgetLabel"
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMovieBudgetLabel"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieBudgetLabel"
                     tools:text="160000000 $"/>
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieRevenueLabel"
+                    android:id="@+id/fragmentDetailsMovieRevenueLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_revenue_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieBudget" />
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieBudget" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieRevenue"
+                    android:id="@+id/fragmentDetailsMovieRevenue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_tertiary"
@@ -239,21 +241,21 @@
                     android:layout_marginStart="@dimen/secondary_horizontal_margin"
                     bind:finance="@{viewModel.movieRevenue}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieRevenueLabel"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieRevenueLabel"
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMovieRevenueLabel"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieRevenueLabel"
                     tools:text="160000000 $"/>
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieReleaseDateLabel"
+                    android:id="@+id/fragmentDetailsMovieReleaseDateLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_release_date_label"
                     android:textSize="@dimen/text_tertiary"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieRevenue" />
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieRevenue" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieReleaseDate"
+                    android:id="@+id/fragmentDetailsMovieReleaseDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_tertiary"
@@ -261,21 +263,21 @@
                     android:layout_marginStart="@dimen/secondary_horizontal_margin"
                     bind:release_date_world="@{viewModel.movieReleaseDate}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/activityDetailsMovieReleaseDateLabel"
-                    app:layout_constraintTop_toTopOf="@id/activityDetailsMovieReleaseDateLabel" />
+                    app:layout_constraintStart_toEndOf="@id/fragmentDetailsMovieReleaseDateLabel"
+                    app:layout_constraintTop_toTopOf="@id/fragmentDetailsMovieReleaseDateLabel" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieGenresLabel"
+                    android:id="@+id/fragmentDetailsMovieGenresLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_genres_label"
                     android:textSize="@dimen/text_tertiary"
                     android:layout_marginTop="@dimen/tertiary_vertical_margin"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieReleaseDate" />
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieReleaseDate" />
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/activityDetailsMovieGenresListGroup"
+                    android:id="@+id/fragmentDetailsMovieGenresListGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/item_genre_height"
@@ -284,23 +286,23 @@
                     app:singleSelection="true"
                     app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
                     app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresLabel" />
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieGenresLabel" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieTagsLabel"
+                    android:id="@+id/fragmentDetailsMovieTagsLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_movie_details_tags_label"
                     android:textSize="@dimen/text_tertiary"
                     android:layout_marginTop="@dimen/tertiary_vertical_margin"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieGenresListGroup"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieGenresListGroup"
                     bind:viewVisibility="@{viewModel.movieKeywordsEnabled}"/>
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/activityDetailsMovieKeywordsListGroup"
+                    android:id="@+id/fragmentDetailsMovieKeywordsListGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/item_genre_height"
@@ -309,13 +311,13 @@
                     app:singleSelection="true"
                     app:chipSpacingHorizontal="@dimen/item_genre_horizontal_margin"
                     app:chipSpacingVertical="@dimen/item_genre_vertical_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieTitleOriginal"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieTagsLabel"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieTitleOriginal"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieTagsLabel"
                     bind:viewVisibility="@{viewModel.movieKeywordsEnabled}" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieOverview"
+                    android:id="@+id/fragmentDetailsMovieOverview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
@@ -326,103 +328,103 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieKeywordsListGroup"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieKeywordsListGroup"
                     tools:text="@tools:sample/lorem/random" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieCreditsCastLabel"
+                    android:id="@+id/fragmentDetailsMovieCreditsCastLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
                     android:text="@string/activity_movie_details_cast_credits_label"
                     android:textSize="@dimen/text_secondary"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieOverview"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieOverview"
                     bind:viewVisibility="@{viewModel.movieCreditsCastEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activityDetailsMovieCastListRecycler"
+                    android:id="@+id/fragmentDetailsMovieCastListRecycler"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/secondary_horizontal_margin"
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCreditsCastLabel"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieCreditsCastLabel"
                     bind:viewVisibility="@{viewModel.movieCreditsCastEnabled}"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_credits" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieSimilarLabel"
+                    android:id="@+id/fragmentDetailsMovieSimilarLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
                     android:textSize="@dimen/text_secondary"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieCastListRecycler"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieCastListRecycler"
                     bind:similar_movies_label="@{viewModel.movieSimilarMoviesCount}"
                     bind:viewVisibility="@{viewModel.movieSimilarMoviesEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activityDetailsMovieSimilarListRecycler"
+                    android:id="@+id/fragmentDetailsMovieSimilarListRecycler"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/secondary_horizontal_margin"
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarLabel"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieSimilarLabel"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_similar_movie" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieImagesLabel"
+                    android:id="@+id/fragmentDetailsMovieImagesLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
                     android:textSize="@dimen/text_secondary"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieSimilarListRecycler"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieSimilarListRecycler"
                     bind:movie_images_label="@{viewModel.movieImagesCount}"
                     bind:viewVisibility="@{viewModel.movieImagesEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activityDetailsMovieImagesListRecycler"
+                    android:id="@+id/fragmentDetailsMovieImagesListRecycler"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_horizontal_margin"
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieImagesLabel"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieImagesLabel"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_movie_image" />
 
                 <TextView
-                    android:id="@+id/activityDetailsMovieVideosLabel"
+                    android:id="@+id/fragmentDetailsMovieVideosLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_vertical_margin"
                     android:textSize="@dimen/text_secondary"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieImagesListRecycler"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieImagesListRecycler"
                     bind:movie_videos_label="@{viewModel.movieVideosCount}"
                     bind:viewVisibility="@{viewModel.movieVideoEnabled}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activityDetailsMovieVideosListRecycler"
+                    android:id="@+id/fragmentDetailsMovieVideosListRecycler"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/primary_horizontal_margin"
                     android:layout_marginBottom="@dimen/primary_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintStart_toStartOf="@id/activityDetailsMovieOverview"
-                    app:layout_constraintTop_toBottomOf="@id/activityDetailsMovieVideosLabel"
+                    app:layout_constraintEnd_toEndOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintStart_toStartOf="@id/fragmentDetailsMovieOverview"
+                    app:layout_constraintTop_toBottomOf="@id/fragmentDetailsMovieVideosLabel"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_video" />
 
@@ -446,7 +448,7 @@
         </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/activityDetailsMovieNoData"
+            android:id="@+id/fragmentDetailsMovieNoData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
@@ -468,7 +470,7 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/Widget.AppCompat.ActionButton"
-                android:id="@+id/activityDetailsMovieNoDataBackButton"
+                android:id="@+id/fragmentDetailsMovieNoDataBackButton"
                 android:layout_width="@dimen/activity_movie_details_no_data_back_button_size"
                 android:layout_height="@dimen/activity_movie_details_no_data_back_button_size"
                 android:layout_marginTop="@dimen/primary_vertical_margin"

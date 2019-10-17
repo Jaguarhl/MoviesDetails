@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.kartsev.dmitry.cinemadetails.R
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieListBaseViewModel
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.helper.DefaultDiffCallback
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.viewholder.ItemMovieViewHolder
 

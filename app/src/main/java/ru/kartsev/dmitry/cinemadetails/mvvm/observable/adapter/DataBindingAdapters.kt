@@ -106,19 +106,21 @@ fun formatFinance(view: TextView, sum: Long) = with(view) {
 }
 
 @BindingAdapter("app:original_title")
-fun movieOriginalTitle(view: TextView, title: String) = with (view) {
-    val label = context.getString(R.string.activity_movie_details_title_original_label)
-    // FIXME: Replace spaces by something more appropriate and tunable
-    val finalText = "$label   $title"
-    val spannableString = SpannableString(finalText).apply {
-        setSpan(
-            StyleSpan(ITALIC),
-            label.length,
-            length,
-            Spannable.SPAN_EXCLUSIVE_INCLUSIVE
-        )
+fun movieOriginalTitle(view: TextView, title: String?) = with(view) {
+    title?.let {
+        val label = context.getString(R.string.activity_movie_details_title_original_label)
+        // FIXME: Replace spaces by something more appropriate and tunable
+        val finalText = "$label   $title"
+        val spannableString = SpannableString(finalText).apply {
+            setSpan(
+                StyleSpan(ITALIC),
+                label.length,
+                length,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+        }
+        text = spannableString
     }
-    text = spannableString
 }
 
 @BindingAdapter("app:similar_movies_label")
@@ -143,14 +145,16 @@ fun labelMovieImages(view: TextView, count: Int?) = with(view) {
 }
 
 @BindingAdapter("app:release_date_world")
-fun viewReleaseDates(view: TextView, date: String) = with(view) {
-    val util = get(Util::class.java)
-    text = context.getString(
-        R.string.date_release_world,
-        util.formatTime(
-            date, "yyyy-MM-dd", "dd MMMM yyyy"
+fun viewReleaseDates(view: TextView, date: String?) = with(view) {
+    date?.let {
+        val util = get(Util::class.java)
+        text = context.getString(
+            R.string.date_release_world,
+            util.formatTime(
+                date, "yyyy-MM-dd", "dd MMMM yyyy"
+            )
         )
-    )
+    }
 }
 
 @BindingAdapter("app:viewVisibility")

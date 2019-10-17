@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion 28
@@ -40,6 +41,10 @@ android {
         enabled = true
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     testOptions {
         reportDir "$rootDir/test-reports"
         resultsDir "$rootDir/test-results"
@@ -64,6 +69,10 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
@@ -78,7 +87,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.fragment:fragment-ktx:1.2.0-alpha02"
+    implementation "androidx.fragment:fragment-ktx:$ktx_fragment_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 //    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
@@ -86,8 +95,8 @@ dependencies {
     implementation "android.arch.paging:runtime:$paging_version"
 
     // Moshi
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     // Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
@@ -99,32 +108,32 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_interceptor_version"
 
     // Room
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "android.arch.persistence.room:runtime:$roomPersistanceVersion"
-    kapt "android.arch.persistence.room:compiler:$roomPersistanceVersion"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "android.arch.persistence.room:runtime:$room_persistance_version"
+    kapt "android.arch.persistence.room:compiler:$room_persistance_version"
 
     // Picasso for Image Loading
-    implementation ("com.squareup.picasso:picasso:$picassoVersion") {
+    implementation ("com.squareup.picasso:picasso:$picasso_version") {
         exclude group: "com.android.support"
     }
 
     // Android youtube player
-    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayerVersion"
+    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtube_player_version"
 
     // GravitySnapHelper
-    implementation "com.github.rubensousa:gravitysnaphelper:$gravitySnapHelperVersion"
+    implementation "com.github.rubensousa:gravitysnaphelper:$gravity_snap_helper_version"
 
     // PhotoView
-    implementation "com.github.chrisbanes:PhotoView:$photoViewVersion"
+    implementation "com.github.chrisbanes:PhotoView:$photo_view_version"
 
     // Kotlin Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.jakewharton.timber:timber:$timber_version"
 
     // Koin
     implementation "org.koin:koin-core:$koin_version"
@@ -138,5 +147,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 }

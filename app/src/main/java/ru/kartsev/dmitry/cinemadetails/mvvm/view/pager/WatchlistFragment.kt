@@ -1,4 +1,4 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.pager
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,30 +7,26 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_watchlist.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentWatchlistBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.WatchlistViewModel.Companion.ACTION_OPEN_DETAILS
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.activity.MovieDetailsActivity
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.WatchlistAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
 
 class WatchlistFragment : Fragment(), KoinComponent {
 
     /** Section: Static functions. */
 
     companion object {
-        fun newInstance(): WatchlistFragment = WatchlistFragment()
+        fun newInstance(): WatchlistFragment =
+            WatchlistFragment()
     }
 
     /** Section: Private fields. */
 
-    private lateinit var viewModel: WatchlistViewModel
+    private val viewModel: MainFragmentViewModel by lazy { parentFragment!!.viewModel<MainFragmentViewModel>().value }
     private lateinit var watchlistAdapter: WatchlistAdapter
     private lateinit var viewBinding: FragmentWatchlistBinding
 
@@ -42,11 +38,8 @@ class WatchlistFragment : Fragment(), KoinComponent {
             R.layout.fragment_watchlist,
             container, false)
 
-        viewModel = ViewModelProviders.of(this).get(WatchlistViewModel::class.java)
+        viewModel.initializeWatchlist()
 
-        viewModel.initializeByDefault()
-
-        propertyHandler.attach()
         return viewBinding.root
     }
 
@@ -90,13 +83,13 @@ class WatchlistFragment : Fragment(), KoinComponent {
 
     override fun onDestroyView() {
         fragmentWatchlistRecyclerList.adapter = null
-        propertyHandler.detach()
         super.onDestroyView()
     }
 
-    /** Section: Property Handler. */
+    /** Section: Property Handler.
 
-    private val propertyHandler = PropertyHandler(this)
+    private val propertyHandler =
+        PropertyHandler(this)
 
     class PropertyHandler(
         reference: WatchlistFragment
@@ -111,5 +104,5 @@ class WatchlistFragment : Fragment(), KoinComponent {
         }
 
         override fun observableOrNull(reference: WatchlistFragment) = reference.viewModel
-    }
+    }*/
 }

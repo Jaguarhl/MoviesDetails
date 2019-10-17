@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.view.details.MovieDetailsViewModel" />
     </data>
 
     <androidx.cardview.widget.CardView

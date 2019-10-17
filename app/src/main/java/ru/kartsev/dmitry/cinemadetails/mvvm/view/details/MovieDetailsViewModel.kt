@@ -1,6 +1,5 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.details
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,8 +9,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.get
-import org.koin.core.inject
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.common.config.AppConfig.MAX_CAST_ORDER
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.database.tables.details.MovieVideoData
@@ -32,7 +29,8 @@ import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.ImageObser
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.VideoObservable
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.BaseViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.BaseViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.SingleLiveEvent
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
@@ -46,152 +44,28 @@ class MovieDetailsViewModel : BaseViewModel() {
 
     /** Section: Bindable Properties. */
 
-    var movieVideoEnabled: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieVideoEnabled)
-        }
-
-    var movieVideosCount: Int? = null
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieVideosCount)
-        }
-
-    var movieSimilarMoviesEnabled: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieSimilarMoviesEnabled)
-        }
-
-    var movieSimilarMoviesCount: Int? = null
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieSimilarMoviesCount)
-        }
-
-    var movieKeywordsEnabled: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieKeywordsEnabled)
-        }
-
-    var movieCreditsCastEnabled: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieCreditsCastEnabled)
-        }
-
-    var movieImagesEnabled: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieImagesEnabled)
-        }
-
-    var movieImagesCount: Int = 0
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieImagesCount)
-        }
-
-    var movieToolbarCollapsed: Boolean = false
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieToolbarCollapsed)
-        }
-
-    var movieTitle: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieTitle)
-        }
-
-    var movieTitleOriginal: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieTitleOriginal)
-        }
-
-    var movieDescription: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieDescription)
-        }
-
-    var moviePosterPath: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.moviePosterPath)
-        }
-
-    var movieBackdropPath: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieBackdropPath)
-        }
-
-    var movieOverallInfo: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieOverallInfo)
-        }
-
-    var movieReleaseDate: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieReleaseDate)
-        }
-
-    var movieRuntime: Int = 0
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieRuntime)
-        }
-
-    var moviePopularity: Double = 0.0
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.moviePopularity)
-        }
-
-    var movieBudget: Long = 0
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieBudget)
-        }
-
-    var movieRevenue: Long = 0
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieRevenue)
-        }
-
-    var movieRating: String = ""
-        @Bindable get() = field
-        set(value) {
-            field = if (field == value) return else value
-            notifyPropertyChanged(BR.movieRating)
-        }
+    var movieVideoEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    var movieVideosCount: MutableLiveData<Int> = MutableLiveData()
+    var movieSimilarMoviesEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    var movieSimilarMoviesCount: MutableLiveData<Int> = MutableLiveData()
+    var movieKeywordsEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    var movieCreditsCastEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    var movieImagesEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    var movieImagesCount: MutableLiveData<Int> = MutableLiveData()
+    var movieToolbarCollapsed: MutableLiveData<Boolean> = MutableLiveData()
+    var movieTitle: MutableLiveData<String> = MutableLiveData()
+    var movieTitleOriginal: MutableLiveData<String> = MutableLiveData()
+    var movieDescription: MutableLiveData<String> = MutableLiveData()
+    var moviePosterPath: MutableLiveData<String> = MutableLiveData()
+    var movieBackdropPath: MutableLiveData<String> = MutableLiveData()
+    var movieOverallInfo: MutableLiveData<String> = MutableLiveData()
+    var movieReleaseDate: MutableLiveData<String> = MutableLiveData()
+    var movieRuntime: MutableLiveData<Int> = MutableLiveData()
+    var moviePopularity: MutableLiveData<Double> = MutableLiveData()
+    var movieBudget: MutableLiveData<Long> = MutableLiveData()
+    var movieRevenue: MutableLiveData<Long> = MutableLiveData()
+    var movieRating: MutableLiveData<String> = MutableLiveData()
+    val movieNoDataAvailable: MutableLiveData<Boolean> = MutableLiveData()
 
     /** Section: Simple Properties. */
 
@@ -210,7 +84,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     val movieSimilarMoviesLiveData: MutableLiveData<List<SimilarMovieObservable>> = MutableLiveData()
     val movieVideosLiveData: MutableLiveData<List<VideoObservable>> = MutableLiveData()
     val movieImagesLiveData: MutableLiveData<List<ImageObservable>> = MutableLiveData()
-    val movieNoDataAvailable: MutableLiveData<Boolean> = MutableLiveData()
+    val movieDetailsUIEvents: SingleLiveEvent<MovieDetailsUIEventsState> = SingleLiveEvent()
 
     var movieId: Int? = null
     var movieIdToShow: Int? = null
@@ -237,13 +111,14 @@ class MovieDetailsViewModel : BaseViewModel() {
 
     fun movieSimilarItemClicked(movieId: Int) {
         movieIdToShow = movieId
-        action = ACTION_OPEN_MOVIE
+        action =
+            ACTION_OPEN_MOVIE
     }
 
     fun movieImageClicked(imageObservable: ImageObservable) {
         movieImagePathToOpen = imageObservable.imagePath
         movieImageDimensionsToOpen = "${imageObservable.width} x ${imageObservable.height}"
-        action = ACTION_OPEN_IMAGE
+        movieDetailsUIEvents.postValue(OpenImageEvent(movieImagePathToOpen!!, movieImageDimensionsToOpen!!))
     }
 
     fun addMovieToFavourites() {
@@ -262,7 +137,7 @@ class MovieDetailsViewModel : BaseViewModel() {
 
     fun getMovieInfoToShare(title: String, releaseDateLabel: String, genresLabel: String): String {
         val result = StringBuilder(title)
-        if (movieReleaseDate.isNotEmpty()) result.append(
+        if (movieReleaseDate.value.isNullOrEmpty().not()) result.append(
             "\n\n$releaseDateLabel $movieReleaseDate"
         )
 
@@ -274,7 +149,7 @@ class MovieDetailsViewModel : BaseViewModel() {
             )
         }
 
-        if (movieDescription.isNotEmpty()) result.append(
+        if (movieDescription.value.isNullOrEmpty().not()) result.append(
             "\n\n$movieDescription"
         )
 
@@ -343,21 +218,23 @@ class MovieDetailsViewModel : BaseViewModel() {
         }
             ?.data
 
-        movieTitle = getMovieTitle(translated?.title, resultDetails.title)
-        movieTitleOriginal = resultDetails.original_title ?: ""
-        movieDescription = translated?.overview ?: resultDetails.overview ?: ""
-        moviePosterPath = resultDetails.poster_path ?: ""
-        movieBackdropPath = resultDetails.backdrop_path ?: ""
-        movieOverallInfo = "${resultDetails.production_countries?.map { it.name }?.joinToString(" / ")}"
-        movieReleaseDate = resultDetails.release_date ?: ""
-        movieRuntime = resultDetails.runtime ?: 0
-        moviePopularity = resultDetails.popularity ?: 0.0
-        movieBudget = resultDetails.budget ?: 0
-        movieRevenue = resultDetails.revenue ?: 0
-        movieRating = resultDetails.vote_average.toString()
+        movieTitle.postValue(getMovieTitle(translated?.title, resultDetails.title))
+        movieTitleOriginal.postValue(resultDetails.original_title ?: "")
+        movieDescription.postValue(translated?.overview ?: resultDetails.overview ?: "")
+        moviePosterPath.postValue(resultDetails.poster_path ?: "")
+        movieBackdropPath.postValue(resultDetails.backdrop_path ?: "")
+        movieOverallInfo.postValue("${resultDetails.production_countries?.map { it.name }?.joinToString(" / ")}")
+        movieReleaseDate.postValue(resultDetails.release_date ?: "")
+        movieRuntime.postValue(resultDetails.runtime ?: 0)
+        moviePopularity.postValue(resultDetails.popularity ?: 0.0)
+        movieBudget.postValue(resultDetails.budget ?: 0)
+        movieRevenue.postValue(resultDetails.revenue ?: 0)
+        movieRating.postValue(resultDetails.vote_average.toString())
         resultDetails.genres?.let { getMovieGenres(it) }
 
-        if (movieBackdropPath.isEmpty()) action = ACTION_COLLAPSE_TOOLBAR
+        if (resultDetails.backdrop_path.isNullOrEmpty()) {
+            movieDetailsUIEvents.postValue(CollapseToolbarEvent)
+        }
         movieNoDataAvailable.postValue(false)
 
         loading = false
@@ -369,7 +246,8 @@ class MovieDetailsViewModel : BaseViewModel() {
 
             withContext(Dispatchers.Main) {
                 movieAddedToFavourites = favourite != null
-                action = ACTION_MARK_FAVOURITE
+                action =
+                    ACTION_MARK_FAVOURITE
             }
         }
     }
@@ -389,8 +267,8 @@ class MovieDetailsViewModel : BaseViewModel() {
         }
 
     private fun getMovieImages(list: List<Backdrop>) {
-        movieImagesEnabled = list.isNotEmpty()
-        movieImagesCount = list.size
+        movieImagesEnabled.postValue(list.isNotEmpty())
+        movieImagesCount.postValue(list.size)
         movieImagesLiveData.postValue(
             list.map {
                 ImageObservable(
@@ -404,8 +282,8 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     private fun getSimilarMovies(list: List<MovieEntity>) {
-        movieSimilarMoviesEnabled = list.isNotEmpty()
-        movieSimilarMoviesCount = /*if (list.size > MAX_SIMILAR_MOVIES) { MAX_SIMILAR_MOVIES } else */list.size
+        movieSimilarMoviesEnabled.postValue(list.isNotEmpty())
+        movieSimilarMoviesCount.postValue(list.size)
         movieSimilarMoviesLiveData.postValue(
             list/*.take(MAX_SIMILAR_MOVIES)*/
                 .map {
@@ -415,7 +293,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     private fun getMovieCastCredits(list: List<Cast>) {
-        movieCreditsCastEnabled = list.isNotEmpty()
+        movieCreditsCastEnabled.postValue(list.isNotEmpty())
         movieCreditsCastLiveData.postValue(
             list.filter {
                 it.order <= MAX_CAST_ORDER
@@ -427,8 +305,8 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     private fun getMovieVideos(list: List<MovieVideoData>) {
-        movieVideoEnabled = list.isNotEmpty()
-        movieVideosCount = list.size
+        movieVideoEnabled.postValue(list.isNotEmpty())
+        movieVideosCount.postValue(list.size)
         movieVideosLiveData.postValue(
             list.map {
                 VideoObservable(it.key, it.name, it.site, it.size, it.type)
@@ -445,7 +323,7 @@ class MovieDetailsViewModel : BaseViewModel() {
     }
 
     private fun getMovieKeywords(list: List<Keyword>) {
-        movieKeywordsEnabled = list.isNotEmpty()
+        movieKeywordsEnabled.postValue(list.isNotEmpty())
         movieKeywordsLiveData.postValue(
             list.map {
                 KeywordObservable(it.name, it.id)

@@ -1,4 +1,4 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.view.fragments
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.pager
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,31 +14,35 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_now_playing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.BR
 import ru.kartsev.dmitry.cinemadetails.databinding.FragmentNowPlayingBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel.Companion.ACTION_OPEN_DETAILS
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.activity.MovieDetailsActivity
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.MoviesListAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.autoCleared
 
 class NowPlayingFragment : Fragment(), KoinComponent {
     /** Section: Static functions. */
 
     companion object {
-        fun newInstance(): NowPlayingFragment = NowPlayingFragment()
+        fun newInstance(): NowPlayingFragment =
+            NowPlayingFragment()
     }
+
+    var binding by autoCleared<FragmentNowPlayingBinding>()
 
     /** Section: Private fields. */
 
-    private lateinit var viewModel: NowPlayingViewModel
+    private val viewModel: MainFragmentViewModel by lazy { parentFragment!!.viewModel<MainFragmentViewModel>().value }
     private lateinit var moviesAdapter: MoviesListAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
+
+    internal var callback: OnItemSelectedCallback? = null
+
+    fun setOnItemSelectedListener(callback: OnItemSelectedCallback) {
+        this.callback = callback
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,23 +51,21 @@ class NowPlayingFragment : Fragment(), KoinComponent {
     ): View? {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.inflate<FragmentNowPlayingBinding>(
+        binding = DataBindingUtil.inflate<FragmentNowPlayingBinding>(
             inflater,
             R.layout.fragment_now_playing,
             container, false
         )
 
-        viewModel = ViewModelProviders.of(this).get(NowPlayingViewModel::class.java)
-        viewModel.initializeByDefault()
-
         binding.viewModel = viewModel
 
-        propertyHandler.attach()
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.initializeNowPlaying()
 
         activity?.apply {
             moviesAdapter = MoviesListAdapter(viewModel)
@@ -75,17 +77,12 @@ class NowPlayingFragment : Fragment(), KoinComponent {
             }
 
             observeLiveData()
-        }
-
-
-        activity?.apply {
             setTitle(R.string.activity_main_tab_now_playing_title)
         }
     }
 
     override fun onDestroyView() {
         nowPlayingFragmentRecyclerList.adapter = null
-        propertyHandler.detach()
         super.onDestroyView()
     }
 
@@ -110,6 +107,12 @@ class NowPlayingFragment : Fragment(), KoinComponent {
         viewModel.moviesListEmpty.observe(this, Observer {
             nowPlayingFragmentNoData.visibility = if (it) View.VISIBLE else View.GONE
         })
+
+        viewModel.movieUIEvents.observe(this, Observer {
+            when (it) {
+                is ShowMovieDetails -> callback?.onItemSelected(it.movieId)
+            }
+        })
     }
 
     private fun initListeners() {
@@ -118,28 +121,5 @@ class NowPlayingFragment : Fragment(), KoinComponent {
                 viewModel.refreshData()
             }
         }
-    }
-
-    /** Section: Property Handler. */
-
-    private val propertyHandler = PropertyHandler(this)
-
-    class PropertyHandler(
-        reference: NowPlayingFragment
-    ) : DefaultPropertyHandler<NowPlayingFragment>(reference) {
-        override fun onPropertyChanged(reference: NowPlayingFragment, propertyId: Int) =
-            with(reference) {
-                val context = context ?: return
-                when (propertyId) {
-                    BR.action -> when (viewModel.action) {
-                        ACTION_OPEN_DETAILS -> MovieDetailsActivity.openActivityWithMovieId(
-                            viewModel.movieIdToOpenDetails!!,
-                            context
-                        )
-                    }
-                }
-            }
-
-        override fun observableOrNull(reference: NowPlayingFragment) = reference.viewModel
     }
 }

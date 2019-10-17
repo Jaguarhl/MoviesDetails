@@ -1,4 +1,4 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base
+package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope

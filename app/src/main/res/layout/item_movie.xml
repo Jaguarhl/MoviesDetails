@@ -14,7 +14,7 @@
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieListBaseViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

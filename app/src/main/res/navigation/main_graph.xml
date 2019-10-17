@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainNav"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.view.pager.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main"  >
+        <action
+            android:id="@+id/showMovieDetails"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/mainFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.view.details.MovieDetailsFragment"
+        android:label="MovieDetailsFragment"
+        tools:layout="@layout/fragment_movie_details">
+        <action
+            android:id="@+id/showMovieImage"
+            app:destination="@id/movieImageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/mainFragment"/>
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieImageFragment"
+        android:name="ru.kartsev.dmitry.cinemadetails.mvvm.view.image.MovieImageFragment"
+        android:label="MovieImageFragment"
+        tools:layout="@layout/fragment_view_image" >
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+        <argument
+            android:name="imageDimensions"
+            app:argType="string" />
+    </fragment>
+</navigation>

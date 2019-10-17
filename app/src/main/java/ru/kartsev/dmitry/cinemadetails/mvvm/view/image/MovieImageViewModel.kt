@@ -1,8 +1,8 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.image
 
 import org.koin.core.inject
 import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.BaseViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.BaseViewModel
 
 class MovieImageViewModel : BaseViewModel() {
     /** Section: Injections. */

@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.NowPlayingViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.view.pager.MainFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

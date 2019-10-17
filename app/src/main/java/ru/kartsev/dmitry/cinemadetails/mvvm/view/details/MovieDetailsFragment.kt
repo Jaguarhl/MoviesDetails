@@ -1,88 +1,99 @@
-package ru.kartsev.dmitry.cinemadetails.mvvm.view.activity
+package ru.kartsev.dmitry.cinemadetails.mvvm.view.details
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.activity_details.*
-import ru.kartsev.dmitry.cinemadetails.BR
-import ru.kartsev.dmitry.cinemadetails.databinding.ActivityDetailsBinding
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.VideoListAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.DefaultPropertyHandler
+import kotlinx.android.synthetic.main.fragment_movie_details.*
 import androidx.recyclerview.widget.LinearSnapHelper
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.GenreObservable
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.snackbar.Snackbar
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.KeywordObservable
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_MOVIE
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastListAdapter
-import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.SimilarMoviesListAdapter
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_COLLAPSE_TOOLBAR
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_MARK_FAVOURITE
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel.Companion.ACTION_OPEN_IMAGE
+import ru.kartsev.dmitry.cinemadetails.databinding.FragmentMovieDetailsBinding
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.CreditsCastListAdapter
 import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.ImagesListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.SimilarMoviesListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.VideoListAdapter
+import ru.kartsev.dmitry.cinemadetails.mvvm.view.helper.autoCleared
 
-class MovieDetailsActivity : AppCompatActivity() {
+class MovieDetailsFragment : Fragment() {
+
+    var binding by autoCleared<FragmentMovieDetailsBinding>()
+
     /** Section: Private Properties. */
 
-    lateinit var viewModel: MovieDetailsViewModel
+    private lateinit var viewModel: MovieDetailsViewModel
     private lateinit var castAdapter: CreditsCastListAdapter
     private lateinit var videosAdapter: VideoListAdapter
     private lateinit var similarMoviesListAdapter: SimilarMoviesListAdapter
     private lateinit var movieImagesListAdapter: ImagesListAdapter
+    private val args by navArgs<MovieDetailsFragmentArgs>()
 
     /** Section: Base Methods. */
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreate(savedInstanceState)
-
-        val binding = DataBindingUtil.setContentView<ActivityDetailsBinding>(
-            this,
-            R.layout.activity_details
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_movie_details, container,
+            false
         )
+        setHasOptionsMenu(true)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
-        with(binding) {
-            lifecycleOwner = this@MovieDetailsActivity
-            viewModel = this@MovieDetailsActivity.viewModel
-        }
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
-            setHomeButtonEnabled(true)
+        binding.apply {
+            lifecycleOwner = this@MovieDetailsFragment.viewLifecycleOwner
+            viewModel = this@MovieDetailsFragment.viewModel
         }
 
         initRecyclerViews()
 
-        propertyHandler.attach()
-
-        intent?.apply {
-            if (!hasExtra(MOVIE_ID_KEY) || savedInstanceState != null) return@apply
-
-            val movieId = getIntExtra(MOVIE_ID_KEY, 0)
-            viewModel.initializeWithMovieId(movieId)
-        }
-
         initListeners()
         observeLiveData()
+
+        activity?.let {it as AppCompatActivity
+            it.setSupportActionBar(toolbar)
+            it.supportActionBar?.apply {
+                setDisplayShowTitleEnabled(false)
+                setDisplayHomeAsUpEnabled(true)
+                setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
+                setHomeButtonEnabled(true)
+            }
+        }
+
+        args.apply {
+            val movieId = movieId
+            viewModel.initializeWithMovieId(movieId)
+        }
     }
 
     /** Section: Private Methods. */
@@ -90,7 +101,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     private fun initRecyclerViews() {
         castAdapter = CreditsCastListAdapter(viewModel)
 
-        activityDetailsMovieCastListRecycler.apply {
+        fragmentDetailsMovieCastListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = castAdapter
@@ -99,7 +110,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         similarMoviesListAdapter =
             SimilarMoviesListAdapter(viewModel)
 
-        activityDetailsMovieSimilarListRecycler.apply {
+        fragmentDetailsMovieSimilarListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = similarMoviesListAdapter
@@ -108,7 +119,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         videosAdapter = VideoListAdapter(lifecycle)
 
-        activityDetailsMovieVideosListRecycler.apply {
+        fragmentDetailsMovieVideosListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = videosAdapter
@@ -117,7 +128,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         movieImagesListAdapter = ImagesListAdapter(viewModel)
 
-        activityDetailsMovieImagesListRecycler.apply {
+        fragmentDetailsMovieImagesListRecycler.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = movieImagesListAdapter
@@ -126,30 +137,27 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        activityDetailsMovieCastListRecycler.adapter = null
-        activityDetailsMovieSimilarListRecycler.adapter = null
-        activityDetailsMovieVideosListRecycler.adapter = null
-        activityDetailsMovieImagesListRecycler.adapter = null
-        propertyHandler.detach()
+        fragmentDetailsMovieCastListRecycler?.adapter = null
+        fragmentDetailsMovieSimilarListRecycler?.adapter = null
+        fragmentDetailsMovieVideosListRecycler?.adapter = null
+        fragmentDetailsMovieImagesListRecycler?.adapter = null
         super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar_details, menu)
-        val item = menu?.findItem(R.id.menu_item_add_to_favourite)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_toolbar_details, menu)
+        val item = menu.findItem(R.id.menu_item_add_to_favourite)
 
         item?.let {
             val iconRes = if (!viewModel.movieAddedToFavourites) R.drawable.ic_favourite_border_white else R.drawable.ic_favourite_white
             it.setIcon(iconRes)
         }
-
-        return super.onCreateOptionsMenu(menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                navController().popBackStack()
                 true
             }
 
@@ -184,9 +192,9 @@ class MovieDetailsActivity : AppCompatActivity() {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    viewModel.movieToolbarCollapsed = true
-                } else if (viewModel.movieToolbarCollapsed) {
-                    viewModel.movieToolbarCollapsed = false
+                    viewModel.movieToolbarCollapsed.postValue(true)
+                } else if (viewModel.movieToolbarCollapsed.value != null && viewModel.movieToolbarCollapsed.value!!) {
+                    viewModel.movieToolbarCollapsed.postValue(false)
                 }
             }
         })
@@ -218,15 +226,37 @@ class MovieDetailsActivity : AppCompatActivity() {
         })
 
         viewModel.movieNoDataAvailable.observe(this, Observer {
-            activityDetailsMovieNoData.visibility = if (it) View.VISIBLE else View.GONE
-            activityDetailsMovieNoDataBackButton.setOnClickListener {
-                onBackPressed()
+            fragmentDetailsMovieNoData.visibility = if (it) View.VISIBLE else View.GONE
+            fragmentDetailsMovieNoDataBackButton.setOnClickListener {
+                navController().popBackStack()
             }
         })
 
         viewModel.exceptionLiveData.observe(this, Observer {
-            val view = findViewById<View>(R.id.rootView)
-            Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(fragmentRoot, it, Snackbar.LENGTH_LONG).show()
+        })
+
+        viewModel.movieDetailsUIEvents.observe(this, Observer {
+            when (it) {
+                is CollapseToolbarEvent -> {
+                    ViewCompat.setNestedScrollingEnabled(detailsScrollView, false)
+                    app_bar_layout?.apply {
+                        setExpanded(false, false)
+                        (layoutParams as CoordinatorLayout.LayoutParams).behavior?.also { coordinator ->
+                            (coordinator as AppBarLayout.Behavior).setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+                                override fun canDrag(p0: AppBarLayout): Boolean {
+                                    return false
+                                }
+                            })
+                        }
+                    }
+                    viewModel.movieToolbarCollapsed.postValue(false)
+                }
+
+                is MarkFavouriteEvent -> activity?.invalidateOptionsMenu()
+
+                is OpenImageEvent -> navController().navigate(MovieDetailsFragmentDirections.showMovieImage(it.imagePath, it.imageDimensions))
+            }
         })
     }
 
@@ -256,7 +286,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     /** Section: Chips Workaround. */
 
     private fun addKeywordsChips(list: List<KeywordObservable>?) {
-        with(activityDetailsMovieKeywordsListGroup) {
+        with(fragmentDetailsMovieKeywordsListGroup) {
             removeAllViews()
             list?.forEach {
                 addView(getChip(it.name, it.id))
@@ -265,7 +295,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun addGenresChips(list: List<GenreObservable>?) {
-        with(activityDetailsMovieGenresListGroup) {
+        with(fragmentDetailsMovieGenresListGroup) {
             removeAllViews()
             list?.forEach {
                 addView(getChip(it.name, it.id))
@@ -274,7 +304,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun getChip(textToSet: String, genreId: Int): Chip {
-        return Chip(this).apply {
+        return Chip(activity).apply {
             setChipDrawable(ChipDrawable.createFromResource(context, R.xml.item_chip))
             text = textToSet
             setOnClickListener {
@@ -286,15 +316,23 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     /** Section: Property Handler. */
 
-    private val propertyHandler = PropertyHandler(this)
+    /*private val propertyHandler =
+        PropertyHandler(
+            this
+        )
 
     class PropertyHandler(
-        reference: MovieDetailsActivity
-    ) : DefaultPropertyHandler<MovieDetailsActivity>(reference) {
-        override fun onPropertyChanged(reference: MovieDetailsActivity, propertyId: Int) = with(reference) {
+        reference: MovieDetailsFragment
+    ) : DefaultPropertyHandler<MovieDetailsFragment>(reference) {
+        override fun onPropertyChanged(reference: MovieDetailsFragment, propertyId: Int) = with(reference) {
             when (propertyId) {
                 BR.action -> when (viewModel.action) {
-                    ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let { openActivityWithMovieId(it, this) }
+                    ACTION_OPEN_MOVIE -> viewModel.movieIdToShow?.let {
+                        openActivityWithMovieId(
+                            it,
+                            this
+                        )
+                    }
 
                     ACTION_COLLAPSE_TOOLBAR -> {
                         ViewCompat.setNestedScrollingEnabled(detailsScrollView, false)
@@ -326,18 +364,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
 
-        override fun observableOrNull(reference: MovieDetailsActivity) = reference.viewModel
-    }
+        override fun observableOrNull(reference: MovieDetailsFragment) = reference.viewModel
+    }*/
 
-    companion object {
-        private const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
-
-        fun openActivityWithMovieId(id: Int, context: Context) {
-            val intent = Intent(context, MovieDetailsActivity::class.java).apply {
-                putExtra(MOVIE_ID_KEY, id)
-            }
-
-            context.startActivity(intent)
-        }
-    }
+    private fun navController() = findNavController()
 }

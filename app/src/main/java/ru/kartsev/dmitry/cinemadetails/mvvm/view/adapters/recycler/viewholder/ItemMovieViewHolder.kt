@@ -8,7 +8,7 @@ import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
-import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
+import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieListBaseViewModel
 
 class ItemMovieViewHolder(
     private val binding: ItemMovieBinding

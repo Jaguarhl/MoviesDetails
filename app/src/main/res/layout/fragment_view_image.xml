@@ -2,15 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".mvvm.view.activity.MovieDetailsActivity">
+    tools:context=".mvvm.view.activity.MainActivity">
 
-    <data class="ActivityViewImageBinding">
+    <data class="FragmentViewImageBinding">
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieImageViewModel" />
+            type="ru.kartsev.dmitry.cinemadetails.mvvm.view.image.MovieImageViewModel" />
     </data>
 
     <LinearLayout
