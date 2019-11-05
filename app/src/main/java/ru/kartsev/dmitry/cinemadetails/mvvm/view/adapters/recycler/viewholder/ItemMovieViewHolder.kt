@@ -1,11 +1,8 @@
 package ru.kartsev.dmitry.cinemadetails.mvvm.view.adapters.recycler.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.qualifier.named
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.MovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.base.MovieListBaseViewModel
@@ -23,6 +20,8 @@ class ItemMovieViewHolder(
     }
 
     fun cleanupImagesTask() {
-        get<Picasso>(named(NetworkModule.PICASSO_NAME)).cancelRequest(binding.itemMoviePoster)
+//        binding.itemMoviePoster.also {
+//            Glide.with(it.context).pauseAllRequests()
+//        }
     }
 }

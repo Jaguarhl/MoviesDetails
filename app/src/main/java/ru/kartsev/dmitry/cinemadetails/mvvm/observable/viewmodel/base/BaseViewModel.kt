@@ -13,14 +13,14 @@ abstract class BaseViewModel : ObservableViewModel(), KoinComponent {
     /** Section: Bindable Properties. */
 
     var action: Int? = null
-        @Bindable get() = field
+        @Bindable get
         set(value) {
             field = value
             notifyPropertyChanged(BR.action)
         }
 
     var loading: Boolean = false
-        @Bindable get() = field
+        @Bindable get
         set(value) {
             field = if (field == value) return else value
             notifyPropertyChanged(BR.loading)

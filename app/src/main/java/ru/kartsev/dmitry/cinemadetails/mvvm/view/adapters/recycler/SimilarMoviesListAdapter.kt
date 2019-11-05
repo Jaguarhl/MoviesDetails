@@ -5,12 +5,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.qualifier.named
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.databinding.ItemSimilarMovieBinding
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.baseobservable.SimilarMovieObservable
 import ru.kartsev.dmitry.cinemadetails.mvvm.observable.viewmodel.MovieDetailsViewModel
@@ -73,7 +70,9 @@ class SimilarMoviesListAdapter(
         }
 
         fun cleanupImagesTask() {
-            get<Picasso>(named(PICASSO_NAME)).cancelRequest(binding.itemSimilarMoviePoster)
+//            binding.itemSimilarMoviePoster.also {
+//                Glide.with(it.context).pauseAllRequests()
+//            }
         }
     }
 }

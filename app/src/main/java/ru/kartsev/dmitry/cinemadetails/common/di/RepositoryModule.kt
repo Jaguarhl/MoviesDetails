@@ -1,6 +1,7 @@
 package ru.kartsev.dmitry.cinemadetails.common.di
 
 import org.koin.core.module.Module
+import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.kartsev.dmitry.cinemadetails.common.config.StorageConfig.SETTINGS_REPOSITORY_LIFETIME_H

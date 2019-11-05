@@ -9,15 +9,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.github.chrisbanes.photoview.PhotoViewAttacher
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import org.koin.core.qualifier.named
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.koin.java.KoinJavaComponent.get
 import ru.kartsev.dmitry.cinemadetails.R
-import ru.kartsev.dmitry.cinemadetails.common.di.NetworkModule.PICASSO_NAME
 import ru.kartsev.dmitry.cinemadetails.common.utils.Util
-import java.lang.Exception
+import ru.kartsev.dmitry.cinemadetails.common.utils.generateImageLink
+import ru.kartsev.dmitry.cinemadetails.mvvm.model.repository.TmdbSettingsRepository
 import java.lang.StringBuilder
 
 /** Section: Adapters. */
@@ -34,34 +32,25 @@ fun adapterImage(
     imageSize: String? = null,
     imageZoomable: Boolean = false
 ) {
-//    if (uri.isNullOrEmpty()) return
+    if (uri.isNullOrEmpty()) return
+    val url = "${imageSize.toString()}${uri.toString()}".generateImageLink(
+        get(TmdbSettingsRepository::class.java).imagesBaseUrl)
 
-    val picasso = get(Picasso::class.java, named(PICASSO_NAME))
-    val creator = picasso.load("${imageSize.toString()}${uri.toString()}")
+    val creator = Glide.with(view.context).load(url)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
 
     with(creator) {
         errorPlaceholder?.let {
             error(errorPlaceholder)
         }
 
-        fit()
-        if (isCenterInside) centerInside() else centerCrop()
+        if (isCenterInside && !imageZoomable) centerInside() else fitCenter()
 
         defaultPlaceholder?.let {
             placeholder(it)
-        } ?: noPlaceholder()
+        }
 
-        if (imageZoomable) {
-            val viewAttacher = PhotoViewAttacher(view)
-            into(view, object : Callback {
-                override fun onSuccess() {
-                    viewAttacher.update()
-                }
-
-                override fun onError(e: Exception?) {
-                }
-            })
-        } else into(view)
+        into(view)
     }
 }
 
@@ -106,7 +95,7 @@ fun formatFinance(view: TextView, sum: Long) = with(view) {
 }
 
 @BindingAdapter("app:original_title")
-fun movieOriginalTitle(view: TextView, title: String) = with (view) {
+fun movieOriginalTitle(view: TextView, title: String) = with(view) {
     val label = context.getString(R.string.activity_movie_details_title_original_label)
     // FIXME: Replace spaces by something more appropriate and tunable
     val finalText = "$label   $title"
